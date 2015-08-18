@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r603 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r603%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200604181159.k3IBxHgF009007%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000133.html">
+   <LINK REL="Next"  HREF="000135.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r603 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r603%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200604181159.k3IBxHgF009007%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r603 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Apr 18 13:59:17 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000133.html">[Upwatch-commits] r602 - upwatch/trunk/uw_process
+</A></li>
+        <LI>Next message: <A HREF="000135.html">[Upwatch-commits] r604 - upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#134">[ date ]</a>
+              <a href="thread.html#134">[ thread ]</a>
+              <a href="subject.html#134">[ subject ]</a>
+              <a href="author.html#134">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-18 13:58:58 +0200 (Tue, 18 Apr 2006)
+New Revision: 603
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/shorewall
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/upwatch
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xfs
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-04-18 11:58:58 UTC (rev 603)
+@@ -5,5 +5,13 @@
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Received higher prio advert
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) removing protocol Virtual Routes
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Transition to MASTER STATE
++green [LOGDATE] Keepalived: Terminating on signal
++green [LOGDATE] Keepalived_vrrp: Terminating VRRP child process on signal
++green [LOGDATE] Keepalived_vrrp: VRRP_Instance\([WORD]\) removing protocol VIPs.
++green [LOGDATE] kernel: IPVS: stopping sync thread [NUM] ..
++green [LOGDATE] Keepalived: Stopping Keepalived 
++green [LOGDATE] kernel: IPVS: sync thread stopped!
++green [LOGDATE] Keepalived_healthcheckers: Terminating Healthchecker child process on signal
++green [LOGDATE] Keepalived_healthcheckers: IPVS: No such destination
+ red [LOGDATE] Keepalived_healthcheckers: Error connecting server \[[IPADDR]:[NUM]\]\.
+ red [LOGDATE] Keepalived_healthcheckers: Cannot send get request to \[[IPADDR]:[NUM]\]\.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-04-18 11:58:58 UTC (rev 603)
+@@ -490,6 +490,7 @@
+ green [LOGDATE] kernel: Probing PCI hardware\. 
+ green [LOGDATE] kernel: Processor NAP mode on idle enabled\.
+ green [LOGDATE] kernel: Processor #[NUM] Pentium\(tm\) Pro APIC version [NUM]
++green [LOGDATE] kernel: Processor #[NUM] Pentium [NUM](tm) XEON(tm) APIC version [NUM]
+ green [LOGDATE] kernel: Processors: [NUM]
+ green [LOGDATE] kernel: Process [WORD] \(pid: [NUM], stackpage=c[HEX]\)
+ green [LOGDATE] kernel: PS/[NUM] auxiliary pointing device detected -- driver installed\. 
+@@ -542,7 +543,8 @@
+ green [LOGDATE] kernel: \(scsi[NUM]\) during machine bootup\. 
+ green [LOGDATE] kernel: scsi[NUM] : GDT[NUM]RP
+ green [LOGDATE] kernel: scsi[NUM] : GDT[NUM]RS
+-green [LOGDATE] kernel: scsi[NUM] : Vendor: Adaptec  Model: [NUM]S            FW:[NUM]E
++green [LOGDATE] kernel: scsi[NUM] : Vendor: Adaptec\s+Model: [NUM]S            FW:[NUM]E
++green [LOGDATE] kernel: scsi[NUM] : Vendor: Adaptec Model: [NUM]S\s+FW:
+ green [LOGDATE] kernel: scsi : [NUM] hosts?\.
+ green [LOGDATE] kernel: \(scsi[NUM]\) If not, then please properly set the device termination 
+ green [LOGDATE] kernel: \(scsi[NUM]\) in the Adaptec SCSI BIOS by hitting CTRL-A when prompted 
+@@ -696,6 +698,9 @@
+ green [LOGDATE] kernel: Using IPI Shortcut mode
+ green [LOGDATE] kernel: Write protecting the kernel read-only data: [NUM]k
+ green [LOGDATE] kernel: {IPADDR] sent an invalid ICMP type [NUM], code [NUM] error to a broadcast: [IPADDR] on [WORD][NUM]
++green [LOGDATE] kernel: ACPI: System description tables not found
++green [LOGDATE] kernel: ESR value before enabling vector: [NUM]
++green [LOGDATE] kernel: \.\.TIMER: 
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
+ 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/shorewall
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/shorewall	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/shorewall	2006-04-18 11:58:58 UTC (rev 603)
+@@ -1 +1,2 @@
+ green [LOGDATE] kernel: Shorewall:
++green [LOGDATE] root: Shorewall Restarted
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-18 11:58:58 UTC (rev 603)
+@@ -14,3 +14,5 @@
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:send_smb\([NUM]\)
+ ignore [LOGDATE] smbd[PID]: write_socket_data: write failure. Error = Connection reset by peer
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_socket_data\([NUM]\) 
++green [LOGDATE] smb_add_request: request \[.*\] timed out!
++green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/upwatch	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/upwatch	2006-04-18 11:58:58 UTC (rev 603)
+@@ -1,2 +1,4 @@
+ green [LOGDATE] uw_[WORD]: uw_[WORD] shutdown failed
+ green [LOGDATE] uw_maint.pl[PID]: [NUM] finished
++green [LOGDATE] upwatch:\s*$
++green [LOGDATE] upwatch: \^\[\[[NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xfs
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xfs	2006-04-17 00:45:06 UTC (rev 602)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xfs	2006-04-18 11:58:58 UTC (rev 603)
+@@ -1,4 +1,5 @@
+ green [LOGDATE] xfs: ignoring font path element [PATH] \(unreadable\) 
++green [LOGDATE] xfs: ignoring font path element [PATH]:[WORD] \(unreachable\)
+ green [LOGDATE] xfs[PID]: attempting clone\.\.\. 
+ green [LOGDATE] xfs[PID]: clone: child becoming drone 
+ green [LOGDATE] xfs[PID]: clone: parent revitalizing as xfs 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000133.html">[Upwatch-commits] r602 - upwatch/trunk/uw_process
+</A></li>
+	<LI>Next message: <A HREF="000135.html">[Upwatch-commits] r604 - upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#134">[ date ]</a>
+              <a href="thread.html#134">[ thread ]</a>
+              <a href="subject.html#134">[ subject ]</a>
+              <a href="author.html#134">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r583 - upwatch/trunk/uw_route
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r583%20-%20upwatch/trunk/uw_route&In-Reply-To=%3C200604132241.k3DMfMd1000956%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000113.html">
+   <LINK REL="Next"  HREF="000115.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r583 - upwatch/trunk/uw_route</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r583%20-%20upwatch/trunk/uw_route&In-Reply-To=%3C200604132241.k3DMfMd1000956%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r583 - upwatch/trunk/uw_route">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 14 00:41:22 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000113.html">[Upwatch-commits] r582 - upwatch/trunk/uw_purple
+</A></li>
+        <LI>Next message: <A HREF="000115.html">[Upwatch-commits] r584 - in upwatch/trunk: common compat/bb/bbhimport uw_setip uw_syncprobes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#114">[ date ]</a>
+              <a href="thread.html#114">[ thread ]</a>
+              <a href="subject.html#114">[ subject ]</a>
+              <a href="author.html#114">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-14 00:41:18 +0200 (Fri, 14 Apr 2006)
+New Revision: 583
+
+Modified:
+   upwatch/trunk/uw_route/run.c
+Log:
+Kill warnings in uw_route.
+There is one left...
+
+
+Modified: upwatch/trunk/uw_route/run.c
+===================================================================
+--- upwatch/trunk/uw_route/run.c	2006-04-13 22:31:29 UTC (rev 582)
++++ upwatch/trunk/uw_route/run.c	2006-04-13 22:41:18 UTC (rev 583)
+@@ -36,7 +36,7 @@
+   if (HAVE_OPT(ROUTE)) {
+     int i=0;
+     int     ct  = STACKCT_OPT( ROUTE );
+-    char**  pn = STACKLST_OPT( ROUTE );
++    char**  pn = (char **) &amp;STACKLST_OPT( ROUTE );
+ 
+     while (ct--) {
+       char probe[256], queue[256];
+@@ -183,7 +183,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   if (HAVE_OPT(COPY) &amp;&amp; strcmp(OPT_ARG(COPY), &quot;none&quot;)) {
+     char *name = filebase;
+-    if (spool_result(OPT_ARG(SPOOLDIR), OPT_ARG(COPY), doc, &amp;name)) {
++    if (spool_result((char *) &amp;OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(COPY), doc, &amp;name)) {
+       free(name);
+     }
+   }
+@@ -289,7 +289,7 @@
+       // ensure they have unique filenames, or clashes are inevitable
+       // in a queue further on in the process.
+       sprintf(buffer, &quot;%s-%u&quot;, filebase, i);
+-      if (spool_result(OPT_ARG(SPOOLDIR), route[i].queue, route[i].doc, &amp;name)) {
++      if (spool_result((char *) &amp;OPT_ARG(SPOOLDIR), route[i].queue, route[i].doc, &amp;name)) {
+         free(name); // the returned name
+       }
+       xmlFreeDoc(route[i].doc);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000113.html">[Upwatch-commits] r582 - upwatch/trunk/uw_purple
+</A></li>
+	<LI>Next message: <A HREF="000115.html">[Upwatch-commits] r584 - in upwatch/trunk: common compat/bb/bbhimport uw_setip uw_syncprobes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#114">[ date ]</a>
+              <a href="thread.html#114">[ thread ]</a>
+              <a href="subject.html#114">[ subject ]</a>
+              <a href="author.html#114">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

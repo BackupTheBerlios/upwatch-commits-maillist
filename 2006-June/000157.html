@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r623 - upwatch/trunk/uw_mysqlstats
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r623%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200606201042.k5KAgg0X025334%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000156.html">
+   <LINK REL="Next"  HREF="000158.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r623 - upwatch/trunk/uw_mysqlstats</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r623%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200606201042.k5KAgg0X025334%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r623 - upwatch/trunk/uw_mysqlstats">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Jun 20 12:42:42 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000156.html">[Upwatch-commits] r622 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+        <LI>Next message: <A HREF="000158.html">[Upwatch-commits] r624 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-20 12:42:41 +0200 (Tue, 20 Jun 2006)
+New Revision: 623
+
+Modified:
+   upwatch/trunk/uw_mysqlstats/run.c
+Log:
+Generate a correct result file for uw_mysqlstats, this has always been broken.
+The monitor works correctly now, but uw_process does not handle it correctly, I will fix that too.
+
+Not usefull for us though since we cannot upgrade our uw_process :-(
+
+
+Modified: upwatch/trunk/uw_mysqlstats/run.c
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/run.c	2006-06-14 12:07:27 UTC (rev 622)
++++ upwatch/trunk/uw_mysqlstats/run.c	2006-06-20 10:42:41 UTC (rev 623)
+@@ -187,7 +187,7 @@
+   xmlDocPtr doc = (xmlDocPtr) user_data;
+   struct probedef *probe = (struct probedef *)value;
+ 
+-  xmlNodePtr subtree, mysql;
++  xmlNodePtr subtree, mysqlstats;
+   int color;
+   char info[1024];
+   char buffer[1024];
+@@ -200,22 +200,22 @@
+     color = STAT_GREEN;
+   }
+ 
+-  mysql = xmlNewChild(xmlDocGetRootElement(doc), NULL, &quot;mysql&quot;, NULL);
++  mysqlstats = xmlNewChild(xmlDocGetRootElement(doc), NULL, &quot;mysqlstats&quot;, NULL);
+   if (probe-&gt;realm) {
+-    xmlSetProp(mysql, &quot;realm&quot;, probe-&gt;realm);
++    xmlSetProp(mysqlstats, &quot;realm&quot;, probe-&gt;realm);
+   }
+-  sprintf(buffer, &quot;%d&quot;, probe-&gt;probeid);      xmlSetProp(mysql, &quot;id&quot;, buffer);
+-  sprintf(buffer, &quot;%s&quot;, probe-&gt;ipaddress);    xmlSetProp(mysql, &quot;ipaddress&quot;, buffer);
+-  sprintf(buffer, &quot;%d&quot;, (int) now);           xmlSetProp(mysql, &quot;date&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, probe-&gt;probeid);      xmlSetProp(mysqlstats, &quot;id&quot;, buffer);
++  sprintf(buffer, &quot;%s&quot;, probe-&gt;ipaddress);    xmlSetProp(mysqlstats, &quot;ipaddress&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, (int) now);           xmlSetProp(mysqlstats, &quot;date&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60)); 
+-    xmlSetProp(mysql, &quot;expires&quot;, buffer);
+-  sprintf(buffer, &quot;%d&quot;, color);               xmlSetProp(mysql, &quot;color&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;selectq);      subtree = xmlNewChild(mysql, NULL, &quot;select&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;insertq);      subtree = xmlNewChild(mysql, NULL, &quot;insert&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;updateq);      subtree = xmlNewChild(mysql, NULL, &quot;update&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;deleteq);      subtree = xmlNewChild(mysql, NULL, &quot;delete&quot;, buffer);
++    xmlSetProp(mysqlstats, &quot;expires&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, color);               xmlSetProp(mysqlstats, &quot;color&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;selectq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;select&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;insertq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;insert&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;updateq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;update&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;deleteq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;delete&quot;, buffer);
+   if (probe-&gt;msg) {
+-    subtree = xmlNewTextChild(mysql, NULL, &quot;info&quot;, probe-&gt;msg);
++    subtree = xmlNewTextChild(mysqlstats, NULL, &quot;info&quot;, probe-&gt;msg);
+     free(probe-&gt;msg);
+     probe-&gt;msg = NULL;
+   }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000156.html">[Upwatch-commits] r622 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+	<LI>Next message: <A HREF="000158.html">[Upwatch-commits] r624 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r688 - upwatch/trunk/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-November/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r688%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200711261113.lAQBDJwR017044%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000222.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r688 - upwatch/trunk/uw_process</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r688%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200711261113.lAQBDJwR017044%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r688 - upwatch/trunk/uw_process">raarts at mail.berlios.de
+       </A><BR>
+    <I>Mon Nov 26 12:13:19 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000222.html">[Upwatch-commits] r687 - upwatch/trunk/upwatch
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#223">[ date ]</a>
+              <a href="thread.html#223">[ thread ]</a>
+              <a href="subject.html#223">[ subject ]</a>
+              <a href="author.html#223">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-11-26 12:13:18 +0100 (Mon, 26 Nov 2007)
+New Revision: 688
+
+Modified:
+   upwatch/trunk/uw_process/notify.c
+   upwatch/trunk/uw_process/process.c
+   upwatch/trunk/uw_process/run.c
+Log:
+Adapted to newer gnokii API. Hint: do not forget to add the upwatch
+user to the group uucp when using gnokii...
+
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2007-11-26 10:22:33 UTC (rev 687)
++++ upwatch/trunk/uw_process/notify.c	2007-11-26 11:13:18 UTC (rev 688)
+@@ -170,9 +170,12 @@
+ #include &lt;gnokii.h&gt;
+ 
+ static char *lockfile = NULL;
+-static struct gn_statemachine state;
+-static gn_data data;
++static char *configfile = NULL;
++static char *configmodel = NULL;
+ 
++static struct gn_statemachine *state;
++static gn_data *data;
++
+ static void  gnokii_error_logger(const char *fmt, va_list ap)
+ {
+   char buf[512];
+@@ -182,42 +185,34 @@
+ 
+ static void busterminate(void)
+ {
+-  gn_sm_functions(GN_OP_Terminate, NULL, &amp;state);
+-  if (lockfile) gn_device_unlock(lockfile);
++        gn_lib_phone_close(state);
++        gn_lib_phoneprofile_free(&amp;state);
++        gn_lib_library_free();
+ }
+ 
+-static int businit(void)
++static void businit(void)
+ {
+-  gn_error error;
+-  char *aux;
+-  static atexit_registered = 0;
+-
+-  gn_data_clear(&amp;data);
+-
+-  aux = gn_cfg_get(gn_cfg_info, &quot;global&quot;, &quot;use_locking&quot;);
+-  /* Defaults to 'no' */
+-  if (aux &amp;&amp; !strcmp(aux, &quot;yes&quot;)) {
+-    lockfile = gn_device_lock(state.config.port_device);
+-    if (lockfile == NULL) {
+-      LOG(LOG_NOTICE, &quot;Lock file error. Cannot send SMS messages\n&quot;);
+-      return 0;
++  gn_error err;
++  if ((err = gn_lib_phoneprofile_load_from_file(configfile, configmodel, &amp;state)) != GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;%s\n&quot;, gn_error_print(err));
++    if (configfile) {
++      LOG(LOG_NOTICE, &quot;File: %s\n&quot;, configfile);
+     }
++    if (configmodel) {
++      LOG(LOG_NOTICE, &quot;Phone section: [phone_%s]\n&quot;, configmodel);
++    }
++    exit(2);
+   }
+ 
+   /* register cleanup function */
+-  if (!atexit_registered) {
+-    atexit_registered = 1;
+-    atexit(busterminate);
+-  }
++  atexit(busterminate);
+   /* signal(SIGINT, bussignal); */
+ 
+-  /* Initialise the code for the GSM interface. */
+-  error = gn_gsm_initialise(&amp;state);
+-  if (error != GN_ERR_NONE) {
+-    LOG(LOG_NOTICE, &quot;Telephone interface init failed: %s\n&quot;, gn_error_print(error));
+-    return 0;
++  if ((err = gn_lib_phone_open(state)) != GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;%s\n&quot;, gn_error_print(err));
++    exit(2);
+   }
+-  return 1;
++  data = &amp;state-&gt;sm_data;
+ }
+ #endif
+ 
+@@ -232,16 +227,7 @@
+   if (firsttime) {
+     gn_elog_handler = gnokii_error_logger;
+ 
+-    /* Read config file */
+-    if (gn_cfg_read_default() &lt; 0)
+-      return 0;
+-
+-    if (!gn_cfg_phone_load(&quot;&quot;, &amp;state))
+-      return 0;
+-
+-    if (businit()) {
+-      firsttime = 0;
+-    }
++    businit();
+   }
+   input_len = GN_SMS_MAX_LENGTH;
+ 
+@@ -257,15 +243,15 @@
+   }
+ 
+   if (!sms.smsc.number[0]) {
+-    data.message_center = calloc(1, sizeof(gn_sms_message_center));
+-    data.message_center-&gt;id = 1;
+-    if (gn_sm_functions(GN_OP_GetSMSCenter, &amp;data, &amp;state) == GN_ERR_NONE) {
+-      strcpy(sms.smsc.number, data.message_center-&gt;smsc.number);
+-      sms.smsc.type = data.message_center-&gt;smsc.type;
++    data-&gt;message_center = calloc(1, sizeof(gn_sms_message_center));
++    data-&gt;message_center-&gt;id = 1;
++    if (gn_sm_functions(GN_OP_GetSMSCenter, data, state) == GN_ERR_NONE) {
++      strcpy(sms.smsc.number, data-&gt;message_center-&gt;smsc.number);
++      sms.smsc.type = data-&gt;message_center-&gt;smsc.type;
+     } else {
+       LOG(LOG_WARNING, &quot;Cannot read the SMSC number from your phone.&quot;);
+     }
+-    free(data.message_center);
++    free(data-&gt;message_center);
+   }
+ 
+   if (!sms.smsc.type) sms.smsc.type = GN_GSM_NUMBER_Unknown;
+@@ -278,9 +264,9 @@
+     sms.user_data[++curpos].type = GN_SMS_DATA_None;
+   }
+ 
+-  data.sms = &sms;
++  data-&gt;sms = &sms;
+ 
+-  error = gn_sms_send(&amp;data, &amp;state); /* send it */
++  error = gn_sms_send(data, state); /* send it */
+ 
+   if (error == GN_ERR_NONE) {
+     LOG(LOG_NOTICE, &quot;SMS: %s&quot;, msg);
+@@ -288,6 +274,8 @@
+   }
+   LOG(LOG_NOTICE, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
+   if (debug &gt; 3) fprintf(stderr, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
++#else
++  LOG(LOG_NOTICE, &quot;SMS to %s (%s): SMS-support not compiled in&quot;, to, msg);
+ #endif
+   return 0;
+ }
+@@ -346,6 +334,8 @@
+                    OPT_ARG(FROM_NAME)
+   );
+   free(servername);
++  
++  LOG(LOG_NOTICE, &quot;notify: SMS=%s, email=%s&quot;,  t-&gt;def-&gt;sms, t-&gt;def-&gt;email);
+   if (t-&gt;def-&gt;email[0]) {
+     notified |= mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
+   }
+
+Modified: upwatch/trunk/uw_process/process.c
+===================================================================
+--- upwatch/trunk/uw_process/process.c	2007-11-26 10:22:33 UTC (rev 687)
++++ upwatch/trunk/uw_process/process.c	2007-11-26 11:13:18 UTC (rev 688)
+@@ -464,7 +464,7 @@
+ 
+   set_result_prev_color(t, prv); // indicate previous color in result set
+ 
+-  if (t-&gt;def-&gt;email[0]) { // and if email address given, add simple notification record
++  if (t-&gt;def-&gt;email[0] || t-&gt;def-&gt;sms[0]) { // and if email address given, add simple notification record
+     xmlNodePtr notify;
+ 
+     notify = xmlNewChild(t-&gt;cur, NULL, &quot;notify&quot;, NULL);
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2007-11-26 10:22:33 UTC (rev 687)
++++ upwatch/trunk/uw_process/run.c	2007-11-26 11:13:18 UTC (rev 688)
+@@ -293,7 +293,7 @@
+           if (row[0]) modules[i]-&gt;fuse  = (strcmp(row[0], &quot;yes&quot;) == 0) ? 1 : 0;
+           if (row[1]) modules[i]-&gt;lastseen = atoi(row[1]);
+         } else {
+-          LOG(LOG_NOTICE, &quot;probe record for id %u not found&quot;, modules[i]-&gt;class);
++          LOG(LOG_NOTICE, &quot;recordid %u not found in probe table (probetype='%s'), db=%s&quot;, modules[i]-&gt;class, modules[i]-&gt;module_name, OPT_ARG(DBNAME));
+         }
+         mysql_free_result(result);
+       }
+@@ -655,7 +655,7 @@
+             }
+           }
+         } else {
+-          LOG(LOG_NOTICE, &quot;probe record for id %u not found&quot;, modules[i]-&gt;class);
++          LOG(LOG_NOTICE, &quot;%s probe record for id %u not found&quot;, modules[i]-&gt;module_name, modules[i]-&gt;class);
+         }
+         mysql_free_result(result);
+       }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000222.html">[Upwatch-commits] r687 - upwatch/trunk/upwatch
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#223">[ date ]</a>
+              <a href="thread.html#223">[ thread ]</a>
+              <a href="subject.html#223">[ subject ]</a>
+              <a href="author.html#223">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

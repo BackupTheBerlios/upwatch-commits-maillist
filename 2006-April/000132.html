@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r601 - upwatch/trunk/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r601%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200604170034.k3H0YTcb011192%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000131.html">
+   <LINK REL="Next"  HREF="000133.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r601 - upwatch/trunk/uw_process</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r601%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200604170034.k3H0YTcb011192%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r601 - upwatch/trunk/uw_process">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Apr 17 02:34:29 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000131.html">[Upwatch-commits] r600 - in upwatch/trunk: uw_postgresql uw_process uw_smtp uw_snmpget uw_tcpconnect
+</A></li>
+        <LI>Next message: <A HREF="000133.html">[Upwatch-commits] r602 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#132">[ date ]</a>
+              <a href="thread.html#132">[ thread ]</a>
+              <a href="subject.html#132">[ subject ]</a>
+              <a href="author.html#132">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-17 02:33:29 +0200 (Mon, 17 Apr 2006)
+New Revision: 601
+
+Modified:
+   upwatch/trunk/uw_process/run.c
+Log:
+killed warnings in uw_process with casting of options
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2006-04-17 00:14:59 UTC (rev 600)
++++ upwatch/trunk/uw_process/run.c	2006-04-17 00:33:29 UTC (rev 601)
+@@ -395,7 +395,7 @@
+   if (HAVE_OPT(TRUST)) {
+     int i, found=0;
+     int     ct  = STACKCT_OPT( TRUST );
+-    char**  pn = STACKLST_OPT( TRUST );
++    char**  pn = (char **) STACKLST_OPT( TRUST );
+ 
+     while (ct--) {
+       for (i=0; modules[i]; i++) {
+@@ -458,7 +458,7 @@
+ {
+   int trust;
+   int     ct  = STACKCT_OPT( TRUST );
+-  char**  pn = STACKLST_OPT( TRUST );
++  char**  pn = (char **) &amp;STACKLST_OPT( TRUST );
+ 
+   for (trust=0; trust &lt; ct; trust++) {
+     if (strcmp(pn[trust], &quot;all&quot;) == 0) {
+@@ -589,7 +589,7 @@
+ {
+   int i;
+   int     ct  = STACKCT_OPT( INPUT );
+-  char**  pn = STACKLST_OPT( INPUT );
++  char**  pn = (char **) &amp;STACKLST_OPT( INPUT );
+ 
+   childpidcnt = ct;
+   if (debug &gt; 2) fprintf(stderr, &quot;pondering..\n&quot;);
+@@ -640,7 +640,7 @@
+               char subject[256];
+ 
+               sprintf(subject, &quot;UPWATCH: probe %s is lagging in processing&quot;, modules[i]-&gt;module_name);
+-              mail(OPT_ARG(NOC_MAIL), subject, subject, (time_t)NULL);
++              mail((char *) &amp;OPT_ARG(NOC_MAIL), subject, subject, (time_t)NULL);
+               my_query(modules[i]-&gt;db, 0, &quot;update probe set lagwarn = 'yes' where id = '%u'&quot;,
+                                            modules[i]-&gt;class);
+             }
+@@ -649,7 +649,7 @@
+               char subject[256];
+ 
+               sprintf(subject, &quot;UPWATCH: probe %s is up-to-date again&quot;, modules[i]-&gt;module_name);
+-              mail(OPT_ARG(NOC_MAIL), subject, subject, (time_t)NULL);
++              mail((char *) &amp;OPT_ARG(NOC_MAIL), subject, subject, (time_t)NULL);
+               my_query(modules[i]-&gt;db, 0, &quot;update probe set lagwarn = 'no' where id = '%u'&quot;,
+                                            modules[i]-&gt;class);
+             }
+@@ -703,7 +703,7 @@
+   guint lowtime, hightime; 
+   char *p;
+ 
+-  res.name = strtok(OPT_ARG(SUMMARIZE), &quot;,&quot;);
++  res.name = strtok((char *) &amp;OPT_ARG(SUMMARIZE), &quot;,&quot;);
+   lowtime = 0;
+   hightime = time(NULL);
+   p = strtok(NULL, &quot;,&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000131.html">[Upwatch-commits] r600 - in upwatch/trunk: uw_postgresql uw_process uw_smtp uw_snmpget uw_tcpconnect
+</A></li>
+	<LI>Next message: <A HREF="000133.html">[Upwatch-commits] r602 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#132">[ date ]</a>
+              <a href="thread.html#132">[ thread ]</a>
+              <a href="subject.html#132">[ subject ]</a>
+              <a href="author.html#132">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

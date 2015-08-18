@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r587 - in upwatch/trunk: common upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r587%20-%20in%20upwatch/trunk%3A%20common%20upwatch&In-Reply-To=%3C200604161254.k3GCsR1k030931%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000117.html">
+   <LINK REL="Next"  HREF="000119.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r587 - in upwatch/trunk: common upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r587%20-%20in%20upwatch/trunk%3A%20common%20upwatch&In-Reply-To=%3C200604161254.k3GCsR1k030931%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r587 - in upwatch/trunk: common upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Sun Apr 16 14:54:27 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000117.html">[Upwatch-commits] r586 - in upwatch/trunk: uw_dns uw_httpget uw_imap uw_iptraf
+</A></li>
+        <LI>Next message: <A HREF="000119.html">[Upwatch-commits] r588 - in upwatch/trunk: upwatch uw_dns uw_httpget uw_imap uw_purple uw_route uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#118">[ date ]</a>
+              <a href="thread.html#118">[ thread ]</a>
+              <a href="subject.html#118">[ subject ]</a>
+              <a href="author.html#118">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-16 14:53:50 +0200 (Sun, 16 Apr 2006)
+New Revision: 587
+
+Modified:
+   upwatch/trunk/common/main.c
+   upwatch/trunk/upwatch/generic.h
+   upwatch/trunk/upwatch/log.c
+Log:
+A compiler warning fix did not work as expected, something I didn't notice with my first tests.
+This is the correct fix, logging works again.
+
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2006-04-14 18:18:43 UTC (rev 586)
++++ upwatch/trunk/common/main.c	2006-04-16 12:53:50 UTC (rev 587)
+@@ -92,7 +92,7 @@
+ 
+   if (OPT_VALUE_STDERR)  _log2stderr  = TRUE;
+   if (OPT_VALUE_SYSLOG)  _log2syslog  = TRUE;
+-  if (HAVE_OPT(LOGFILE)) _logfilename = (char *) &amp;OPT_ARG(LOGFILE);
++  if (HAVE_OPT(LOGFILE)) _logfilename = OPT_ARG(LOGFILE);
+ 
+   LOG(LOG_NOTICE, &quot;start (Version %s-%s, date %s %s)&quot;, VERSION, RELEASE, __DATE__, __TIME__);
+   LOG(LOG_INFO, &quot;using GCC %s&quot;, __VERSION__);
+
+Modified: upwatch/trunk/upwatch/generic.h
+===================================================================
+--- upwatch/trunk/upwatch/generic.h	2006-04-14 18:18:43 UTC (rev 586)
++++ upwatch/trunk/upwatch/generic.h	2006-04-16 12:53:50 UTC (rev 587)
+@@ -43,7 +43,7 @@
+ extern int _logline;
+ extern int _log2stderr;
+ extern int _log2syslog;
+-extern char *_logfilename;
++extern const char *_logfilename;
+ 
+ extern int run(void);
+ extern int init(void);
+
+Modified: upwatch/trunk/upwatch/log.c
+===================================================================
+--- upwatch/trunk/upwatch/log.c	2006-04-14 18:18:43 UTC (rev 586)
++++ upwatch/trunk/upwatch/log.c	2006-04-16 12:53:50 UTC (rev 587)
+@@ -19,7 +19,7 @@
+ char *progname;
+ int _log2stderr;
+ int _log2syslog;
+-char *_logfilename;
++const char *_logfilename;
+ 
+ /****************************
+  logging utility function
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000117.html">[Upwatch-commits] r586 - in upwatch/trunk: uw_dns uw_httpget uw_imap uw_iptraf
+</A></li>
+	<LI>Next message: <A HREF="000119.html">[Upwatch-commits] r588 - in upwatch/trunk: upwatch uw_dns uw_httpget uw_imap uw_purple uw_route uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#118">[ date ]</a>
+              <a href="thread.html#118">[ thread ]</a>
+              <a href="subject.html#118">[ subject ]</a>
+              <a href="author.html#118">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,430 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r474 - in upwatch/trunk: . uw_send
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r474%20-%20in%20upwatch/trunk%3A%20.%20uw_send&In-Reply-To=%3C200502181320.j1IDKl0l032267%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000003.html">
+   <LINK REL="Next"  HREF="000005.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r474 - in upwatch/trunk: . uw_send</H1>
+    <B>Ron Arts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r474%20-%20in%20upwatch/trunk%3A%20.%20uw_send&In-Reply-To=%3C200502181320.j1IDKl0l032267%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r474 - in upwatch/trunk: . uw_send">raarts at sheep.berlios.de
+       </A><BR>
+    <I>Fri Feb 18 14:20:47 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000003.html">[Upwatch-commits] r473 - in upwatch/trunk: . doc upwatch util uw_sysstat xmbmon203
+</A></li>
+        <LI>Next message: <A HREF="000005.html">[Upwatch-commits] r475 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2005-02-18 14:20:46 +0100 (Fri, 18 Feb 2005)
+New Revision: 474
+
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/Makefile.am.common
+   upwatch/trunk/configure.ac
+   upwatch/trunk/uw_send/Makefile.am
+   upwatch/trunk/uw_send/run.c
+Log:
+
+The State Thread library we use has no x86_64 arch support.
+To support these platforms as upwatch clients I removed
+multiple thread support from uw_send, and made some
+adjustments to the build scripts. So now we can at
+least support 64 bits on the clients..
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/Makefile.am	2005-02-18 13:20:46 UTC (rev 474)
+@@ -68,7 +68,7 @@
+ if ENABLE_SERVER
+ SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} compat util scripts config common
+ else
+-SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} util config common
++SUBDIRS = upwatch ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
+ endif
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+
+Modified: upwatch/trunk/Makefile.am.common
+===================================================================
+--- upwatch/trunk/Makefile.am.common	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/Makefile.am.common	2005-02-18 13:20:46 UTC (rev 474)
+@@ -56,6 +56,6 @@
+ %.spec-requires %.spec-buildrequires %.spec-files: %.def
+ 	autogen -b $(&lt;:%.def=%) $(AGDEFINES) $(GENINCL) -T $(SPECTPL) $&lt;
+ 
+-CLEANFILES = $(program:%=%.c) $(program:%=%.h) $(program:%=%.1) Makefile.in \
++CLEANFILES = $(program:%=%.c) $(program:%=%.h) $(program:%=%.1) \
+   $(PROBFILES) $(SPECFILES) $(INITFILES)
+ 
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/configure.ac	2005-02-18 13:20:46 UTC (rev 474)
+@@ -215,11 +215,19 @@
+ then
+   LIBOPTS=/usr/lib/libopts.a
+ fi
++if test -f /usr/lib64/libopts.a
++then
++  LIBOPTS=/usr/lib64/libopts.a
++fi
+ 
+ if test -f /usr/local/lib/libopts.a
+ then
+   LIBOPTS=/usr/local/lib/libopts.a
+ fi
++if test -f /usr/local/lib64/libopts.a
++then
++  LIBOPTS=/usr/local/lib64/libopts.a
++fi
+ AC_SUBST(LIBOPTS)
+ 
+ ################## MYSQL
+@@ -380,6 +388,16 @@
+ AC_SUBST(LIBXML2_CFLAGS)
+ AC_SUBST(LIBXML2_LIBS)
+ 
++# STATE THREADS
++AC_CHECK_LIB(st, st_init, HAS_ST=yes, HAS_ST=no)
++if test ${HAS_ST} = yes ; then
++  LIBSTLIBS=-lst
++else
++  AC_MSG_ERROR([Sorry, we really need libst to continue])
++fi
++AC_SUBST(LIBST_CFLAGS)
++AC_SUBST(LIBST_LIBS)
++
+ # THREADS
+ AC_CHECK_LIB(pthread, pthread_create, HAS_PTHREADS=yes, HAS_PTHREADS=no)
+ if test ${HAS_PTHREADS} = yes ; then
+@@ -470,9 +488,9 @@
+ 	else
+ 		AC_MSG_ERROR([You really need libesmtp to compile upwatch server])
+ 	fi
+-	AM_CONDITIONAL(HAVE_LIBESMTP, test $HAVE_LIBESMTP -eq 1)
+ 	AC_SUBST(LIBESMTP_LIBS)
+ fi
++AM_CONDITIONAL(HAVE_LIBESMTP, test &quot;$HAVE_LIBESMTP&quot; = &quot;1&quot;)
+ 
+ # readline
+ AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lncurses)
+@@ -584,14 +602,19 @@
+ AC_CONFIG_FILES([doc/Makefile])
+ AC_CONFIG_FILES([config/Makefile])
+ AC_CONFIG_FILES([common/Makefile])
+-AC_CONFIG_FILES([st-1.4/Makefile])
+ AC_CONFIG_FILES([upwatch/Makefile])
+ AC_CONFIG_FILES([util/Makefile])
+ AC_CONFIG_FILES([uw_send/Makefile])
+ AC_CONFIG_FILES([uw_sysstat/Makefile])
+ AC_CONFIG_FILES([uw_sysstat/os/Makefile])
+ AC_CONFIG_FILES([uw_null/Makefile])
++AC_CONFIG_FILES([scripts/Makefile])
+ 
++if test &quot;$enable_server&quot; = &quot;yes&quot; -o &quot;$enable_monitors&quot; = &quot;yes&quot;
++then
++AC_CONFIG_FILES([st-1.4/Makefile])
++fi
++
+ # server 
+ if test &quot;$enable_server&quot; = &quot;yes&quot;
+ then
+@@ -602,7 +625,6 @@
+ AC_CONFIG_FILES([uw_route/Makefile])
+ AC_CONFIG_FILES([uw_process/Makefile])
+ AC_CONFIG_FILES([uw_syncprobes/Makefile])
+-AC_CONFIG_FILES([scripts/Makefile])
+ AC_CONFIG_FILES([compat/Makefile])
+ AC_CONFIG_FILES([compat/sometests/Makefile])
+ AC_CONFIG_FILES([compat/sometests/setproctitle/Makefile])
+
+Modified: upwatch/trunk/uw_send/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_send/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/uw_send/Makefile.am	2005-02-18 13:20:46 UTC (rev 474)
+@@ -1,6 +1,5 @@
+ include $(top_srcdir)/Makefile.am.path
+ 
+-AM_CFLAGS += -I$(INCL_ST) -DUSE_ST
+ program = uw_send
+ sbin_PROGRAMS = $(program)
+ man_MANS = uw_send.1
+@@ -9,7 +8,7 @@
+ 
+ uw_send_SOURCES = run.c uw_send.c uw_send.h uw_send.def $(SPECFILES) $(INITFILES)
+ uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ $(AM_CFLAGS)
+-uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBGLIB2_LIBS@
++uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/uw_send/run.c	2005-02-18 13:20:46 UTC (rev 474)
+@@ -8,7 +8,21 @@
+ #include &lt;netinet/in.h&gt;
+ 
+ #include &lt;generic.h&gt;
++#ifdef USE_ST
+ #include &lt;st.h&gt;
++#else
++int st_read(int fd, void *buf, size_t size, int timeout)
++{
++  return(read(fd, buf, size));
++}
++
++int st_write(int fd, void *buf, size_t size, int timeout)
++{
++  return(write(fd, buf, size));
++}
++#define st_netfd_fileno 
++#define st_netfd_t int
++#endif
+ #include &quot;uw_send.h&quot;
+ 
+ struct q_info {
+@@ -150,6 +164,7 @@
+     td = g_malloc0(sizeof(struct thr_data));
+     td-&gt;q = q;
+     td-&gt;filename = strdup(buffer);
++#ifdef USE_ST
+     if (st_thread_create(push, td, 0, 0) == NULL) { 
+       LOG(LOG_WARNING, &quot;couldn't create thread&quot;);
+       st_sleep(1);
+@@ -160,30 +175,43 @@
+     while (q-&gt;thread_count &gt;= q-&gt;maxthreads) {
+       st_usleep(10000); /* 10 ms */
+     }
++#else
++    push(td);
++#endif
+   }
+   g_dir_close(dir);
++#ifdef USE_ST
+   thread_count--;
++#endif
+   return NULL;
+ }
+ 
+ static void create_q_threads(gpointer key, gpointer value, gpointer user_data)
+ {
++#ifdef USE_ST
+   if (st_thread_create(read_queue, value, 0, 0) == NULL) { 
+     LOG(LOG_WARNING, &quot;couldn't create queue thread for %s&quot;, (char *)key);
+   } else {
+     if (debug &gt; 3) { LOG(LOG_DEBUG, &quot;created new thread&quot;); }
+     thread_count++;
+   }
++#else
++  read_queue(value);
++#endif
+ }
+ 
+ int run(void)
+ {
++#ifdef USE_ST
+   st_usleep(1); //force context switch so timers will work
++#endif
+   g_hash_table_foreach(hash, create_q_threads, NULL);
++#ifdef USE_ST
+   if (debug &gt; 3) { LOG(LOG_DEBUG, &quot;waiting for all threads to finish&quot;); }
+   while (thread_count) {
+     st_usleep(10000); /* 10 ms */
+   }
++#endif
+   if (HAVE_OPT(HANGUPSCRIPT) &amp;&amp; online) {
+     int status;
+ 
+@@ -246,6 +274,7 @@
+     goto quit;
+   }
+   uw_setproctitle(&quot;connecting to %s:%d&quot;, q-&gt;host, q-&gt;port);
++#ifdef USE_ST
+   if ((rmt_nfd = st_netfd_open_socket(sock)) == NULL) {
+     LOG(LOG_ERR, &quot;st_netfd_open_socket: %m&quot;, strerror(errno));
+     close(sock);
+@@ -259,18 +288,33 @@
+     q-&gt;fatal = 1;
+     goto quit;
+   }
++#else
++  rmt_nfd = sock;
++  if (connect(rmt_nfd, (struct sockaddr *)&amp;server, sizeof(server)) &lt; 0) {
++    LOG(LOG_ERR, &quot;%s:%d: %m&quot;, q-&gt;host, q-&gt;port, strerror(errno));
++    close(rmt_nfd);
++    q-&gt;fatal = 1;
++    goto quit;
++  }
++#endif
+ 
+   if (pushto(rmt_nfd, td)) {
+     LOG(LOG_INFO, &quot;uploaded %s&quot;, td-&gt;filename); 
+     unlink(td-&gt;filename);
+   }
++#ifdef USE_ST
+   st_netfd_close(rmt_nfd);
++#else
++  close(rmt_nfd);
++#endif
+ 
+ quit:
+   free(td-&gt;filename);
+   free(td);
++#ifdef USE_ST
+   q-&gt;thread_count--;
+   thread_count--;
++#endif
+   return NULL;
+ }
+ 
+@@ -306,7 +350,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading login request string&quot;); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -324,7 +368,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout writing %s&quot;, buffer); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_write: %m&quot;); 
++      LOG(LOG_WARNING, &quot;write: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -336,7 +380,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading OK enter password&quot;); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -354,7 +398,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout writing %s&quot;, buffer); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_write: %m&quot;); 
++      LOG(LOG_WARNING, &quot;write: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -366,7 +410,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading enter command&quot;); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -384,7 +428,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout writing %s&quot;, buffer); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_write: %m&quot;); 
++      LOG(LOG_WARNING, &quot;write: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -396,7 +440,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading DATA response&quot;); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -420,7 +464,7 @@
+       if (errno == ETIME) { 
+         LOG(LOG_WARNING, &quot;timeout writing %s&quot;, buffer); 
+       } else { 
+-        LOG(LOG_WARNING, &quot;st_write: %m&quot;); 
++        LOG(LOG_WARNING, &quot;write: %m&quot;); 
+       }
+       fclose(in);
+       return 0;
+@@ -447,7 +491,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading enter command&quot;); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -465,7 +509,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout writing %s&quot;, buffer); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_write: %m&quot;); 
++      LOG(LOG_WARNING, &quot;write: %m&quot;); 
+     }
+     return 0;
+   }
+@@ -477,7 +521,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, &quot;timeout reading QUIT response&quot;, buffer); 
+     } else { 
+-      LOG(LOG_WARNING, &quot;st_read: %m&quot;); 
++      LOG(LOG_WARNING, &quot;read: %m&quot;); 
+     }
+     return 0;
+   }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000003.html">[Upwatch-commits] r473 - in upwatch/trunk: . doc upwatch util uw_sysstat xmbmon203
+</A></li>
+	<LI>Next message: <A HREF="000005.html">[Upwatch-commits] r475 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#4">[ date ]</a>
+              <a href="thread.html#4">[ thread ]</a>
+              <a href="subject.html#4">[ subject ]</a>
+              <a href="author.html#4">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

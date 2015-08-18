@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r507 - upwatch/trunk/libstatgrab/src/libstatgrab
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-December/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r507%20-%20upwatch/trunk/libstatgrab/src/libstatgrab&In-Reply-To=%3C200512291554.jBTFsKV7004124%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000037.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r507 - upwatch/trunk/libstatgrab/src/libstatgrab</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r507%20-%20upwatch/trunk/libstatgrab/src/libstatgrab&In-Reply-To=%3C200512291554.jBTFsKV7004124%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r507 - upwatch/trunk/libstatgrab/src/libstatgrab">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Dec 29 16:54:20 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000037.html">[Upwatch-commits] r506 - upwatch/trunk/libstatgrab
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-12-29 16:54:20 +0100 (Thu, 29 Dec 2005)
+New Revision: 507
+
+Modified:
+   upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+Log:
+statfs -&gt; statvfs for BSD.
+
+
+Modified: upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+===================================================================
+--- upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2005-12-29 15:53:54 UTC (rev 506)
++++ upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2005-12-29 15:54:20 UTC (rev 507)
+@@ -122,7 +122,7 @@
+ #endif
+ #ifdef ALLBSD
+ 	int nummnt;
+-	struct statfs *mp;
++	struct statvfs *mp;
+ #endif
+ 
+ #ifdef ALLBSD
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000037.html">[Upwatch-commits] r506 - upwatch/trunk/libstatgrab
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

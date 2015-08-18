@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r553 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r553%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog%20upwatch&In-Reply-To=%3C200604061302.k36D2diZ023755%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000081.html">
+   <LINK REL="Next"  HREF="000085.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r553 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r553%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog%20upwatch&In-Reply-To=%3C200604061302.k36D2diZ023755%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r553 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr  6 15:02:39 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000081.html">[Upwatch-commits] r552 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000085.html">[Upwatch-commits] r554 - upwatch/trunk/st-1.6
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-06 15:02:37 +0200 (Thu, 06 Apr 2006)
+New Revision: 553
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/identd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/su
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-04-05 18:07:23 UTC (rev 552)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-04-06 13:02:37 UTC (rev 553)
+@@ -1,10 +1,11 @@
+-green [LOGDATE] (sm-msp-queue|sendmail)[PID]: [MSGID]: ((from=.*|to=.*|ctladdr=.*|size=.*|class=.*|pri=.*|nrcpts=.*|msgid=.*|proto=.*|dsn=.*|delay=.*|xdelay=.*|mailer=.*|relay=.*)[,\s]*)*
++green [LOGDATE] (sm-msp-queue|sendmail|sm-mta)[PID]: [MSGID]: ((from=.*|to=.*|ctladdr=.*|size=.*|class=.*|pri=.*|nrcpts=.*|msgid=.*|proto=.*|dsn=.*|delay=.*|xdelay=.*|mailer=.*|relay=.*)[,\s]*)*
+ green [LOGDATE] sendmail[PID]: alias database [PATH] (auto)?rebuilt by root
+ green [LOGDATE] sendmail[PID]: [PATH]: [NUM] aliases, longest [NUM] bytes, [NUM] bytes total
+ green [LOGDATE] sendmail[PID]: restarting on signal /usr/sbin/sendmail
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
++green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+ 
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/identd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/identd	2006-04-05 18:07:23 UTC (rev 552)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/identd	2006-04-06 13:02:37 UTC (rev 553)
+@@ -1 +1,2 @@
+ green [LOGDATE] identd[PID]: request_thread: read\([NUM], \.\.\., [NUM]\) failed: Connection reset by peer
++green [LOGDATE] identd[PID]: Connection from [HOSTNAME]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-04-05 18:07:23 UTC (rev 552)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-04-06 13:02:37 UTC (rev 553)
+@@ -69,3 +69,5 @@
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old prime
+ green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: No route to host
+ green [LOGDATE] sshd[PID]: input_userauth_request: invalid user [USER]
++green [LOGDATE] sshd[PID]: Authentication refused: bad ownership or modes for file [PATH]
++green [LOGDATE] sshd: sshd shutdown failed
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/su
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/su	2006-04-05 18:07:23 UTC (rev 552)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/su	2006-04-06 13:02:37 UTC (rev 553)
+@@ -1,2 +1,4 @@
+ green [LOGDATE] su: \(to [USER]\) [USER] on none
++green [LOGDATE] su: [USER] to [USER] on /dev/[WORD][NUM]
+ green [LOGDATE] su: pam_unix2: session finished for user [USER], service su
++green [LOGDATE] su[PID]: Warning! Could not relabel with user_u:object_r:devpts_t, not relabeling. 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-05 18:07:23 UTC (rev 552)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-06 13:02:37 UTC (rev 553)
+@@ -34,6 +34,7 @@
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): signal [NUM] received - finishing up
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): started [PID]: on [PATH]
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): st_read: Connection reset by peer
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): read: Connection reset by peer
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): unknown message:
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): uploaded [PATH]
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): user [WORD], pwd [WORD] not found
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000081.html">[Upwatch-commits] r552 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000085.html">[Upwatch-commits] r554 - upwatch/trunk/st-1.6
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

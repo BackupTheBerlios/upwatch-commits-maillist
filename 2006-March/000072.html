@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r541%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200603311309.k2VD9AGj019164%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000071.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r541%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200603311309.k2VD9AGj019164%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Mar 31 15:09:10 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000071.html">[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-31 15:08:59 +0200 (Fri, 31 Mar 2006)
+New Revision: 541
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+Log:
+Sync regexes.
+One note: I made all gconfd messages green. Since gconfd logs in all languages it knows this is a mission impossible. Besides, I can't image gconfd has something usefull to tell us....
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-31 13:08:59 UTC (rev 541)
+@@ -41,9 +41,13 @@
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX &lt;CRLF&gt;\.&lt;CRLF&gt; workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
++green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Network is unreachable \(port [NUM]\)
++green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME] \[[IPADDR]\]: read timeout \(port [NUM]\)
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+ red [LOGDATE] postfix/smtpd[PID]: lookup table has changed -- exiting
+ red [LOGDATE] postfix/trivial-rewrite[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/smtp[PID]: fatal:
++red [LOGDATE] postfix/sendmail[PID]: fatal: [WORD]\([NUM]\): Message file too big [PATH]:
++red [LOGDATE] postfix/postdrop[PID]: warning: uid=[NUM]: File too large
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd	2006-03-31 13:08:59 UTC (rev 541)
+@@ -7,4 +7,4 @@
+ green [LOGDATE] gconfd \([USER]-[NUM]\): adres gevonden &quot;xml:readonly:[PATH]&quot; naar een alleen-lezen configuratiebron op positie [NUM]
+ green [LOGDATE] gconfd \([USER]-[NUM]\): Resolved address &quot;xml:readwrite:[PATH]&quot; to a writable config source at position [NUM]
+ green [LOGDATE] gconfd \([USER]-[NUM]\): Adres gevonden &quot;xml:readwrite:[PATH]&quot; naar een schrijfbare configuratiebron op positie [NUM]
+-
++green [LOGDATE] gconfd
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,2 +1,3 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
++green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
+ 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 13:08:59 UTC (rev 541)
+@@ -321,6 +321,7 @@
+ green [LOGDATE] kernel: IPSEC EVENT: KLIPS device ipsec[NUM] shut down\.
+ green [LOGDATE] kernel: ip_tables: \(C\) [NUM]-[NUM] Netfilter core team
+ green [LOGDATE] kernel: iptables: [WORD] IN=
++green [LOGDATE] kernel: ipta[NUM] 
+ green [LOGDATE] kernel: IPv[NUM] over IPv[NUM] tunneling driver
+ green [LOGDATE] kernel: IPVS: Connection hash table configured \(size=[NUM], memory=[NUM]Kbytes\)
+ green [LOGDATE] kernel: IPX Portions Copyright \(c\) [NUM]
+@@ -406,6 +407,7 @@
+ green [LOGDATE] kernel: NET[NUM]: Linux TCP/IP
+ green [LOGDATE] kernel: NET[NUM]: Unix domain sockets
+ green [LOGDATE] kernel: NET: Registered protocol family [NUM]
++green [LOGDATE] kernel: NET: [NUM] messages suppressed.
+ green [LOGDATE] kernel: nfsd: last server has exited
+ green [LOGDATE] kernel: nfs: server [IPADDR] OK
+ green [LOGDATE] kernel: nfsd: unexporting all filesystems
+@@ -704,3 +706,4 @@
+ red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
+ red [LOGDATE] kernel: attempt to access beyond end of device
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
++red [LOGDATE] kernel: VM: killing process
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils	2006-03-31 13:08:59 UTC (rev 541)
+@@ -6,5 +6,5 @@
+ green [LOGDATE] rpc.mountd: authenticated (un)?mount request from [HOSTNAME]:[NUM] for [PATH] \([PATH]\)
+ green [LOGDATE] rpc.mountd: refused mount request from [HOSTNAME] for [PATH] \([PATH]\)
+ green [LOGDATE] rpc.statd[PID]: Caught signal [NUM], un-registering and exiting\.
++green [LOGDATE] rpc.mountd: Caught signal [NUM], un-registering and exiting.
+ 
+-
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,2 +1,3 @@
+ green [LOGDATE] smb: nmbd shutdown failed
+ green [LOGDATE] smb: smbd shutdown failed
++green [LOGDATE] mount.smbfs[PID]: [[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]] client/smbmount.c:send_fs_socket\([NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,6 +1,6 @@
+ green [LOGDATE] sophie: [PATH] placed in the background
+-green [LOGDATE] sophie[PID]: Callbacks\?       : yes 
+-green [LOGDATE] sophie[PID]: Error strings\?   : yes 
++green [LOGDATE] sophie[PID]: Callbacks\?       : [WORD] 
++green [LOGDATE] sophie[PID]: Error strings\?   : [WORD] 
+ green [LOGDATE] sophie[PID]: File '[PATH]' infected with virus '.*' 
+ green [LOGDATE] sophie[PID]: limit_classif    : [NUM] 
+ green [LOGDATE] sophie[PID]: limit_decompr    : [NUM] 
+@@ -16,19 +16,19 @@
+ green [LOGDATE] sophie[PID]: notice           : SIGNAL '[NUM]' caught - cleaning up and exiting\. 
+ green [LOGDATE] sophie[PID]: [PATH] Placed in the background \[PID: [NUM]\] 
+ green [LOGDATE] sophie[PID]: PID file         : [PATH] 
+-green [LOGDATE] sophie[PID]: Running as user  : mail 
++green [LOGDATE] sophie[PID]: Running as user  : [WORD]
+ green [LOGDATE] sophie[PID]: SAVI config      : [PATH] 
+-green [LOGDATE] sophie[PID]: Show virus name\? : yes 
++green [LOGDATE] sophie[PID]: Show virus name\? : [WORD]
+ ignore [LOGDATE] sophie[PID]: Error strings
+-green [LOGDATE] sophie[PID]: socket_check     : yes 
+-green [LOGDATE] sophie[PID]: Socket group     : mail 
++green [LOGDATE] sophie[PID]: socket_check     : [WORD]
++green [LOGDATE] sophie[PID]: Socket group     : [WORD]
+ green [LOGDATE] sophie[PID]: Socket path      : [PATH] 
+ green [LOGDATE] sophie[PID]: Sophie child has timed-out \(no data received in [NUM] seconds\) - process killed 
+ green [LOGDATE] sophie[PID]: Sophie IDE       : Sophos IDE version [NUM]\.[NUM] \(detects [NUM] viruses\) 
+ green [LOGDATE] sophie[PID]: Sophie version   : [NUM]\.[NUM]rc[NUM] 
+ green [LOGDATE] sophie[PID]: Sophos engine    : Sophos engine version [NUM]\.[NUM] 
+ green [LOGDATE] sophie[PID]: Timeout          : [NUM] seconds 
+-green [LOGDATE] sophie[PID]: Timestamps\?      : no 
++green [LOGDATE] sophie[PID]: Timestamps\?      : [WORD]
+ green [LOGDATE] sophie[PID]: Umask            : [NUM] 
+ green [LOGDATE] sophie[PID]: warning          : Scan result =&gt; '[PATH]' infected with virus '.*' 
+ green [LOGDATE] sophie[PID]: warning          : Socket '[PATH]' already exists! 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-03-31 13:08:59 UTC (rev 541)
+@@ -66,3 +66,4 @@
+ ignore [LOGDATE] sshd[PID]: syslogin_perform_logout: logout\(\) returned an error
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old modulus
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old prime
++green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: No route to host
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000071.html">[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r574 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r574%20-%20upwatch/trunk&In-Reply-To=%3C200604131548.k3DFmJ6Q025354%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000104.html">
+   <LINK REL="Next"  HREF="000106.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r574 - upwatch/trunk</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r574%20-%20upwatch/trunk&In-Reply-To=%3C200604131548.k3DFmJ6Q025354%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r574 - upwatch/trunk">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr 13 17:48:19 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000104.html">[Upwatch-commits] r573 - upwatch/trunk/st-1.6
+</A></li>
+        <LI>Next message: <A HREF="000106.html">[Upwatch-commits] r575 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-13 17:48:13 +0200 (Thu, 13 Apr 2006)
+New Revision: 574
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Break ./configure --prefix= on Linux, make rpm can't handle it yet.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-04-13 13:52:03 UTC (rev 573)
++++ upwatch/trunk/configure.ac	2006-04-13 15:48:13 UTC (rev 574)
+@@ -44,18 +44,18 @@
+ case $host in
+   *-*-linux*) 
+     linux=true
+-    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
+-    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
+-    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
+-    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if ! test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
+-    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
++    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
++    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
++    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
++    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
++    if test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
++    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
+     LDFLAGS=&quot;${LDFLAGS} -L/usr/lib64&quot;
+     ;;
+   *-*-freebsd*) 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000104.html">[Upwatch-commits] r573 - upwatch/trunk/st-1.6
+</A></li>
+	<LI>Next message: <A HREF="000106.html">[Upwatch-commits] r575 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

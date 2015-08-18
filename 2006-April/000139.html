@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r607%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C444812A5.1030703%40nedbsd.nl%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000138.html">
+   <LINK REL="Next"  HREF="000140.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat</H1>
+    <B>Wijnand Wiersma</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r607%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C444812A5.1030703%40nedbsd.nl%3E"
+       TITLE="[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat">wijnand at nedbsd.nl
+       </A><BR>
+    <I>Fri Apr 21 01:00:53 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000138.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000140.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#139">[ date ]</a>
+              <a href="thread.html#139">[ thread ]</a>
+              <a href="subject.html#139">[ subject ]</a>
+              <a href="author.html#139">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>wijnand at BerliOS tried to tell me:
+&gt;<i> Author: wijnand
+</I>&gt;<i> Date: 2006-04-21 00:57:28 +0200 (Fri, 21 Apr 2006)
+</I>&gt;<i> New Revision: 607
+</I>&gt;<i>
+</I>&gt;<i> Modified:
+</I>&gt;<i>    upwatch/trunk/uw_sysstat/run.c
+</I>&gt;<i>    upwatch/trunk/uw_sysstat/uw_sysstat.def
+</I>&gt;<i> Log:
+</I>&gt;<i> Remove the domain option from the code too.
+</I>&gt;<i>   
+</I>The uw_sysstat.def part was a accident.
+
+But now we have a new option, I really should implement it :-)
+I can't test the diff right now, but I will post it here for review 
+(Ihope mozilla does the right thing):
+
+Index: run.c
+===================================================================
+--- run.c       (revision 607)
++++ run.c       (working copy)
+@@ -31,6 +31,10 @@
+   long long offset;
+ } errlogspec[256];
+ 
++struct _ignorediskfreespec {
++  char *path;
++} ignorediskfreespec[256];
++
+ typedef struct {
+   sg_cpu_percents *cpu;
+   sg_mem_stats *mem;
+@@ -508,6 +512,8 @@
+ {
+   float fullest = 0.0;
+   char info[32768];
++  int i;
++  int ignore;
+ 
+   if (st.disk) {
+     sg_fs_stats *disk_stat_ptr = st.disk;
+@@ -515,13 +521,18 @@
+ 
+     for (counter=0; counter &lt; st.disk_entries; counter++){
+       float use;
+-      use = 100.00 * ((float) disk_stat_ptr-&gt;used / (float) 
+(disk_stat_ptr-&gt;used + disk_stat_ptr-&gt;avail));
+-      if (use &gt; fullest) fullest = use;
+-      disk_stat_ptr++;
++      for (i=0, ignore=0; ignorediskfreespec[i].path; i++) {
++       if (strcmp(disk_stat_ptr-&gt;device_name, 
+ignorediskfreespec[i].path) ==0 ) ignore=1;
++      }
++     if (ignore == 0 ) {
++        use = 100.00 * ((float) disk_stat_ptr-&gt;used / (float) 
+(disk_stat_ptr-&gt;used + disk_stat_ptr-&gt;avail));
++        if (use &gt; fullest) fullest = use;
++        disk_stat_ptr++;
++      }
+     }
+   }
+ 
+-  if (fullest &gt; OPT_VALUE_DISKFREE_YELLOW) { // if some disk is more 
+then 80% full give `df` listing
++  if (fullest &gt; OPT_VALUE_DISKFREE_YELLOW) { // if some disk is more 
+then the yellow treshold full give `df` listing
+     char cmd[1024];
+     char buffer[24];
+     FILE *in;
+@@ -628,6 +639,7 @@
+   node = newnode(doc, &quot;diskfree&quot;);
+   add_diskfree_info(node);
+   color = xmlGetPropInt(node, &quot;color&quot;);
++
+   if (color &gt; highest_color) highest_color = color;
+ 
+   if (HAVE_OPT(HPQUEUE) &amp;&amp; (highest_color != prv_highest_color)) {
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: smime.p7s
+Type: application/x-pkcs7-signature
+Size: 3497 bytes
+Desc: S/MIME Cryptographic Signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/upwatch-commits/attachments/20060421/e5d83001/attachment.bin">https://lists.berlios.de/pipermail/upwatch-commits/attachments/20060421/e5d83001/attachment.bin</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000138.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000140.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#139">[ date ]</a>
+              <a href="thread.html#139">[ thread ]</a>
+              <a href="subject.html#139">[ subject ]</a>
+              <a href="author.html#139">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

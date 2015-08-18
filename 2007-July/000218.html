@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r683 - in upwatch/trunk: common doc
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-July/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r683%20-%20in%20upwatch/trunk%3A%20common%20doc&In-Reply-To=%3C200707101945.l6AJjcFv019263%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000217.html">
+   <LINK REL="Next"  HREF="000219.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r683 - in upwatch/trunk: common doc</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r683%20-%20in%20upwatch/trunk%3A%20common%20doc&In-Reply-To=%3C200707101945.l6AJjcFv019263%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r683 - in upwatch/trunk: common doc">raarts at mail.berlios.de
+       </A><BR>
+    <I>Tue Jul 10 21:45:38 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000217.html">[Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000219.html">[Upwatch-commits] r684 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#218">[ date ]</a>
+              <a href="thread.html#218">[ thread ]</a>
+              <a href="subject.html#218">[ subject ]</a>
+              <a href="author.html#218">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-07-10 21:45:37 +0200 (Tue, 10 Jul 2007)
+New Revision: 683
+
+Modified:
+   upwatch/trunk/common/main.c
+   upwatch/trunk/doc/Makefile.am
+   upwatch/trunk/doc/program-guide.txt
+Log:
+Ignore xmllint exit value.
+The newer autogen versions chekc if options are allowed or not.
+Our use is based on the fact that unknown options are skipped.
+So we had a problem. This fix restores the old autogen behaviour.
+
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2007-07-02 08:10:45 UTC (rev 682)
++++ upwatch/trunk/common/main.c	2007-07-10 19:45:37 UTC (rev 683)
+@@ -83,6 +83,10 @@
+   }
+   //fprintf(stderr, &quot;%s\n&quot;, progname);
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   umask(002); // all created files must be group-writable
+   arg_ct = optionProcess( &amp;progOptions, argc, newArgv );
+   argc -= arg_ct;
+
+Modified: upwatch/trunk/doc/Makefile.am
+===================================================================
+--- upwatch/trunk/doc/Makefile.am	2007-07-02 08:10:45 UTC (rev 682)
++++ upwatch/trunk/doc/Makefile.am	2007-07-10 19:45:37 UTC (rev 683)
+@@ -30,7 +30,7 @@
+ endif
+ 
+ upwatch.html: ${UPWATCH_SOURCE}
+-	xmllint --valid --noout upwatch.xml
++	-xmllint --valid --noout upwatch.xml
+ 	-${XSLTPROC} --nonet -o upwatch.html upwatch.xsl upwatch.xml
+ 	touch upwatch.html
+ 
+@@ -46,7 +46,7 @@
+ 	touch upwatch.pdf
+ 
+ admin-guide.html: ${ADMIN_SOURCE}
+-	xmllint --valid --noout admin-guide.xml
++	-xmllint --valid --noout admin-guide.xml
+ 	-${XSLTPROC} --nonet -o admin-guide.html upwatch.xsl admin-guide.xml
+ 	touch admin-guide.html
+ 
+@@ -59,7 +59,7 @@
+ 	touch admin-guide.pdf
+ 
+ program-guide.html: ${PROGRAM_SOURCE}
+-	xmllint --valid --noout program-guide.xml
++	-xmllint --valid --noout program-guide.xml
+ 	-${XSLTPROC} --nonet -o program-guide.html upwatch.xsl program-guide.xml
+ 	touch program-guide.html
+ 
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000217.html">[Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000219.html">[Upwatch-commits] r684 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#218">[ date ]</a>
+              <a href="thread.html#218">[ thread ]</a>
+              <a href="subject.html#218">[ subject ]</a>
+              <a href="author.html#218">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

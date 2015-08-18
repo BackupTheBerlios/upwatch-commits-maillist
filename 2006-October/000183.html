@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r649 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r649%20-%20upwatch/trunk&In-Reply-To=%3C200610032223.k93MNeDJ003414%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000184.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r649 - upwatch/trunk</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r649%20-%20upwatch/trunk&In-Reply-To=%3C200610032223.k93MNeDJ003414%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r649 - upwatch/trunk">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Wed Oct  4 00:23:40 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000184.html">[Upwatch-commits] r650 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#183">[ date ]</a>
+              <a href="thread.html#183">[ thread ]</a>
+              <a href="subject.html#183">[ subject ]</a>
+              <a href="author.html#183">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-10-04 00:23:39 +0200 (Wed, 04 Oct 2006)
+New Revision: 649
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+While trying to port upwatch to my mac mini (macppc) OpenBSD-CURRENT install I found out that options.h has been moved to $incpath/autogen/options.h which is a sane place so recognize it.
+
+It is nice to know this was the only change to make this happen ;-)
+The hardware sensors will not work yet but I knew this in advance, I should make the OpenBSD sensors support a separate include where I can specify all availlable stuff and map it to names uw_sysstat expects.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-08-29 09:08:32 UTC (rev 648)
++++ upwatch/trunk/configure.ac	2006-10-03 22:23:39 UTC (rev 649)
+@@ -294,6 +294,10 @@
+   then
+     LIBOPTS_CFLAGS=&quot;-I${incpath}/autoopts&quot;
+   fi
++  if test -f $incpath/autogen/options.h
++  then
++    LIBOPTS_CFLAGS=&quot;-I${incpath}/autogen&quot;
++  fi
+ done
+ 
+ AC_SUBST(LIBOPTS_CFLAGS)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000184.html">[Upwatch-commits] r650 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#183">[ date ]</a>
+              <a href="thread.html#183">[ thread ]</a>
+              <a href="subject.html#183">[ subject ]</a>
+              <a href="author.html#183">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

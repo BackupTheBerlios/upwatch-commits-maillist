@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r620 - in upwatch/trunk: . util uw_acceptbb uw_dns uw_iptraf uw_null uw_route uw_send uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r620%20-%20in%20upwatch/trunk%3A%20.%20util%20uw_acceptbb%20uw_dns%20uw_iptraf%20uw_null%20uw_route%20uw_send%20uw_sysstat&In-Reply-To=%3C200606061937.k56Jbe6q023269%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000155.html">
+   <LINK REL="Next"  HREF="000154.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r620 - in upwatch/trunk: . util uw_acceptbb uw_dns uw_iptraf uw_null uw_route uw_send uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r620%20-%20in%20upwatch/trunk%3A%20.%20util%20uw_acceptbb%20uw_dns%20uw_iptraf%20uw_null%20uw_route%20uw_send%20uw_sysstat&In-Reply-To=%3C200606061937.k56Jbe6q023269%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r620 - in upwatch/trunk: . util uw_acceptbb uw_dns uw_iptraf uw_null uw_route uw_send uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Jun  6 21:37:40 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000155.html">[Upwatch-commits] r619 - in upwatch/trunk/libstatgrab-0.13: . docs docs/libstatgrab docs/saidar docs/statgrab examples src src/libstatgrab src/saidar src/statgrab
+</A></li>
+        <LI>Next message: <A HREF="000154.html">[Upwatch-commits] r621 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#153">[ date ]</a>
+              <a href="thread.html#153">[ thread ]</a>
+              <a href="subject.html#153">[ subject ]</a>
+              <a href="author.html#153">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-06 21:37:14 +0200 (Tue, 06 Jun 2006)
+New Revision: 620
+
+Modified:
+   upwatch/trunk/Makefile.am.common
+   upwatch/trunk/util/uwq_options.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_iptraf/uw_iptraf.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_send/uw_send.def
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+binaries that don't use a database connection should not know anything about the database options, they should not even print they are ignored when doing a program -h for example. 
+
+Only uwq is still having trouble, I will investigate that before removing the dbase_options_ign.def include.
+
+
+Modified: upwatch/trunk/Makefile.am.common
+===================================================================
+--- upwatch/trunk/Makefile.am.common	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/Makefile.am.common	2006-06-06 19:37:14 UTC (rev 620)
+@@ -11,8 +11,7 @@
+ SPECTPL = $(top_srcdir)/common/spec.tpl
+ PROBTPL = $(top_srcdir)/common/probe.tpl
+ INITTPL = $(top_srcdir)/common/init.tpl
+-CMDDEF  = $(top_srcdir)/common/generic_options.def $(top_srcdir)/common/dbase_options.def \
+- $(top_srcdir)/common/minimal_options.def
++CMDDEF  = $(top_srcdir)/common/generic_options.def $(top_srcdir)/common/minimal_options.def
+ PROBDEF = $(top_srcdir)/common/probe_generic.def
+ if CYGWIN
+ GENINCL = -L /usr/local/share/autogen -L $(top_srcdir)/common
+
+Modified: upwatch/trunk/util/uwq_options.def
+===================================================================
+--- upwatch/trunk/util/uwq_options.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/util/uwq_options.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -36,6 +36,6 @@
+ #include license_gpl.def
+ #include minimal_options.def
+ 
+-#include dbase_options_ign.def
+ #include generic_options_ign.def
+ #include option_realm_ign.def
++#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -77,4 +77,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options.def
+ 
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_dns/uw_dns.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -95,4 +95,3 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
+
+Modified: upwatch/trunk/uw_iptraf/uw_iptraf.def
+===================================================================
+--- upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -136,3 +136,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
++
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_null/uw_null.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -79,7 +79,6 @@
+ };
+ 
+ #include license_gpl.def
+-#include dbase_options.def
+ #include generic_options.def
+ #include option_realm_ign.def
+ #include minimal_options.def
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_route/uw_route.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -10,7 +10,7 @@
+ homerc        = &quot;$$/upwatch.conf&quot;;
+ homerc        = &quot;$$/uw_route.conf&quot;;
+ detail        = 
+-'uw_route reads probe resultfiles, and stores them in the database';
++'uw_route reads probe resultfiles, and stores them in the right processing queue';
+ 
+ // this section is for the generated specfile
+ spec-requires = &quot;/usr/bin/mysql glib2&quot;;
+
+Modified: upwatch/trunk/uw_send/uw_send.def
+===================================================================
+--- upwatch/trunk/uw_send/uw_send.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_send/uw_send.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -147,4 +147,3 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
+-#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-06-06 19:32:47 UTC (rev 619)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-06-06 19:37:14 UTC (rev 620)
+@@ -234,5 +234,3 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
+-#include dbase_options_ign.def
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000155.html">[Upwatch-commits] r619 - in upwatch/trunk/libstatgrab-0.13: . docs docs/libstatgrab docs/saidar docs/statgrab examples src src/libstatgrab src/saidar src/statgrab
+</A></li>
+	<LI>Next message: <A HREF="000154.html">[Upwatch-commits] r621 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#153">[ date ]</a>
+              <a href="thread.html#153">[ thread ]</a>
+              <a href="subject.html#153">[ subject ]</a>
+              <a href="author.html#153">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

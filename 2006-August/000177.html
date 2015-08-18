@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r643 - in upwatch/libdbi: common config
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r643%20-%20in%20upwatch/libdbi%3A%20common%20config&In-Reply-To=%3C200608221525.k7MFPkc7000223%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000176.html">
+   <LINK REL="Next"  HREF="000178.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r643 - in upwatch/libdbi: common config</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r643%20-%20in%20upwatch/libdbi%3A%20common%20config&In-Reply-To=%3C200608221525.k7MFPkc7000223%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r643 - in upwatch/libdbi: common config">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Aug 22 17:25:46 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000176.html">[Upwatch-commits] r642 - in upwatch/libdbi: common config
+</A></li>
+        <LI>Next message: <A HREF="000178.html">[Upwatch-commits] r644 - upwatch/libdbi/config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#177">[ date ]</a>
+              <a href="thread.html#177">[ thread ]</a>
+              <a href="subject.html#177">[ subject ]</a>
+              <a href="author.html#177">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-22 17:25:45 +0200 (Tue, 22 Aug 2006)
+New Revision: 643
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+   upwatch/libdbi/config/upwatch-common.mysql
+   upwatch/libdbi/config/upwatch-full.mysql
+   upwatch/libdbi/config/upwatch-realm.mysql
+Log:
+Use correct SQL.
+All queries for the default database are fixed now except for &quot;INSERT into probe&quot; for each probe.
+I will fix that later when my eyes feel better after looking to that autogen(hell!) crap.
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 15:25:45 UTC (rev 643)
+@@ -110,7 +110,7 @@
+       (error (sprintf &quot;addbyhand not set for probe %s&quot; (get &quot;probe.name&quot;)) )
+   )
+ +]
+-INSERT into pr_[+name+]_def set id = '1', description = 'empty';
++INSERT into pr_[+name+]_def (id, description) VALUES (1, 'empty');
+ INSERT into probe set id = '[+id+]', name = '[+name+]', description = '[+descrip+]', [+
+  if (exist? &quot;expiry&quot;) +]expiry = '[+expiry+]', [+ endif +]addbyhand = '[+addbyhand+]', [+
+  if (exist? &quot;fuse&quot;) +]fuse = '[+fuse+]', [+ endif +]class = '[+class+]', graphgroup = '[+graphgroup+]', graphtypes = '[+graphtypes+]', comment = '[+comment+]';[+ ENDFOR probe +][+
+
+Modified: upwatch/libdbi/config/upwatch-common.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-common.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-common.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -1,5 +1,3 @@
+-
+-
+ --
+ -- Table structure for table 'probe'
+ --
+@@ -22,5 +20,4 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
+-
++INSERT INTO probe ( id, name, addbyhand, addbycust, comment ) VALUES ( 1,'empty','no','no','do NOT delete!');
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -9,8 +9,8 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_group set id = '1', name = 'empty', description = 'do NOT delete!';
+-INSERT INTO pr_group set id = '2', name = 'Default';
++INSERT INTO pr_group (id, name, description ) VALUES (1,'empty','do NOT delete!');
++INSERT INTO pr_group (id, name) VALUES (2,'Default');
+ 
+ --
+ -- Table structure for table 'pr_hist'
+@@ -18,12 +18,12 @@
+ 
+ CREATE TABLE pr_hist (
+   id int unsigned NOT NULL auto_increment,
+-  server int unsigned NOT NULL default '1',
++  server int unsigned NOT NULL default 1,
+   hide enum('yes', 'no') not null default 'no',
+-  contact int unsigned NOT NULL default '1',  -- user field: pointer to contact database
+-  class smallint unsigned NOT NULL default '1',
+-  probe int unsigned NOT NULL default '1',
+-  pgroup int unsigned NOT NULL default '1',     -- group id
++  contact int unsigned NOT NULL default 1,  -- user field: pointer to contact database
++  class smallint unsigned NOT NULL default 1,
++  probe int unsigned NOT NULL default 1,
++  pgroup int unsigned NOT NULL default 1,     -- group id
+   stattime int unsigned NOT NULL default '0',
+   prv_color smallint unsigned NOT NULL default '200',
+   color smallint unsigned NOT NULL default '200',
+@@ -35,7 +35,7 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
++INSERT INTO pr_hist ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+ -- Table structure for table 'pr_status'
+@@ -43,11 +43,11 @@
+ 
+ CREATE TABLE pr_status (
+   id int unsigned NOT NULL auto_increment,
+-  class int unsigned NOT NULL default '1',
+-  probe int unsigned NOT NULL default '1',
+-  server int unsigned NOT NULL default '1',
++  class int unsigned NOT NULL default 1,
++  probe int unsigned NOT NULL default 1,
++  server int unsigned NOT NULL default 1,
+   hide enum('yes', 'no') not null default 'no',
+-  contact int unsigned NOT NULL default '1',  -- user field: pointer to contact database
++  contact int unsigned NOT NULL default 1,  -- user field: pointer to contact database
+   yellow float NOT NULL default '0',
+   red float NOT NULL default '0',
+   stattime int unsigned NOT NULL default '0',
+@@ -63,11 +63,13 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_status set id = '1', message = 'do NOT delete!';
++INSERT INTO pr_status ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+ -- Table structure for table 'rack'
+ --
++
++-- FIXME: this table does not belong in the upwatch database
+   
+ CREATE TABLE rack (
+   id int unsigned NOT NULL auto_increment,
+@@ -78,7 +80,7 @@
+   PRIMARY KEY  (id) 
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO rack set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO rack ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'server'
+@@ -93,7 +95,7 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO server set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO server ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'notify'
+@@ -111,7 +113,7 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO notify set id = '1', name = 'empty', status = 'disabled', comment = 'do NOT delete!';
++INSERT INTO notify ( id, name, status, comment ) VALUES ( 1,'empty','disabled','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'notifycond'
+@@ -136,5 +138,5 @@
+   KEY notify_key (notify)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO notifycond set id = '1', notify = '1';
++INSERT INTO notifycond ( id, notify, comment ) VALUES ( 1,1,'do NOT delete!');
+ 
+
+Modified: upwatch/libdbi/config/upwatch-realm.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-realm.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-realm.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -17,7 +17,7 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_realm set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO pr_realm ( id, name, comment ) VALUES ( 1, 'empty','do NOT delete!');
+ 
+ CREATE TABLE pr_regex (
+   id int unsigned NOT NULL auto_increment,
+@@ -29,7 +29,7 @@
+   UNIQUE KEY packex (package,regex)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_regex set id = '1', logtype = 'none', package = 'none', action = 'green', regex = 'do NOT delete!';
++INSERT INTO pr_regex ( id, logtype, package, action, regex ) VALUES (1,'none','none','green','do NOT delete!');
+ 
+ CREATE TABLE pr_macros (
+   id int unsigned NOT NULL auto_increment,
+@@ -39,7 +39,7 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY typename (logtype,name)
+ ) TYPE=MyISAM;
+-INSERT INTO pr_macros set id = '1', logtype = 'none', name = 'empty', regex = 'do NOT delete!';
++INSERT INTO pr_macros (id, logtype, name, regex) VALUES ( 1,'none','empty','do NOT delete!');
+ 
+ CREATE TABLE pr_rmacros (
+   id int unsigned NOT NULL auto_increment,
+@@ -49,7 +49,7 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY typex (logtype,regex)
+ ) TYPE=MyISAM;
+-INSERT INTO pr_rmacros set id = '1', logtype = 'none', name = 'empty', regex = 'do NOT delete!';
++INSERT INTO pr_rmacros (id, logtype, name, regex) VALUES ( 1,'none','empty','do NOT delete!');
+ 
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000176.html">[Upwatch-commits] r642 - in upwatch/libdbi: common config
+</A></li>
+	<LI>Next message: <A HREF="000178.html">[Upwatch-commits] r644 - upwatch/libdbi/config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#177">[ date ]</a>
+              <a href="thread.html#177">[ thread ]</a>
+              <a href="subject.html#177">[ subject ]</a>
+              <a href="author.html#177">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

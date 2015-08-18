@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r586 - in upwatch/trunk: uw_dns uw_httpget uw_imap uw_iptraf
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r586%20-%20in%20upwatch/trunk%3A%20uw_dns%20uw_httpget%20uw_imap%20uw_iptraf&In-Reply-To=%3C200604141818.k3EIIkL7021210%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000116.html">
+   <LINK REL="Next"  HREF="000118.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r586 - in upwatch/trunk: uw_dns uw_httpget uw_imap uw_iptraf</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r586%20-%20in%20upwatch/trunk%3A%20uw_dns%20uw_httpget%20uw_imap%20uw_iptraf&In-Reply-To=%3C200604141818.k3EIIkL7021210%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r586 - in upwatch/trunk: uw_dns uw_httpget uw_imap uw_iptraf">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 14 20:18:46 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000116.html">[Upwatch-commits] r585 - upwatch/trunk/cfg
+</A></li>
+        <LI>Next message: <A HREF="000118.html">[Upwatch-commits] r587 - in upwatch/trunk: common upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#117">[ date ]</a>
+              <a href="thread.html#117">[ thread ]</a>
+              <a href="subject.html#117">[ subject ]</a>
+              <a href="author.html#117">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-14 20:18:43 +0200 (Fri, 14 Apr 2006)
+New Revision: 586
+
+Modified:
+   upwatch/trunk/uw_dns/run.c
+   upwatch/trunk/uw_httpget/run.c
+   upwatch/trunk/uw_imap/run.c
+   upwatch/trunk/uw_iptraf/run.c
+Log:
+Fix some more compiler warnings
+
+
+Modified: upwatch/trunk/uw_dns/run.c
+===================================================================
+--- upwatch/trunk/uw_dns/run.c	2006-04-13 23:00:10 UTC (rev 585)
++++ upwatch/trunk/uw_dns/run.c	2006-04-14 18:18:43 UTC (rev 586)
+@@ -131,8 +131,8 @@
+   
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
+-			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
++			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+@@ -269,7 +269,7 @@
+ void write_results(void)
+ {
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   int i;
+   xmlDocPtr doc;
+ 
+@@ -279,7 +279,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+     if (strcmp(output[i], &quot;uw_test&quot;) == 0) 
+-      spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++      spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_httpget/run.c
+===================================================================
+--- upwatch/trunk/uw_httpget/run.c	2006-04-13 23:00:10 UTC (rev 585)
++++ upwatch/trunk/uw_httpget/run.c	2006-04-14 18:18:43 UTC (rev 586)
+@@ -104,8 +104,8 @@
+ 
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
+-                        OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
++                        (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+@@ -260,7 +260,7 @@
+ static void write_results(void)
+ {
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   int i;
+   xmlDocPtr doc;
+ 
+@@ -269,7 +269,7 @@
+   g_hash_table_foreach(cache, write_probe, doc);
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+-    spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_imap/run.c
+===================================================================
+--- upwatch/trunk/uw_imap/run.c	2006-04-13 23:00:10 UTC (rev 585)
++++ upwatch/trunk/uw_imap/run.c	2006-04-14 18:18:43 UTC (rev 586)
+@@ -82,8 +82,8 @@
+   
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
+-			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
++			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+@@ -226,7 +226,7 @@
+ void write_results(void)
+ {
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   int i;
+   xmlDocPtr doc;
+ 
+@@ -235,7 +235,7 @@
+   g_hash_table_foreach(cache, write_probe, doc);
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+-    spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_iptraf/run.c
+===================================================================
+--- upwatch/trunk/uw_iptraf/run.c	2006-04-13 23:00:10 UTC (rev 585)
++++ upwatch/trunk/uw_iptraf/run.c	2006-04-14 18:18:43 UTC (rev 586)
+@@ -42,7 +42,7 @@
+   time_t now;
+   struct ipnetw *net;
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   int i;
+ 
+   doc = UpwatchXmlDoc(&quot;result&quot;, NULL);
+@@ -82,7 +82,7 @@
+   free(ipnets);
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+-    spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+@@ -95,7 +95,7 @@
+     int i, oldcount_ipnets;
+     struct ipnetw *newnet, *oldnet, *net;
+     int     ct  = STACKCT_OPT( NETWORK );
+-    char**  pn = STACKLST_OPT( NETWORK );
++    char**  pn = (char **) &amp;STACKLST_OPT( NETWORK );
+ 
+     for (i=0; i &lt; OPT_VALUE_INTERVAL; i++) { // wait some seconds
+       sleep(1);
+@@ -151,7 +151,7 @@
+   }
+   if (HAVE_OPT(EXTIGNORE)) {
+     int     ct  = STACKCT_OPT(EXTIGNORE);
+-    char**  pn = STACKLST_OPT(EXTIGNORE);
++    char**  pn = (char **) &amp;STACKLST_OPT(EXTIGNORE);
+     int i;
+ 
+     if (ct &gt;= 255) { LOG(LOG_ERR, &quot;Too many extignore statements, only 255 are supported&quot;); }
+@@ -225,7 +225,7 @@
+   mypid = getpid() &amp; 0xffff;
+   if (HAVE_OPT(INTERFACE)) {
+     int     ct  = STACKCT_OPT( INTERFACE );
+-    char**  pn = STACKLST_OPT( INTERFACE );
++    char**  pn = (char **) &amp;STACKLST_OPT( INTERFACE );
+ 
+     while (ct--) {
+       dev = *pn++;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000116.html">[Upwatch-commits] r585 - upwatch/trunk/cfg
+</A></li>
+	<LI>Next message: <A HREF="000118.html">[Upwatch-commits] r587 - in upwatch/trunk: common upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#117">[ date ]</a>
+              <a href="thread.html#117">[ thread ]</a>
+              <a href="subject.html#117">[ subject ]</a>
+              <a href="author.html#117">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

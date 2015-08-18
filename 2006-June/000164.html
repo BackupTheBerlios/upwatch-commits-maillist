@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r630 - upwatch/trunk/uw_purple
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r630%20-%20upwatch/trunk/uw_purple&In-Reply-To=%3C200606280829.k5S8TxoT016923%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000163.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r630 - upwatch/trunk/uw_purple</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r630%20-%20upwatch/trunk/uw_purple&In-Reply-To=%3C200606280829.k5S8TxoT016923%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r630 - upwatch/trunk/uw_purple">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Jun 28 10:29:59 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000163.html">[Upwatch-commits] r629 - upwatch/trunk/doc
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-28 10:29:41 +0200 (Wed, 28 Jun 2006)
+New Revision: 630
+
+Modified:
+   upwatch/trunk/uw_purple/run.c
+   upwatch/trunk/uw_purple/uw_purple.def
+Log:
+Unbreak uw_purple. I added a unneeded cast when fixing warnings which broke the output option.
+Also clarify this program only accepts ONE output option.
+
+
+Modified: upwatch/trunk/uw_purple/run.c
+===================================================================
+--- upwatch/trunk/uw_purple/run.c	2006-06-26 13:45:17 UTC (rev 629)
++++ upwatch/trunk/uw_purple/run.c	2006-06-28 08:29:41 UTC (rev 630)
+@@ -74,7 +74,7 @@
+   }
+   if (count) {
+     xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+-    spool_result(OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(OUTPUT), doc, NULL);
++    spool_result(OPT_ARG(SPOOLDIR), OPT_ARG(OUTPUT), doc, NULL);
+     LOG(LOG_INFO, &quot;%s: purpled %u probes&quot;, dbspec-&gt;realm, count);
+   }
+ 
+
+Modified: upwatch/trunk/uw_purple/uw_purple.def
+===================================================================
+--- upwatch/trunk/uw_purple/uw_purple.def	2006-06-26 13:45:17 UTC (rev 629)
++++ upwatch/trunk/uw_purple/uw_purple.def	2006-06-28 08:29:41 UTC (rev 630)
+@@ -1,4 +1,5 @@
+ AutoGen Definitions options;
++
+ export        = &quot;#define progOptions uw_purpleOptions&quot;;
+ prog-name     = uw_purple;
+ prog-title    = &quot;Upwatch purple daemon&quot;;
+@@ -53,8 +54,7 @@
+     descrip   = &quot;name of queue to drop results&quot;;
+     doc       =
+ 'The argument is taken to be a maildir under the directory `spooldir`.
+-All results are placed in this queue.
+-This flag may be given multiple times.';
++All results are placed in this queue.';
+ };
+ 
+ #include license_gpl.def
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000163.html">[Upwatch-commits] r629 - upwatch/trunk/doc
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

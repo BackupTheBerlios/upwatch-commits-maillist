@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql	uw_postgresql uw_process uw_snmpget
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2009-November/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r695%20-%20in%20upwatch/trunk%3A%20config%20uw_mysql%0A%09uw_postgresql%20uw_process%20uw_snmpget&In-Reply-To=%3C200911200921.nAK9LJEs005667%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000229.html">
+   <LINK REL="Next"  HREF="000231.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql	uw_postgresql uw_process uw_snmpget</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r695%20-%20in%20upwatch/trunk%3A%20config%20uw_mysql%0A%09uw_postgresql%20uw_process%20uw_snmpget&In-Reply-To=%3C200911200921.nAK9LJEs005667%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql	uw_postgresql uw_process uw_snmpget">raarts at mail.berlios.de
+       </A><BR>
+    <I>Fri Nov 20 10:21:19 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000229.html">[Upwatch-commits] r694 - upwatch/trunk/uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000231.html">[Upwatch-commits] r696 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#230">[ date ]</a>
+              <a href="thread.html#230">[ thread ]</a>
+              <a href="subject.html#230">[ subject ]</a>
+              <a href="author.html#230">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2009-11-20 10:21:18 +0100 (Fri, 20 Nov 2009)
+New Revision: 695
+
+Modified:
+   upwatch/trunk/config/upwatch-full.mysql
+   upwatch/trunk/uw_mysql/probe.def
+   upwatch/trunk/uw_mysql/run.c
+   upwatch/trunk/uw_postgresql/probe.def
+   upwatch/trunk/uw_postgresql/run.c
+   upwatch/trunk/uw_process/notify.c
+   upwatch/trunk/uw_snmpget/probe.def
+   upwatch/trunk/uw_snmpget/run.c
+Log:
+Added 'port' variable to mysql, snmpget and postgresql probes.
+Need to be hand-added to the database!
+
+
+Modified: upwatch/trunk/config/upwatch-full.mysql
+===================================================================
+--- upwatch/trunk/config/upwatch-full.mysql	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/config/upwatch-full.mysql	2009-11-20 09:21:18 UTC (rev 695)
+@@ -28,11 +28,15 @@
+   prv_color smallint unsigned NOT NULL default '200',
+   color smallint unsigned NOT NULL default '200',
+   message text NOT NULL default '',
+-  PRIMARY KEY  (id),
+-  UNIQUE KEY probtime (probe,stattime),
+-  UNIQUE KEY probclstat (probe,class,stattime),
+-  KEY stattime (stattime),
+-  KEY contact (contact)
++  PRIMARY KEY  (`id`),
++  UNIQUE KEY `probtime` (`probe`,`stattime`),
++  UNIQUE KEY `probclstat` (`probe`,`class`,`stattime`),
++  KEY `stattime` (`stattime`),
++  KEY `contact` (`contact`),
++  KEY `statprobcl` (`stattime`,`probe`,`class`),
++  KEY `probclstatnot` (`probe`,`class`,`stattime`,`notified`),
++  KEY `contacttime` (`contact`,`stattime`),
++  KEY `server` (`server`)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
+
+Modified: upwatch/trunk/uw_mysql/probe.def
+===================================================================
+--- upwatch/trunk/uw_mysql/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_mysql/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -32,6 +32,14 @@
+     descrip = &quot;target ip address&quot;;
+   };
+ 
++  def = {
++    name = &quot;port&quot;;
++    type = &quot;int&quot;;
++    null = false;
++    default = &quot;3306&quot;;
++    descrip = &quot;port to connect to&quot;;
++  };
++
+   attribute = {
+     name = &quot;date&quot;;
+     required = true;
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_mysql/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -106,7 +106,7 @@
+                 &quot;       pr_mysql_def.ipaddress, pr_mysql_def.dbname, &quot;
+                 &quot;       pr_mysql_def.dbuser, pr_mysql_def.dbpasswd,&quot;
+                 &quot;       pr_mysql_def.query, &quot;
+-                &quot;       pr_mysql_def.yellow,  pr_mysql_def.red &quot;
++                &quot;       pr_mysql_def.yellow,  pr_mysql_def.red, pr_mysql_def.port &quot;
+                 &quot;FROM   pr_mysql_def, pr_realm &quot;
+                 &quot;WHERE  pr_mysql_def.id &gt; 1 and pr_mysql_def.disable &lt;&gt; 'yes'&quot;
+                 &quot;       and pr_mysql_def.pgroup = '%d' and pr_realm.id = pr_mysql_def.domid&quot;,
+@@ -146,6 +146,7 @@
+     probe-&gt;query = strdup(row[8]);
+     probe-&gt;yellow = atof(row[9]);
+     probe-&gt;red = atof(row[10]);
++    probe-&gt;port = atoi(row[11]);
+     if (probe-&gt;msg) g_free(probe-&gt;msg);
+     probe-&gt;msg = NULL;
+     probe-&gt;seen = 1;
+@@ -212,6 +213,7 @@
+   }
+   sprintf(buffer, &quot;%d&quot;, probe-&gt;probeid);      xmlSetProp(mysql, &quot;id&quot;, buffer);
+   sprintf(buffer, &quot;%s&quot;, probe-&gt;ipaddress);    xmlSetProp(mysql, &quot;ipaddress&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, probe-&gt;port);         xmlSetProp(mysql, &quot;port&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, (int) now);           xmlSetProp(mysql, &quot;date&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60)); 
+     xmlSetProp(mysql, &quot;expires&quot;, buffer);
+@@ -245,6 +247,7 @@
+ void probe(gpointer data, gpointer user_data) 
+ { 
+   char *dbhost, *dbuser, *dbpasswd, *dbname;
++  int dbport;
+   struct probedef *probe = (struct probedef *)data;
+   MYSQL *mysql = mysql_init(NULL);
+   MYSQL_RES *result;
+@@ -252,13 +255,14 @@
+   unsigned int option;
+ 
+   dbhost = probe-&gt;ipaddress;
++  dbport = probe-&gt;port;
+   dbname = probe-&gt;dbname;
+   dbuser = probe-&gt;dbuser;
+   dbpasswd = probe-&gt;dbpasswd;
+ 
+   option = 50; mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *) &amp;option);
+   gettimeofday(&amp;start, NULL);
+-  if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
++  if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, dbport, NULL, 0)) {
+     probe-&gt;msg = strdup(mysql_error(mysql));
+     return;
+   }
+
+Modified: upwatch/trunk/uw_postgresql/probe.def
+===================================================================
+--- upwatch/trunk/uw_postgresql/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_postgresql/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -27,6 +27,14 @@
+     descrip = &quot;target ip address&quot;;
+   };
+ 
++  def = {
++    name = &quot;port&quot;;
++    type = &quot;int&quot;;
++    null = false;
++    default = &quot;5432&quot;;
++    descrip = &quot;port to connect to&quot;;
++  };
++  
+   attribute = {
+     name = &quot;realm&quot;;
+     required = true;
+
+Modified: upwatch/trunk/uw_postgresql/run.c
+===================================================================
+--- upwatch/trunk/uw_postgresql/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_postgresql/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -108,7 +108,7 @@
+                 &quot;       pr_postgresql_def.ipaddress, pr_postgresql_def.dbname, &quot;
+                 &quot;       pr_postgresql_def.dbuser, pr_postgresql_def.dbpasswd,&quot;
+                 &quot;       pr_postgresql_def.query, &quot;
+-                &quot;       pr_postgresql_def.yellow,  pr_postgresql_def.red &quot;
++                &quot;       pr_postgresql_def.yellow,  pr_postgresql_def.red, pr_postgresql_def.port &quot;
+                 &quot;FROM   pr_postgresql_def, pr_realm &quot;
+                 &quot;WHERE  pr_postgresql_def.id &gt; 1 and pr_postgresql_def.disable &lt;&gt; 'yes'&quot;
+                 &quot;       and pr_postgresql_def.pgroup = '%d' and pr_realm.id = pr_postgresql_def.domid&quot;,
+@@ -148,6 +148,7 @@
+     probe-&gt;query = strdup(row[8]);
+     probe-&gt;yellow = atof(row[9]);
+     probe-&gt;red = atof(row[10]);
++    probe-&gt;port = atoi(row[11]);
+     if (probe-&gt;msg) g_free(probe-&gt;msg);
+     probe-&gt;msg = NULL;
+     probe-&gt;seen = 1;
+@@ -214,6 +215,7 @@
+   }
+   sprintf(buffer, &quot;%d&quot;, probe-&gt;probeid);      xmlSetProp(postgresql, &quot;id&quot;, buffer);
+   sprintf(buffer, &quot;%s&quot;, probe-&gt;ipaddress);    xmlSetProp(postgresql, &quot;ipaddress&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, probe-&gt;port);         xmlSetProp(postgresql, &quot;port&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, (int) now);           xmlSetProp(postgresql, &quot;date&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60));
+     xmlSetProp(postgresql, &quot;expires&quot;, buffer);
+@@ -249,6 +251,7 @@
+ void probe(gpointer data, gpointer user_data) 
+ { 
+   char *dbhost, *dbuser, *dbpasswd, *dbname;
++  char dbport[12];
+   struct probedef *probe = (struct probedef *)data;
+   PGconn *conn;
+   PGresult *res;
+@@ -260,13 +263,14 @@
+   }
+     
+   dbhost = probe-&gt;ipaddress;
++  sprintf(dbport, &quot;%d&quot;, probe-&gt;port);
+   dbname = probe-&gt;dbname;
+   dbuser = probe-&gt;dbuser;
+   dbpasswd = probe-&gt;dbpasswd;
+ 
+   gettimeofday(&amp;start, NULL);
+ 
+-  conn = PQsetdbLogin(dbhost, NULL, NULL, NULL, dbname, dbuser, dbpasswd);
++  conn = PQsetdbLogin(dbhost, dbport, NULL, NULL, dbname, dbuser, dbpasswd);
+   if (PQstatus(conn) == CONNECTION_BAD) {
+     probe-&gt;msg = strdup(PQerrorMessage(conn));
+     goto err_exit;
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_process/notify.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -318,7 +318,7 @@
+   snprintf(body, sizeof(body), &quot;Dear customer,\n\n&quot;
+                 &quot;Moments ago, at %s&quot;
+                 &quot;the status of probe %s\n&quot;
+-                &quot;at server %s\n&quot;
++                &quot;at server %s (id %d, realm %s)\n&quot;
+                 &quot;has changed from %s to %s\n&quot;
+                 &quot;%s:\n%s\n&quot;
+                 &quot;%s&quot;
+@@ -327,7 +327,7 @@
+                 &quot;%s\n&quot;, 
+                    ctime((time_t *)&amp;t-&gt;res-&gt;stattime), 
+                    t-&gt;probe-&gt;module_name,
+-                   servername, 
++                   servername, t-&gt;def-&gt;server, t-&gt;res-&gt;realm,
+                    color2string(t-&gt;res-&gt;prevhistcolor), color2string(t-&gt;res-&gt;color),
+                    body_probe_def[0] ? &quot;\nProbe details&quot; : &quot;&quot;, body_probe_def,
+                    msg,
+
+Modified: upwatch/trunk/uw_snmpget/probe.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_snmpget/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -33,6 +33,14 @@
+     descrip = &quot;target ip address&quot;;
+   };
+ 
++  def = {
++    name = &quot;port&quot;;
++    type = &quot;int&quot;;
++    null = false;
++    default = &quot;161&quot;;
++    descrip = &quot;port to connect to&quot;;
++  };
++
+   attribute = {
+     name = &quot;date&quot;;
+     required = true;
+
+Modified: upwatch/trunk/uw_snmpget/run.c
+===================================================================
+--- upwatch/trunk/uw_snmpget/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_snmpget/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -112,7 +112,7 @@
+   sprintf(qry,  &quot;SELECT pr_snmpget_def.id, pr_snmpget_def.domid, pr_snmpget_def.tblid, pr_realm.name, &quot;
+                 &quot;       pr_snmpget_def.ipaddress, pr_snmpget_def.community, &quot;
+                 &quot;       pr_snmpget_def.OID, pr_snmpget_def.mode, pr_snmpget_def.multiplier, &quot;
+-                &quot;       pr_snmpget_def.yellow,  pr_snmpget_def.red &quot;
++                &quot;       pr_snmpget_def.yellow,  pr_snmpget_def.red, pr_snmpget_def.port &quot;
+                 &quot;FROM   pr_snmpget_def, pr_realm &quot;
+                 &quot;WHERE  pr_snmpget_def.id &gt; 1 and pr_snmpget_def.disable &lt;&gt; 'yes'&quot;
+                 &quot;       and pr_snmpget_def.pgroup = '%d' and pr_realm.id = pr_snmpget_def.domid&quot;,
+@@ -151,6 +151,7 @@
+     probe-&gt;multiplier = atof(row[8]);
+     probe-&gt;yellow = atof(row[9]);
+     probe-&gt;red = atof(row[10]);
++    probe-&gt;port = atoi(row[11]);
+     if (probe-&gt;msg) g_free(probe-&gt;msg);
+     probe-&gt;msg = NULL;
+     probe-&gt;seen = 1;
+@@ -253,6 +254,7 @@
+   snmp_sess_init(&amp;sess);			/* initialize session */
+   sess.version = SNMP_VERSION_1;
+   sess.peername = probe-&gt;ipaddress;
++  sess.remote_port = probe-&gt;port;
+   sess.community = probe-&gt;community;
+   sess.community_len = strlen(sess.community);
+   sess.callback = asynch_response;		/* default callback */
+@@ -332,6 +334,7 @@
+   }
+   sprintf(buffer, &quot;%d&quot;, probe-&gt;probeid);      xmlSetProp(snmpget, &quot;id&quot;, buffer);
+   sprintf(buffer, &quot;%s&quot;, probe-&gt;ipaddress);    xmlSetProp(snmpget, &quot;ipaddress&quot;, buffer);
++  sprintf(buffer, &quot;%d&quot;, probe-&gt;port);         xmlSetProp(snmpget, &quot;port&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, (int) now);           xmlSetProp(snmpget, &quot;date&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, ((int)now)+((int)OPT_VALUE_EXPIRES*60));   xmlSetProp(snmpget, &quot;expires&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, color);               xmlSetProp(snmpget, &quot;color&quot;, buffer);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000229.html">[Upwatch-commits] r694 - upwatch/trunk/uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000231.html">[Upwatch-commits] r696 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#230">[ date ]</a>
+              <a href="thread.html#230">[ thread ]</a>
+              <a href="subject.html#230">[ subject ]</a>
+              <a href="author.html#230">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

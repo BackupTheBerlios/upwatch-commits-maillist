@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r637 -	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r637%20-%0A%09upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200608071241.k77Cf0N0014311%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000170.html">
+   <LINK REL="Next"  HREF="000172.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r637 -	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r637%20-%0A%09upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200608071241.k77Cf0N0014311%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r637 -	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Mon Aug  7 14:41:00 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000170.html">[Upwatch-commits] r636 - upwatch/trunk/util
+</A></li>
+        <LI>Next message: <A HREF="000172.html">[Upwatch-commits] r638 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-07 14:40:22 +0200 (Mon, 07 Aug 2006)
+New Revision: 637
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,3 +1,5 @@
+ green [LOGDATE] amavisd: No pid_file [PATH], can't stop the process
+ green [LOGDATE] amavisd: Shutting down amavisd: failed
++green [LOGDATE] amavisd: Shutting down amavisd: succeeded
++green [LOGDATE] amavisd: Starting amavisd: succeeded
+ 
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1 @@
++green [LOGDATE] [PATH]: [PATH]: optimization changed from [WORD] to [WORD]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1 +1,2 @@
+ green [LOGDATE] dccifd[PID]: missing message body
++green [LOGDATE] dccifd[PID]: [NUM]\.[NUM]\.[NUM] rejected messages to [NUM] targets and discarded messages to [NUM] targets among [NUM] total since [NUM][PATH] [NUM]:[NUM]:[NUM]
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1 @@
++green [LOGDATE].* GS_LOG:
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax	2006-08-07 12:40:22 UTC (rev 637)
+@@ -2,17 +2,24 @@
+ green [LOGDATE] FaxGetty[PID]: ANSWER: DATA CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: Ring detected without successful handshake
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;&lt;NONE&gt;&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;[NUM]&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;s&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION  DEVICE '[PATH]'
+ green [LOGDATE] FaxGetty[PID]: CAUGHT SIGNAL [NUM]
+ green [LOGDATE] FaxGetty[PID]: CLOSE [PATH]
+ green [LOGDATE] FaxGetty[PID]: GETTY: exit status [NUM]
+ green [LOGDATE] FaxGetty[PID]: GETTY: START &quot;[PATH] \+pap -chap&quot;, pid [NUM]
+ green [LOGDATE] FaxGetty[PID]: HELLO
+ green [LOGDATE] FaxGetty[PID]: MODEM MULTI-TECH SYSTEMS MT[NUM]ZPXI/[NUM]
++green [LOGDATE] FaxGetty[PID]: MODEM WWW\.SOFT-SWITCH\.ORG spandsp/
+ green [LOGDATE] FaxGetty[PID]: OPEN [PATH]
+ green [LOGDATE] FaxGetty[PID]: [PATH]: Can not lock device\.
+ green [LOGDATE] FaxGetty[PID]: Purge stale UUCP lock [PATH]
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): from .*, page [NUM] in [NUM]:[NUM], INF, [NUM]\.[NUM] line/mm, [NUM]-D MR, [NUM] bit/s
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): [PATH] from .*, route to &lt;unspecified&gt;, [NUM] pages in [NUM]:[NUM]
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd &quot;[PATH]&quot; &quot;[WORD][NUM]&quot; &quot;[NUM]&quot; &quot;&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;s&quot;
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd &quot;[PATH]&quot; &quot;[WORD][NUM]&quot; &quot;[NUM]&quot; &quot;&quot; &quot;[NUM]&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;s&quot;
+ green [LOGDATE] FaxQueuer[PID]: Copyright \(c\) [NUM]-[NUM]
+ green [LOGDATE] FaxQueuer[PID]: HylaFAX \(tm\) Version
+ green [LOGDATE] FaxQueuer[PID]: NOTIFY: bin/notify &quot;doneq/q[NUM]&quot; &quot;(done|timedout|blocked|requeued)&quot;
+@@ -29,3 +36,5 @@
+ green [LOGDATE] HylaFAX[PID]: Warning, client address &quot;[IPADDR]&quot; is not listed for host name &quot;[HOSTNAME]&quot;\.
+ green [LOGDATE] HylaFAX[PID]: Warning, no inverse address mapping for client host name &quot;[HOSTNAME]&quot;\.
+ green [LOGDATE] hylafax: Shutting down HylaFAX queue manager:  failed
++green [LOGDATE] /usr/sbin/faxquit[PID]: FIFO: open: No such device or address
++
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-07 12:40:22 UTC (rev 637)
+@@ -705,9 +705,12 @@
+ green [LOGDATE] kernel: kmod: runaway modprobe loop assumed and stopped
+ green [LOGDATE] kernel: CIFS VFS: Calculated size 0x[NUM] vs actual length 0x[NUM]
+ green [LOGDATE] kernel: CIFS VFS: bad smb size detected for Mid=[NUM]
++green [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Normal
+ ignore [LOGDATE] kernel: CIFS VFS: Send error in read = [NUM]
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
++yellow [LOGDATE] kernel: zaptel Disabled echo canceller because of tone \(rx\) on channel [NUM
++yellow [LOGDATE] kernel: qozap: CRC error for HDLC frame on card [NUM] \(cardID [NUM]\) S/T port [NUM]
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+@@ -721,3 +724,5 @@
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+ red [LOGDATE] kernel: VM: killing process
+ red [LOGDATE] kernel: ip_conntrack: table full, dropping packet.
++red [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Exceeds Safe Limit
++
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1,16 @@
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Answering Challenge for REGISTER
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to confirmed
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to early
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to proceeding
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to terminated
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to trying
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* end DST: [NUM][PATH] [NUM]:[NUM]:[NUM] \([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Registered at registrar as [EMAIL]
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* sip::process_auth:Match challenge for \[USER=\], realm=[WORD]
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting holding_call
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting transfer_dest
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting transfer_source
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Denying call id=[NUM] reason=user-busy
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* start_dst\([NUM]\) end_dst\([NUM]\) offset_dst\([NUM]\) offset_utc\([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* start DST: [NUM][PATH] [NUM]:[NUM]:[NUM] \([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* timeout::callback: Registering with timeout of [NUM] ms
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,5 +1,4 @@
+ green [LOGDATE] sshd[PID]: refused connect from [IPADDR]
+-
+ green [LOGDATE] sshd:\s*$
+ green [LOGDATE] sshd: Generating SSH[NUM] DSA host key: 
+ green [LOGDATE] sshd: Generating SSH[NUM] RSA host key: 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -3,3 +3,5 @@
+ green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart\.
+ green [LOGDATE] syslog: syslogd shutdown failed 
+ green [LOGDATE] syslog: syslogd startup failed
++green [LOGDATE] [HOSTNAME][PID]: reboot [IPADDR] sip:[EMAIL]:[NUM]
++green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart \(remote reception\)\.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] in.tftpd[PID]: nak: Operation not permitted
+ green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+ green [LOGDATE] in.tftpd[PID]: RRQ from [IPADDR] filename .*
++green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000170.html">[Upwatch-commits] r636 - upwatch/trunk/util
+</A></li>
+	<LI>Next message: <A HREF="000172.html">[Upwatch-commits] r638 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

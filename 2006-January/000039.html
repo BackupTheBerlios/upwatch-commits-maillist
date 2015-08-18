@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r508 - upwatch/trunk/cfg
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r508%20-%20upwatch/trunk/cfg&In-Reply-To=%3C200601042145.k04LjaUX023665%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r508 - upwatch/trunk/cfg</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r508%20-%20upwatch/trunk/cfg&In-Reply-To=%3C200601042145.k04LjaUX023665%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r508 - upwatch/trunk/cfg">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Jan  4 22:45:36 CET 2006</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-01-04 22:45:35 +0100 (Wed, 04 Jan 2006)
+New Revision: 508
+
+Modified:
+   upwatch/trunk/cfg/bootstrap
+Log:
+On MacOSX libtoolize is called glibtoolize, I don't know why.
+I just want to make it easier for me to workaround this without ugly symlink hacks. Testing this is not expensive so just check if this is the case.
+
+First start at making bootstrapping smarter ;-)
+
+
+Modified: upwatch/trunk/cfg/bootstrap
+===================================================================
+--- upwatch/trunk/cfg/bootstrap	2005-12-29 15:54:20 UTC (rev 507)
++++ upwatch/trunk/cfg/bootstrap	2006-01-04 21:45:35 UTC (rev 508)
+@@ -1,4 +1,16 @@
+ #! /bin/sh
++
++# test if libtoolize is called glibtoolize (MacOSX)
++BOGUS=`glibtoolize -n 2&gt;/dev/null`
++TEST=$?
++if [ x$TEST == &quot;x0&quot; ]
++then
++	LIBTOOLIZE=glibtoolize
++else
++	# assume it is just installed
++	LIBTOOLIZE=libtoolize
++fi
++
+ set -x
+ 
+ # libstatgrab
+@@ -9,7 +21,7 @@
+ #  patch -p1 &lt; libstatgrab-openbsd.patch
+   aclocal
+   autoheader
+-  libtoolize
++  $LIBTOOLIZE
+   autoconf
+   automake --gnu --add-missing
+ #fi
+@@ -17,7 +29,7 @@
+ 
+ aclocal \
+ &amp;&amp; autoheader \
+-&amp;&amp; libtoolize \
++&amp;&amp; $LIBTOOLIZE \
+ &amp;&amp; autoconf \
+ &amp;&amp; automake --gnu --add-missing 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

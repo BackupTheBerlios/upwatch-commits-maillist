@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r693 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2008-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r693%20-%20upwatch/trunk&In-Reply-To=%3C200802201910.m1KJA6re029202%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r693 - upwatch/trunk</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r693%20-%20upwatch/trunk&In-Reply-To=%3C200802201910.m1KJA6re029202%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r693 - upwatch/trunk">raarts at mail.berlios.de
+       </A><BR>
+    <I>Wed Feb 20 20:10:06 CET 2008</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#228">[ date ]</a>
+              <a href="thread.html#228">[ thread ]</a>
+              <a href="subject.html#228">[ subject ]</a>
+              <a href="author.html#228">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2008-02-20 20:10:05 +0100 (Wed, 20 Feb 2008)
+New Revision: 693
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Fix 64 bit library search path.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2008-01-30 10:44:54 UTC (rev 692)
++++ upwatch/trunk/configure.ac	2008-02-20 19:10:05 UTC (rev 693)
+@@ -262,7 +262,7 @@
+ 
+ if test -z &quot;$LIBOPTS_LIBS&quot;
+ then
+-  for libpath in /usr/lib /usr/local/lib /usr/lib/lib64 /usr/local/lib64 /usr/pkg/lib
++  for libpath in /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64 /usr/pkg/lib
+   do
+     if test -f $libpath/libopts.a
+     then
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#228">[ date ]</a>
+              <a href="thread.html#228">[ thread ]</a>
+              <a href="subject.html#228">[ subject ]</a>
+              <a href="author.html#228">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

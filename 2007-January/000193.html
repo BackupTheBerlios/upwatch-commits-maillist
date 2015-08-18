@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r658 - upwatch/trunk/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r658%20-%20upwatch/trunk/common&In-Reply-To=%3C200701152301.l0FN10e7012046%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000192.html">
+   <LINK REL="Next"  HREF="000194.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r658 - upwatch/trunk/common</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r658%20-%20upwatch/trunk/common&In-Reply-To=%3C200701152301.l0FN10e7012046%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r658 - upwatch/trunk/common">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Jan 16 00:01:00 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000192.html">[Upwatch-commits] r657 - upwatch/trunk/uw_purple
+</A></li>
+        <LI>Next message: <A HREF="000194.html">[Upwatch-commits] r659 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#193">[ date ]</a>
+              <a href="thread.html#193">[ thread ]</a>
+              <a href="subject.html#193">[ subject ]</a>
+              <a href="author.html#193">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-16 00:01:00 +0100 (Tue, 16 Jan 2007)
+New Revision: 658
+
+Modified:
+   upwatch/trunk/common/init.tpl
+Log:
+Make debian init scripts possible too
+
+
+Modified: upwatch/trunk/common/init.tpl
+===================================================================
+--- upwatch/trunk/common/init.tpl	2007-01-15 22:02:10 UTC (rev 657)
++++ upwatch/trunk/common/init.tpl	2007-01-15 23:01:00 UTC (rev 658)
+@@ -1,4 +1,4 @@
+-[+ AutoGen5 template redhat suse solaris +]
++[+ AutoGen5 template redhat suse solaris debian +]
+ [+ CASE (suffix) +][+
+    == redhat
+ +]#! /bin/sh
+@@ -188,7 +188,155 @@
+         exit 1
+         ;;
+ esac
+-exit 0[+
+-ESAC +]
++exit 0
++[+ == debian
+ 
+++]#!/bin/sh
++### BEGIN INIT INFO
++# Provides:          [+prog-name+]
++# Required-Start:    $local_fs $remote_fs
++# Required-Stop:     $local_fs $remote_fs
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
++# Short-Description: Upwatch client daemon
++# Description: 	[+(string-substitute (get &quot;detail&quot;) '(&quot;\n&quot;) '(&quot;\n#\t\t&quot;) )+]
++### END INIT INFO
+ 
++# Author: Wijnand Wiersma &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/upwatch-commits">wijnand at nedbsd.eu</A>&gt;
++
++# Do NOT &quot;set -e&quot;
++
++# PATH should only include /usr/* if it runs after the mountnfs.sh script
++PATH=/usr/sbin:/usr/bin:/sbin:/bin
++DESC=&quot;[+(string-substitute (get &quot;detail&quot;) '(&quot;\n&quot;) '(&quot;\n#\t\t&quot;) )+]&quot;
++NAME=[+prog-name+]
++DAEMON=/usr/sbin/$NAME
++DAEMON_ARGS=&quot;&quot;
++PIDFILE=/var/run/$NAME.pid
++SCRIPTNAME=/etc/init.d/$NAME
++
++# Exit if the package is not installed
++[ -x &quot;$DAEMON&quot; ] || exit 0
++
++# Read configuration variable file if it is present
++[ -r /etc/default/$NAME ] &amp;&amp; . /etc/default/$NAME
++
++# Load the VERBOSE setting and other rcS variables
++[ -f /etc/default/rcS ] &amp;&amp; . /etc/default/rcS
++
++# Define LSB log_* functions.
++# Depend on lsb-base (&gt;= 3.0-6) to ensure that this file is present.
++. /lib/lsb/init-functions
++
++#
++# Function that starts the daemon/service
++#
++do_start()
++{
++	# Return
++	#   0 if daemon has been started
++	#   1 if daemon was already running
++	#   2 if daemon could not be started
++	start-stop-daemon --start --quiet --pidfile $PIDFILE -c upwatch --exec $DAEMON --test &gt; /dev/null \
++		|| return 1
++	start-stop-daemon --start --quiet --pidfile $PIDFILE -c upwatch --exec $DAEMON -- \
++		$DAEMON_ARGS \
++		|| return 2
++}
++
++#
++# Function that stops the daemon/service
++#
++do_stop()
++{
++	# Return
++	#   0 if daemon has been stopped
++	#   1 if daemon was already stopped
++	#   2 if daemon could not be stopped
++	#   other if a failure occurred
++	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
++	RETVAL=&quot;$?&quot;
++	[ &quot;$RETVAL&quot; = 2 ] &amp;&amp; return 2
++	# Wait for children to finish too if this is a daemon that forks
++	# and if the daemon is only ever run from this initscript.
++	# If the above conditions are not satisfied then add some other code
++	# that waits for the process to drop all resources that could be
++	# needed by services started subsequently.  A last resort is to
++	# sleep for some time.
++	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
++	[ &quot;$?&quot; = 2 ] &amp;&amp; return 2
++	# Many daemons don't delete their pidfiles when they exit.
++	rm -f $PIDFILE
++	return &quot;$RETVAL&quot;
++}
++
++#
++# Function that sends a SIGHUP to the daemon/service
++#
++do_reload() {
++	#
++	# If the daemon can reload its configuration without
++	# restarting (for example, when it is sent a SIGHUP),
++	# then implement that here.
++	#
++	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
++	return 0
++}
++
++case &quot;$1&quot; in
++  start)
++	[ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_daemon_msg &quot;Starting $DESC&quot; &quot;$NAME&quot;
++	do_start
++	case &quot;$?&quot; in
++		0|1) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 0 ;;
++		2) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 1 ;;
++	esac
++	;;
++  stop)
++	[ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_daemon_msg &quot;Stopping $DESC&quot; &quot;$NAME&quot;
++	do_stop
++	case &quot;$?&quot; in
++		0|1) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 0 ;;
++		2) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 1 ;;
++	esac
++	;;
++  #reload|force-reload)
++	#
++	# If do_reload() is not implemented then leave this commented out
++	# and leave 'force-reload' as an alias for 'restart'.
++	#
++	#log_daemon_msg &quot;Reloading $DESC&quot; &quot;$NAME&quot;
++	#do_reload
++	#log_end_msg $?
++	#;;
++  restart|force-reload)
++	#
++	# If the &quot;reload&quot; option is implemented then remove the
++	# 'force-reload' alias
++	#
++	log_daemon_msg &quot;Restarting $DESC&quot; &quot;$NAME&quot;
++	do_stop
++	case &quot;$?&quot; in
++	  0|1)
++		do_start
++		case &quot;$?&quot; in
++			0) log_end_msg 0 ;;
++			1) log_end_msg 1 ;; # Old process is still running
++			*) log_end_msg 1 ;; # Failed to start
++		esac
++		;;
++	  *)
++	  	# Failed to stop
++		log_end_msg 1
++		;;
++	esac
++	;;
++  *)
++	#echo &quot;Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}&quot; &gt;&amp;2
++	echo &quot;Usage: $SCRIPTNAME {start|stop|restart|force-reload}&quot; &gt;&amp;2
++	exit 3
++	;;
++esac
++
++:
++[+ESAC +]
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000192.html">[Upwatch-commits] r657 - upwatch/trunk/uw_purple
+</A></li>
+	<LI>Next message: <A HREF="000194.html">[Upwatch-commits] r659 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#193">[ date ]</a>
+              <a href="thread.html#193">[ thread ]</a>
+              <a href="subject.html#193">[ subject ]</a>
+              <a href="author.html#193">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r512%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603020948.k229mhqG023140%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000042.html">
+   <LINK REL="Next"  HREF="000044.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r512%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603020948.k229mhqG023140%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Mar  2 10:48:43 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000042.html">[Upwatch-commits] r511 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000044.html">[Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-02 10:48:33 +0100 (Thu, 02 Mar 2006)
+New Revision: 512
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+And more openntpd lines I forgot
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-02 09:36:24 UTC (rev 511)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-02 09:48:33 UTC (rev 512)
+@@ -7,4 +7,7 @@
+ green [LOGDATE] services[NUM] ntpd[PID]: peer [IPADDR] now valid
+ green [LOGDATE] ntpd[PID]: adjusting local clock by
+ green [LOGDATE] ntpd[PID]: Terminating
++green [LOGDATE] ntpd[PID]: ntp engine exiting
++green [LOGDATE] ntpd[PID]: dispatch_imsg in main: pipe closed
++green [LOGDATE] ntpd[PID]: Lost child: child exited
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000042.html">[Upwatch-commits] r511 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000044.html">[Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

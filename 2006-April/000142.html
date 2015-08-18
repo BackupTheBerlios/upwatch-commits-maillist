@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r608 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r608%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604211129.k3LBTBRF013135%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000141.html">
+   <LINK REL="Next"  HREF="000144.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r608 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r608%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604211129.k3LBTBRF013135%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r608 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 21 13:29:11 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000141.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000144.html">[Upwatch-commits] r609 - upwatch/trunk/libstatgrab-0.13
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#142">[ date ]</a>
+              <a href="thread.html#142">[ thread ]</a>
+              <a href="subject.html#142">[ subject ]</a>
+              <a href="author.html#142">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-21 13:29:09 +0200 (Fri, 21 Apr 2006)
+New Revision: 608
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Now we really have a ignorediskfree option. Argument is the path to a partition. the diskfree check will skip that partition.
+First attempts were awfull, reading the autogen documentation improved the situation (and code).
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-04-20 22:57:28 UTC (rev 607)
++++ upwatch/trunk/uw_sysstat/run.c	2006-04-21 11:29:09 UTC (rev 608)
+@@ -508,20 +508,36 @@
+ {
+   float fullest = 0.0;
+   char info[32768];
++  int i, ignore;
+ 
+   if (st.disk) {
+     sg_fs_stats *disk_stat_ptr = st.disk;
+     int counter;
+ 
+-    for (counter=0; counter &lt; st.disk_entries; counter++){
++    for (counter=0, ignore=0; counter &lt; st.disk_entries; counter++){
+       float use;
+-      use = 100.00 * ((float) disk_stat_ptr-&gt;used / (float) (disk_stat_ptr-&gt;used + disk_stat_ptr-&gt;avail));
+-      if (use &gt; fullest) fullest = use;
+-      disk_stat_ptr++;
++
++    if (HAVE_OPT( IGNOREDISKFREE )) {
++        int     ct = STACKCT_OPT(  IGNOREDISKFREE );
++        char**  pp = (char **) &amp;STACKLST_OPT( IGNOREDISKFREE );
++
++        do  {
++            char* p = *pp++;
++            if (strcmp(disk_stat_ptr-&gt;device_name, p) ==0 ) ignore=1;
++        } while (--ct &gt; 0);
+     }
++
++     if (ignore == 0 ) {
++        use = 100.00 * ((float) disk_stat_ptr-&gt;used / (float) (disk_stat_ptr-&gt;used + disk_stat_ptr-&gt;avail));
++        if (use &gt; fullest) fullest = use;
++      }
++      ignore=0; /* Reset the ignore flag */
++      disk_stat_ptr++; /* next partition please */
++    }
+   }
+ 
+-  if (fullest &gt; OPT_VALUE_DISKFREE_YELLOW) { // if some disk is more then 80% full give `df` listing
++  if (fullest &gt; OPT_VALUE_DISKFREE_YELLOW) { // if some disk is more then the yellow treshold full give `df` listing
++
+     char cmd[1024];
+     char buffer[24];
+     FILE *in;
+@@ -628,6 +644,7 @@
+   node = newnode(doc, &quot;diskfree&quot;);
+   add_diskfree_info(node);
+   color = xmlGetPropInt(node, &quot;color&quot;);
++
+   if (color &gt; highest_color) highest_color = color;
+ 
+   if (HAVE_OPT(HPQUEUE) &amp;&amp; (highest_color != prv_highest_color)) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000141.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000144.html">[Upwatch-commits] r609 - upwatch/trunk/libstatgrab-0.13
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#142">[ date ]</a>
+              <a href="thread.html#142">[ thread ]</a>
+              <a href="subject.html#142">[ subject ]</a>
+              <a href="author.html#142">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

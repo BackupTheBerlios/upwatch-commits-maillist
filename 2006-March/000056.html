@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r525 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r525%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603091043.k29AhVD7004701%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000055.html">
+   <LINK REL="Next"  HREF="000057.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r525 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r525%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603091043.k29AhVD7004701%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r525 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Mar  9 11:43:31 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000055.html">[Upwatch-commits] r524 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+        <LI>Next message: <A HREF="000057.html">[Upwatch-commits] r526 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-09 11:43:30 +0100 (Thu, 09 Mar 2006)
+New Revision: 525
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync my current regex tree.
+
+AKA: Pimp my regexes.
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [-A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-09 10:43:30 UTC (rev 525)
+@@ -36,14 +36,11 @@
+ green [LOGDATE] postfix/smtpd[PID]: warning: Illegal address syntax from [HOSTNAME]\[[IPADDR]\] in
+ green [LOGDATE] postfix/smtpd[PID]: [MSGID]: discard: [WORD] from [HOSTNAME]\[[IPADDR]\]: &lt;.*&gt;:
+ green [LOGDATE] postfix/smtpd[PID]: NOQUEUE: reject: [WORD] from [HOSTNAME]\[[IPADDR]\]
+-green [LOGDATE] postfix/smtp[PID]: connect to .* \[[IPADDR]\]: read timeout \(port [NUM]\)
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after [WORD] from [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: 
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX &lt;CRLF&gt;\.&lt;CRLF&gt; workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
+-green [LOGDATE] postfix/anvil[PID]: statistics: 
+-green [LOGDATE] postfix/scache[PID]: statistics: 
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-09 10:43:30 UTC (rev 525)
+@@ -5,6 +5,4 @@
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+-green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+-yellow [LOGDATE] sendmail[PID]: alias database [PATH] out of date
+-red [LOGDATE] sendmail[PID]: rejecting connections on daemon MTA: load average: [NUM]
++green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+ green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+ green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
++yellow [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(OPEN Message Error/Authentication Failure\) [NUM] bytes
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -0,0 +1 @@
++green [LOGDATE] auditd[PID]: Audit daemon rotating log files
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,5 +3,3 @@
+ green [LOGDATE] dhcpd: DHCPDISCOVER from [MACADDR]
+ green [LOGDATE] dhcpd: Wrote [NUM] leases to leases file\.
+ green [LOGDATE] dhcpd: No hostname for [IPADDR]
+-green [LOGDATE] dhcpd: ip length [NUM] disagrees with bytes received [NUM].
+-green [LOGDATE] dhcpd: accepting packet with data after udp payload.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-03-09 10:43:30 UTC (rev 525)
+@@ -5,25 +5,3 @@
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Received higher prio advert
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) removing protocol Virtual Routes
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Transition to MASTER STATE
+-ignore [LOGDATE] Keepalived: Watchdog: Error while sending data to Healthcheck Child\. error=\(Broken pipe\)\.
+-green [LOGDATE] Keepalived: Watchdog: success connecting /tmp/\.healthcheckers wdog socket
+-green [LOGDATE] Keepalived: Watchdog: Healthcheck Child no longer exist, restarting\.\.\.
+-green [LOGDATE] Keepalived: Remove a zombie pid file /var/run/keepalived_checkers.pid
+-green [LOGDATE] Keepalived_healthcheckers: Timeout connect, timeout server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Removing service \[[IPADDR]:[NUM]\] from VS \[[IPADDR]:[NUM]\]
+-green [LOGDATE] Keepalived_healthcheckers: Remote SMTP server \[[IPADDR]:[NUM]\] connected\.
+-green [LOGDATE] Keepalived_healthcheckers: SMTP alert successfully sent\.
+-green [LOGDATE] Keepalived_healthcheckers: HTTP status code success to \[[IPADDR]:[NUM]\] url\([NUM]\)\.
+-green [LOGDATE] Keepalived_healthcheckers: Remote Web server \[[IPADDR]:[NUM]\] succeed on service\.
+-green [LOGDATE] Keepalived_healthcheckers: Adding service \[[IPADDR]:[NUM]\] to VS \[[IPADDR]:[NUM]\]
+-green [LOGDATE] Keepalived_healthcheckers: Connection trouble to: \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Read error with server \[[IPADDR]:[NUM]\]: Connection reset by peer
+-ignore [LOGDATE] Keepalived_healthcheckers: Error connecting server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Timeout WEB read server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Netlink reflector reports IP [IPADDR] added
+-green [LOGDATE] Keepalived_healthcheckers: Registering Kernel netlink reflector
+-green [LOGDATE] Keepalived_healthcheckers: Registering Kernel netlink comand channel
+-green [LOGDATE] Keepalived_healthcheckers: Configuration is using : [NUM] Bytes
+-green [LOGDATE] Keepalived_healthcheckers: IPVS : Service already exists
+-green [LOGDATE] Keepalived_healthcheckers: IPVS : Destination already exists
+-green [LOGDATE] Keepalived_healthcheckers: Activating healtchecker for service \[[IPADDR]:[NUM]\]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-09 10:43:30 UTC (rev 525)
+@@ -133,7 +133,8 @@
+ green [LOGDATE] kernel: Enabling the CPU's according to the ACPI table
+ green [LOGDATE] kernel: Enabling unmasked SIMD FPU exception support\.\.\. done\.
+ green [LOGDATE] kernel: e[NUM]: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
+-green [LOGDATE] kernel: e[NUM]: eth[NUM] NIC Link is Up [NUM] Mbps Full duplex
++green [LOGDATE] kernel: e[NUM]: eth[NUM] NIC Link is Up [NUM] Mbps [WORD] duplex
++green [LOGDATE] kernel: e[NUM]: eth[NUM]: e[NUM]_watchdog_task: NIC Link is Up [NUM] Mbps [WORD] Duplex
+ green [LOGDATE] kernel: eth[NUM]: MII #[HEX] registers are: [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX]\. 
+ green [LOGDATE] kernel: eth[NUM]: Airport entering sleep mode
+ green [LOGDATE] kernel: eth[NUM]: Airport waking up
+@@ -143,7 +144,7 @@
+ green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], I/O at [HEX][HEX], IRQ [NUM]
+ green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], IRQ [NUM]
+ green [LOGDATE] kernel: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
+-green [LOGDATE] kernel: eth[NUM]: Media Link On [NUM]mbps full-duplex 
++green [LOGDATE] kernel: eth[NUM]: Media Link On [NUM]mbps [WORD]-duplex 
+ green [LOGDATE] kernel: eth[NUM]: Promiscuous mode enabled
+ green [LOGDATE] kernel: eth[NUM]: Realtek RTL[NUM] PHY transceiver found at address [NUM]\.
+ green [LOGDATE] kernel: eth[NUM]: resuming
+@@ -667,6 +668,8 @@
+ green [LOGDATE] kernel: MD5 Hash NOT expected but found \([IPADDR], [NUM]\)-&gt;\([IPADDR], [NUM]\)
+ green [LOGDATE] kernel: printk: [NUM] messages suppressed.
+ 
++yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
++
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+ red [LOGDATE] kernel: hd[a-z]: dma_intr: error=[NUM]
+@@ -674,3 +677,4 @@
+ red [LOGDATE] kernel: hd[a-z]: packet command error:
+ red [LOGDATE] kernel: SCSI disk error : host [NUM] channel [NUM] id [NUM] lun [NUM] return code = [NUM]
+ red [LOGDATE] kernel: scsi[HEX]:[HEX]:[HEX]:[HEX]: Attempting to abort cmd
++red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,8 +3,8 @@
+ green [LOGDATE] named[PID]: check_hints: A records for J\.ROOT-SERVERS\.NET class [NUM] do not match hint records
+ green [LOGDATE] named[PID]: Cleaned cache of [NUM] RRset
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: bad zone transfer request: '[HOSTNAME]/IN': non-authoritative zone \(NOTAUTH\)
+-green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
+-green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
++ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
++ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: no more recursive clients: quota reached
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update forwarding denied
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update '[HOSTNAME]/IN' denied
+@@ -55,7 +55,7 @@
+ green [LOGDATE] named[PID]: Response from unexpected source \(\[[IPADDR]\]\.[NUM]\)
+ green [LOGDATE] named[PID]: running
+ green [LOGDATE] named[PID]: shutting down
+-green [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
++ignore [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
+ green [LOGDATE] named[PID]: stopping command channel on [IPADDR]#[NUM]
+ green [LOGDATE] named[PID]: suppressing duplicate notify \(&quot;[HOSTNAME]&quot; IN SOA\)
+ green [LOGDATE] named[PID]: sysquery: no addrs found for [USER] NS \(\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,3 +1,3 @@
+ green [LOGDATE] snmpd: snmpd shutdown failed
++green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
+-green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,2 +1 @@
+ green [LOGDATE] xinetd[PID]: Exiting\.\.\.
+-green [LOGDATE] xinetd[PID]: [NUM] .* no services. Exiting...
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -2,7 +2,7 @@
+ # choose your macronames carefully. regular expressions should never
+ # match a macroname!!
+ # entries are matched in the order specified
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+ IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-09 10:43:30 UTC (rev 525)
+@@ -28,8 +28,6 @@
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading fileblock
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading PASS response
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading USER string
+-green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
+-green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading OK enter password
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [PATH]: empty file
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): reading info from database
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): running [NUM] probes
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000055.html">[Upwatch-commits] r524 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+	<LI>Next message: <A HREF="000057.html">[Upwatch-commits] r526 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

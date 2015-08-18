@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r644 - upwatch/libdbi/config
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r644%20-%20upwatch/libdbi/config&In-Reply-To=%3C200608230904.k7N94D4p002432%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000177.html">
+   <LINK REL="Next"  HREF="000179.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r644 - upwatch/libdbi/config</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r644%20-%20upwatch/libdbi/config&In-Reply-To=%3C200608230904.k7N94D4p002432%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r644 - upwatch/libdbi/config">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Wed Aug 23 11:04:13 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000177.html">[Upwatch-commits] r643 - in upwatch/libdbi: common config
+</A></li>
+        <LI>Next message: <A HREF="000179.html">[Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#178">[ date ]</a>
+              <a href="thread.html#178">[ thread ]</a>
+              <a href="subject.html#178">[ subject ]</a>
+              <a href="author.html#178">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-23 11:04:13 +0200 (Wed, 23 Aug 2006)
+New Revision: 644
+
+Modified:
+   upwatch/libdbi/config/upwatch-full.mysql
+Log:
+The rack, notify and notify_cond tables are not used (anymore) so keep the default schema clean.
+
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 15:25:45 UTC (rev 643)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-23 09:04:13 UTC (rev 644)
+@@ -66,23 +66,6 @@
+ INSERT INTO pr_status ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+--- Table structure for table 'rack'
+---
+-
+--- FIXME: this table does not belong in the upwatch database
+-  
+-CREATE TABLE rack (
+-  id int unsigned NOT NULL auto_increment,
+-  contact int NOT NULL default 1,
+-  name varchar(128) NOT NULL default '',
+-  comment text NOT NULL,
+-  color smallint unsigned NOT NULL default '0',
+-  PRIMARY KEY  (id) 
+-) TYPE=MyISAM;
+-
+-INSERT INTO rack ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+-
+---
+ -- Table structure for table 'server'
+ --
+ 
+@@ -97,46 +80,3 @@
+ 
+ INSERT INTO server ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+---
+--- Table structure for table 'notify'
+---
+-
+-CREATE TABLE notify (
+-  id int NOT NULL auto_increment,
+-  name varchar(128) NOT NULL default '',
+-  contact int NOT NULL default 1,
+-  mail int NOT NULL default 1,
+-  sms int NOT NULL default 1,
+-  status enum('enabled', 'disabled', 'ok') NOT NULL default 'enabled',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id),
+-  KEY contact_key (contact)
+-) TYPE=MyISAM;
+-
+-INSERT INTO notify ( id, name, status, comment ) VALUES ( 1,'empty','disabled','do NOT delete!');
+-
+---
+--- Table structure for table 'notifycond'
+---
+-
+-CREATE TABLE notifycond (
+-  id int NOT NULL auto_increment,
+-  notify int NOT NULL default 1,
+-  bycolor enum('yes', 'no') NOT NULL default 'yes',
+-  atcolor smallint NOT NULL default '400',
+-  consecutive smallint NOT NULL default 1,
+-  bydate enum('yes', 'no') NOT NULL default 'no',
+-  fromwday tinyint NOT NULL default 0,
+-  fromhour tinyint NOT NULL default 0,
+-  frommin tinyint NOT NULL default 0,
+-  towday tinyint NOT NULL default 0,
+-  tohour tinyint NOT NULL default 0,
+-  tomin tinyint NOT NULL default 0,
+-  persist enum('yes', 'no') NOT NULL default 'no',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id),
+-  KEY notify_key (notify)
+-) TYPE=MyISAM;
+-
+-INSERT INTO notifycond ( id, notify, comment ) VALUES ( 1,1,'do NOT delete!');
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000177.html">[Upwatch-commits] r643 - in upwatch/libdbi: common config
+</A></li>
+	<LI>Next message: <A HREF="000179.html">[Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#178">[ date ]</a>
+              <a href="thread.html#178">[ thread ]</a>
+              <a href="subject.html#178">[ subject ]</a>
+              <a href="author.html#178">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

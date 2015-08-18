@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r681 - in upwatch/trunk: uw_accept uw_acceptbb	uw_setip
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r681%20-%20in%20upwatch/trunk%3A%20uw_accept%20uw_acceptbb%0A%09uw_setip&In-Reply-To=%3C200706011224.l51COtRi022355%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000215.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r681 - in upwatch/trunk: uw_accept uw_acceptbb	uw_setip</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r681%20-%20in%20upwatch/trunk%3A%20uw_accept%20uw_acceptbb%0A%09uw_setip&In-Reply-To=%3C200706011224.l51COtRi022355%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r681 - in upwatch/trunk: uw_accept uw_acceptbb	uw_setip">raarts at mail.berlios.de
+       </A><BR>
+    <I>Fri Jun  1 14:24:55 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000215.html">[Upwatch-commits] r680 - upwatch/trunk/uw_iptraf
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#216">[ date ]</a>
+              <a href="thread.html#216">[ thread ]</a>
+              <a href="subject.html#216">[ subject ]</a>
+              <a href="author.html#216">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-06-01 14:24:54 +0200 (Fri, 01 Jun 2007)
+New Revision: 681
+
+Modified:
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_setip/uw_setip.def
+Log:
+More dupe options.
+
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_accept/uw_accept.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -32,7 +32,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1985;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -34,7 +34,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1984;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+
+Modified: upwatch/trunk/uw_setip/uw_setip.def
+===================================================================
+--- upwatch/trunk/uw_setip/uw_setip.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_setip/uw_setip.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -31,7 +31,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1990;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+@@ -52,7 +52,7 @@
+ 
+ flag = {
+     name      = setipquery;
+-    value     = A;
++    value     = S;
+     arg_type  = string;
+     arg_default = &quot;update server set ip = '%s', nat = '%s' where id = '%s'&quot;;
+     descrip   = &quot;SQL query to use for updating ip addresses&quot;;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000215.html">[Upwatch-commits] r680 - upwatch/trunk/uw_iptraf
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#216">[ date ]</a>
+              <a href="thread.html#216">[ thread ]</a>
+              <a href="subject.html#216">[ subject ]</a>
+              <a href="author.html#216">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

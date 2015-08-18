@@ -1,0 +1,41 @@
+From raarts at mail.berlios.de  Sat Dec 23 22:16:36 2006
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Sat, 23 Dec 2006 22:16:36 +0100
+Subject: [Upwatch-commits] r656 - upwatch/trunk/uw_process
+Message-ID: <200612232116.kBNLGahO005153@sheep.berlios.de>
+
+Author: raarts
+Date: 2006-12-23 22:16:35 +0100 (Sat, 23 Dec 2006)
+New Revision: 656
+
+Modified:
+   upwatch/trunk/uw_process/notify.c
+Log:
+Buffer overflows are too easy to create...
+
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2006-10-18 21:59:37 UTC (rev 655)
++++ upwatch/trunk/uw_process/notify.c	2006-12-23 21:16:35 UTC (rev 656)
+@@ -181,7 +181,7 @@
+   } else {
+     subject_extra[0] = 0;
+   }
+-  sprintf(subject, "%s: %s %s (was %s) %s", servername,
++  snprintf(subject, sizeof(subject), "%s: %s %s (was %s) %s", servername,
+                    t->probe->module_name, color2string(t->res->color),
+                    color2string(t->res->prevhistcolor), subject_extra);
+ 
+@@ -195,7 +195,7 @@
+   } else {
+     msg[0] = 0;
+   }
+-  sprintf(body, "Dear customer,\n\n"
++  snprintf(body, sizeof(body), "Dear customer,\n\n"
+                 "Moments ago, at %s"
+                 "the status of probe %s\n"
+                 "at server %s\n"
+
+
+

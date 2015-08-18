@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r606 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r606%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604201631.k3KGVMGI028707%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000136.html">
+   <LINK REL="Next"  HREF="000138.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r606 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r606%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604201631.k3KGVMGI028707%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r606 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr 20 18:31:22 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000136.html">[Upwatch-commits] r605 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog
+</A></li>
+        <LI>Next message: <A HREF="000138.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#137">[ date ]</a>
+              <a href="thread.html#137">[ thread ]</a>
+              <a href="subject.html#137">[ subject ]</a>
+              <a href="author.html#137">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-20 18:31:12 +0200 (Thu, 20 Apr 2006)
+New Revision: 606
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Kill obsolete option 'domain', we use realm for this now.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-04-20 16:27:24 UTC (rev 605)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-04-20 16:31:12 UTC (rev 606)
+@@ -34,19 +34,6 @@
+ 
+ // describe commandline flags
+ flag = {
+-    name      = domain;
+-    value     = D;
+-    arg_type  = string;
+-    descrip   = &quot;upwatch domain where this probe belongs to&quot;;
+-    doc       =
+-'The upwatch backend can work with several domains. Each domain is maintained in
+-a separate database, defines its own probes, and receives its own results. 
+-With this option you can specify the domain where the result for this probe
+-will be stored';
+-};
+-
+-// describe commandline flags
+-flag = {
+     name      = realm;
+     value     = R;
+     arg_type  = string;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000136.html">[Upwatch-commits] r605 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog
+</A></li>
+	<LI>Next message: <A HREF="000138.html">[Upwatch-commits] r607 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#137">[ date ]</a>
+              <a href="thread.html#137">[ thread ]</a>
+              <a href="subject.html#137">[ subject ]</a>
+              <a href="author.html#137">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

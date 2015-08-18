@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r485 - in upwatch/trunk: . upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r485%20-%20in%20upwatch/trunk%3A%20.%20upwatch&In-Reply-To=%3C200508170929.j7H9TDjJ020486%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000017.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r485 - in upwatch/trunk: . upwatch</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r485%20-%20in%20upwatch/trunk%3A%20.%20upwatch&In-Reply-To=%3C200508170929.j7H9TDjJ020486%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r485 - in upwatch/trunk: . upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Aug 17 11:29:13 CEST 2005</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000017.html">[Upwatch-commits] r486 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-08-17 11:29:08 +0200 (Wed, 17 Aug 2005)
+New Revision: 485
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/upwatch/generic.h
+Log:
+OpenBSD client support.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-06-23 17:49:04 UTC (rev 484)
++++ upwatch/trunk/configure.ac	2005-08-17 09:29:08 UTC (rev 485)
+@@ -91,6 +91,23 @@
+     CFLAGS=&quot;${CFLAGS} -I/usr/local/include -I/usr/pkg/include&quot;
+     LDFLAGS=&quot;-L/usr/local/lib -L/usr/pkg/lib&quot;
+     ;;
++  *-*-openbsd*)
++    openbsd=true
++    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ;          then bindir='/usr/bin' ; fi
++    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ;        then sbindir='/usr/sbin' ; fi
++    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';   then libexecdir='/usr/libexec' ; fi
++    if test &quot;$datadir&quot; = '${prefix}/share' ;            then datadir='/usr/local/share' ; fi
++    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;           then sysconfdir='/etc' ; fi
++    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;       then sharedstatedir='/usr/local/com' ; fi
++    if test &quot;$localstatedir&quot; = '${prefix}/var' ;        then localstatedir='/var' ; fi
++    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ;          then libdir='/usr/lib' ; fi
++    if test &quot;$includedir&quot; = '${prefix}/include' ;       then includedir='/usr/include' ; fi
++    if test &quot;$oldincludedir&quot; = '/usr/include' ;         then oldincludedir='/usr/include' ; fi
++    if test &quot;$infodir&quot; = '${prefix}/info' ;             then infodir='/usr/share/info' ; fi
++    if test &quot;$mandir&quot; = '${prefix}/man' ;               then mandir='/usr/share/man' ; fi
++    CFLAGS=&quot;${CFLAGS} -I/usr/local/include&quot;
++    LDFLAGS=&quot;-L/usr/local/lib&quot;
++    ;;
+   *-*-solaris*)
+     solaris=true
+     if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+@@ -130,6 +147,7 @@
+ AM_CONDITIONAL(LINUX, test x$linux = xtrue)
+ AM_CONDITIONAL(FREEBSD, test x$freebsd = xtrue)
+ AM_CONDITIONAL(NETBSD, test x$netbsd = xtrue)
++AM_CONDITIONAL(OPENBSD, test x$openbsd = xtrue)
+ AM_CONDITIONAL(SOLARIS, test x$solaris = xtrue)
+ AM_CONDITIONAL(CYGWIN, test x$cygwin = xtrue)
+ 
+
+Modified: upwatch/trunk/upwatch/generic.h
+===================================================================
+--- upwatch/trunk/upwatch/generic.h	2005-06-23 17:49:04 UTC (rev 484)
++++ upwatch/trunk/upwatch/generic.h	2005-08-17 09:29:08 UTC (rev 485)
+@@ -12,6 +12,10 @@
+ #include &lt;db.h&gt;
+ #endif
+ 
++#ifndef ETIME
++#define ETIME ETIMEDOUT                         /* For OpenBSD and possibly more platforms */
++#endif
++
+ #ifdef USE_ST
+ #include &lt;st.h&gt;
+ #define sleep st_sleep
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000017.html">[Upwatch-commits] r486 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

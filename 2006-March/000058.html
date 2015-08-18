@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r527 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r527%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603151134.k2FBYd4I025105%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000057.html">
+   <LINK REL="Next"  HREF="000059.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r527 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r527%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603151134.k2FBYd4I025105%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r527 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Mar 15 12:34:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000057.html">[Upwatch-commits] r526 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+        <LI>Next message: <A HREF="000059.html">[Upwatch-commits] r528 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-15 12:34:27 +0100 (Wed, 15 Mar 2006)
+New Revision: 527
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+Log:
+Sync my regexes. dhcpd only
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-13 08:48:20 UTC (rev 526)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-15 11:34:27 UTC (rev 527)
+@@ -3,3 +3,12 @@
+ green [LOGDATE] dhcpd: DHCPDISCOVER from [MACADDR]
+ green [LOGDATE] dhcpd: Wrote [NUM] leases to leases file\.
+ green [LOGDATE] dhcpd: No hostname for [IPADDR]
++green [LOGDATE] dhcpd: Remove host declaration [WORD] or remove [IPADDR]
++green [LOGDATE] dhcpd: from the dynamic address pool for 
++green [LOGDATE] dhcpd: Dynamic and static leases present for [IPADDR].
++green [LOGDATE] dhcpd: Internet Software Consortium DHCP Server
++green [LOGDATE] dhcpd: Copyright [NUM]-[NUM] Internet Software Consortium.
++green [LOGDATE] dhcpd: All rights reserved.
++green [LOGDATE] dhcpd: For info, please visit <A HREF="http://www.isc.org/products/DHCP">http://www.isc.org/products/DHCP</A>
++green [LOGDATE] dhcpd: (Listening|Sending) on LPF/.*?/.*?/[IPADDR]/[NUM]
++green [LOGDATE] dhcpd: Sending on Socket/fallback/fallback-net
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000057.html">[Upwatch-commits] r526 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+	<LI>Next message: <A HREF="000059.html">[Upwatch-commits] r528 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

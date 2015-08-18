@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-July/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r682%20-%20in%20upwatch/trunk%3A%20config%20uw_send%20uw_sysstat&In-Reply-To=%3C200707020810.l628AkNB011487%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000218.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r682%20-%20in%20upwatch/trunk%3A%20config%20uw_send%20uw_sysstat&In-Reply-To=%3C200707020810.l628AkNB011487%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat">raarts at mail.berlios.de
+       </A><BR>
+    <I>Mon Jul  2 10:10:46 CEST 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000218.html">[Upwatch-commits] r683 - in upwatch/trunk: common doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#217">[ date ]</a>
+              <a href="thread.html#217">[ thread ]</a>
+              <a href="subject.html#217">[ subject ]</a>
+              <a href="author.html#217">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-07-02 10:10:45 +0200 (Mon, 02 Jul 2007)
+New Revision: 682
+
+Modified:
+   upwatch/trunk/config/upwatch.conf
+   upwatch/trunk/uw_send/uw_send.def
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+uw_sysstat and uw_send would not start if they encountered
+database options. Fixed.
+
+
+Modified: upwatch/trunk/config/upwatch.conf
+===================================================================
+--- upwatch/trunk/config/upwatch.conf	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/config/upwatch.conf	2007-07-02 08:10:45 UTC (rev 682)
+@@ -25,10 +25,10 @@
+ spooldir /var/spool/upwatch
+ 
+ # connect to database
+-dbtype mysql
+-dbhost 1.1.1.1
+-dbport 3306
+-dbname dummy
+-dbuser username
+-dbpasswd password
++#dbtype mysql
++#dbhost 1.1.1.1
++#dbport 3306
++#dbname dummy
++#dbuser username
++#dbpasswd password
+ 
+
+Modified: upwatch/trunk/uw_send/uw_send.def
+===================================================================
+--- upwatch/trunk/uw_send/uw_send.def	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/uw_send/uw_send.def	2007-07-02 08:10:45 UTC (rev 682)
+@@ -147,3 +147,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
++
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2007-07-02 08:10:45 UTC (rev 682)
+@@ -247,3 +247,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000218.html">[Upwatch-commits] r683 - in upwatch/trunk: common doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#217">[ date ]</a>
+              <a href="thread.html#217">[ thread ]</a>
+              <a href="subject.html#217">[ subject ]</a>
+              <a href="author.html#217">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

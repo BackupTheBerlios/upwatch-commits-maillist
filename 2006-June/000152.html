@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r618 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r618%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200606061801.k56I1Pd5025741%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000151.html">
+   <LINK REL="Next"  HREF="000155.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r618 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r618%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200606061801.k56I1Pd5025741%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r618 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Jun  6 20:01:25 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000151.html">[Upwatch-commits] r617 - upwatch/trunk/uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000155.html">[Upwatch-commits] r619 - in upwatch/trunk/libstatgrab-0.13: . docs docs/libstatgrab docs/saidar docs/statgrab examples src src/libstatgrab src/saidar src/statgrab
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#152">[ date ]</a>
+              <a href="thread.html#152">[ thread ]</a>
+              <a href="subject.html#152">[ subject ]</a>
+              <a href="author.html#152">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-06 20:01:03 +0200 (Tue, 06 Jun 2006)
+New Revision: 618
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Option '-h' is already in use so remove the short option from --hwstats
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-06-06 17:47:27 UTC (rev 617)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-06-06 18:01:03 UTC (rev 618)
+@@ -108,7 +108,6 @@
+ 
+ flag = {
+     name      = hwstats;
+-    value     = h;
+     arg_type  = bool;
+     descrip   = &quot;Generate hardware statistics&quot;;
+     doc       =
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000151.html">[Upwatch-commits] r617 - upwatch/trunk/uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000155.html">[Upwatch-commits] r619 - in upwatch/trunk/libstatgrab-0.13: . docs docs/libstatgrab docs/saidar docs/statgrab examples src src/libstatgrab src/saidar src/statgrab
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#152">[ date ]</a>
+              <a href="thread.html#152">[ thread ]</a>
+              <a href="subject.html#152">[ subject ]</a>
+              <a href="author.html#152">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

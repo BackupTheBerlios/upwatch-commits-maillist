@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r627 - upwatch/trunk/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r627%20-%20upwatch/trunk/common&In-Reply-To=%3C200606211524.k5LFOkDZ000682%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000160.html">
+   <LINK REL="Next"  HREF="000162.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r627 - upwatch/trunk/common</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r627%20-%20upwatch/trunk/common&In-Reply-To=%3C200606211524.k5LFOkDZ000682%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r627 - upwatch/trunk/common">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Jun 21 17:24:46 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000160.html">[Upwatch-commits] r626 - upwatch/trunk/common
+</A></li>
+        <LI>Next message: <A HREF="000162.html">[Upwatch-commits] r628 - in upwatch/trunk: . st-1.7 st-1.7/docs st-1.7/examples st-1.7/extensions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#161">[ date ]</a>
+              <a href="thread.html#161">[ thread ]</a>
+              <a href="subject.html#161">[ subject ]</a>
+              <a href="author.html#161">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-21 17:24:46 +0200 (Wed, 21 Jun 2006)
+New Revision: 627
+
+Modified:
+   upwatch/trunk/common/init.tpl
+Log:
+No, undo last commit, setting that variable in the initscript does NOT work
+
+
+Modified: upwatch/trunk/common/init.tpl
+===================================================================
+--- upwatch/trunk/common/init.tpl	2006-06-21 15:10:11 UTC (rev 626)
++++ upwatch/trunk/common/init.tpl	2006-06-21 15:24:46 UTC (rev 627)
+@@ -19,9 +19,6 @@
+   . /etc/sysconfig/upwatch
+ fi
+ 
+-# Needed for glibc 2.4
+-export LD_POINTER_GUARD=0
+-
+ # See how we were called.
+ case &quot;$1&quot; in
+   start)
+@@ -77,9 +74,6 @@
+ # Description:         start [+prog-name+]
+ ### END INIT INFO
+ 
+-# Needed for glibc 2.4
+-export LD_POINTER_GUARD=0
+-
+ DEAMON=[+(getenv &quot;sbindir&quot;)+]/[+prog-name+]
+ 
+ test -x $DEAMON || exit 5
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000160.html">[Upwatch-commits] r626 - upwatch/trunk/common
+</A></li>
+	<LI>Next message: <A HREF="000162.html">[Upwatch-commits] r628 - in upwatch/trunk: . st-1.7 st-1.7/docs st-1.7/examples st-1.7/extensions
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#161">[ date ]</a>
+              <a href="thread.html#161">[ thread ]</a>
+              <a href="subject.html#161">[ subject ]</a>
+              <a href="author.html#161">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

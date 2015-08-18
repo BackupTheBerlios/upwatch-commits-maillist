@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r520 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r520%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603061049.k26AnRs7031797%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000050.html">
+   <LINK REL="Next"  HREF="000052.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r520 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r520%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200603061049.k26AnRs7031797%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r520 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Mar  6 11:49:27 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000050.html">[Upwatch-commits] r519 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000052.html">[Upwatch-commits] r521 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-06 11:49:26 +0100 (Mon, 06 Mar 2006)
+New Revision: 520
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+We don't care if a peer is ignored for a while
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-06 10:38:24 UTC (rev 519)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-06 10:49:26 UTC (rev 520)
+@@ -11,4 +11,5 @@
+ green [LOGDATE] ntpd[PID]: dispatch_imsg in main: pipe closed
+ green [LOGDATE] ntpd[PID]: Lost child: child exited
+ green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
++green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000050.html">[Upwatch-commits] r519 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000052.html">[Upwatch-commits] r521 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

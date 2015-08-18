@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r594 - upwatch/trunk/uw_mysql
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r594%20-%20upwatch/trunk/uw_mysql&In-Reply-To=%3C200604162233.k3GMXEsM006042%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000124.html">
+   <LINK REL="Next"  HREF="000126.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r594 - upwatch/trunk/uw_mysql</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r594%20-%20upwatch/trunk/uw_mysql&In-Reply-To=%3C200604162233.k3GMXEsM006042%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r594 - upwatch/trunk/uw_mysql">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Apr 17 00:33:14 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000124.html">[Upwatch-commits] r593 - upwatch/trunk/upwatch
+</A></li>
+        <LI>Next message: <A HREF="000126.html">[Upwatch-commits] r595 - upwatch/trunk/uw_mysql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#125">[ date ]</a>
+              <a href="thread.html#125">[ thread ]</a>
+              <a href="subject.html#125">[ subject ]</a>
+              <a href="author.html#125">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-17 00:32:58 +0200 (Mon, 17 Apr 2006)
+New Revision: 594
+
+Modified:
+   upwatch/trunk/uw_mysql/run.c
+Log:
+MYSQL_OPT_COMPRESS is not used so setting this option is useless
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2006-04-16 22:18:08 UTC (rev 593)
++++ upwatch/trunk/uw_mysql/run.c	2006-04-16 22:32:58 UTC (rev 594)
+@@ -256,7 +256,6 @@
+   dbuser = probe-&gt;dbuser;
+   dbpasswd = probe-&gt;dbpasswd;
+ 
+-  option = 0 ; mysql_options(mysql, MYSQL_OPT_COMPRESS, &amp;option);
+   option = 50; mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, &amp;option);
+   gettimeofday(&amp;start, NULL);
+   if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000124.html">[Upwatch-commits] r593 - upwatch/trunk/upwatch
+</A></li>
+	<LI>Next message: <A HREF="000126.html">[Upwatch-commits] r595 - upwatch/trunk/uw_mysql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#125">[ date ]</a>
+              <a href="thread.html#125">[ thread ]</a>
+              <a href="subject.html#125">[ subject ]</a>
+              <a href="author.html#125">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

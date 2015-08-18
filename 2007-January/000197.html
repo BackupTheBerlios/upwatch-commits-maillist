@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r662 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r662%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200701270023.l0R0NIDW027124%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000196.html">
+   <LINK REL="Next"  HREF="000198.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r662%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200701270023.l0R0NIDW027124%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sat Jan 27 01:23:18 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000196.html">[Upwatch-commits] r661 - in upwatch/trunk: . common doc upwatch	uw_process
+</A></li>
+        <LI>Next message: <A HREF="000198.html">[Upwatch-commits] r663 - in upwatch/trunk: . common upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-27 01:23:17 +0100 (Sat, 27 Jan 2007)
+New Revision: 662
+
+Modified:
+   upwatch/trunk/uw_sysstat/probe.def
+Log:
+
+Sysstat probe is not added by hand.
+
+
+Modified: upwatch/trunk/uw_sysstat/probe.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/probe.def	2007-01-16 22:54:53 UTC (rev 661)
++++ upwatch/trunk/uw_sysstat/probe.def	2007-01-27 00:23:17 UTC (rev 662)
+@@ -5,7 +5,7 @@
+   name = &quot;sysstat&quot;;
+   id = 5;
+   descrip = &quot;System information like load average, CPU/MEM usage etc&quot;;
+-  addbyhand = &quot;yes&quot;;
++  addbyhand = &quot;no&quot;;
+   class = &quot;&quot;;
+   graphgroup = &quot;sysstat&quot;;
+   graphtypes = &quot;cpu loadavg memory blockio swap systemp&quot;;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000196.html">[Upwatch-commits] r661 - in upwatch/trunk: . common doc upwatch	uw_process
+</A></li>
+	<LI>Next message: <A HREF="000198.html">[Upwatch-commits] r663 - in upwatch/trunk: . common upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

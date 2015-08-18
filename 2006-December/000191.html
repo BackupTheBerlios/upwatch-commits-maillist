@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r656 - upwatch/trunk/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r656%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200612232116.kBNLGahO005153%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r656 - upwatch/trunk/uw_process</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r656%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200612232116.kBNLGahO005153%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r656 - upwatch/trunk/uw_process">raarts at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 23 22:16:36 CET 2006</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#191">[ date ]</a>
+              <a href="thread.html#191">[ thread ]</a>
+              <a href="subject.html#191">[ subject ]</a>
+              <a href="author.html#191">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-12-23 22:16:35 +0100 (Sat, 23 Dec 2006)
+New Revision: 656
+
+Modified:
+   upwatch/trunk/uw_process/notify.c
+Log:
+Buffer overflows are too easy to create...
+
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2006-10-18 21:59:37 UTC (rev 655)
++++ upwatch/trunk/uw_process/notify.c	2006-12-23 21:16:35 UTC (rev 656)
+@@ -181,7 +181,7 @@
+   } else {
+     subject_extra[0] = 0;
+   }
+-  sprintf(subject, &quot;%s: %s %s (was %s) %s&quot;, servername,
++  snprintf(subject, sizeof(subject), &quot;%s: %s %s (was %s) %s&quot;, servername,
+                    t-&gt;probe-&gt;module_name, color2string(t-&gt;res-&gt;color),
+                    color2string(t-&gt;res-&gt;prevhistcolor), subject_extra);
+ 
+@@ -195,7 +195,7 @@
+   } else {
+     msg[0] = 0;
+   }
+-  sprintf(body, &quot;Dear customer,\n\n&quot;
++  snprintf(body, sizeof(body), &quot;Dear customer,\n\n&quot;
+                 &quot;Moments ago, at %s&quot;
+                 &quot;the status of probe %s\n&quot;
+                 &quot;at server %s\n&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#191">[ date ]</a>
+              <a href="thread.html#191">[ thread ]</a>
+              <a href="subject.html#191">[ subject ]</a>
+              <a href="author.html#191">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

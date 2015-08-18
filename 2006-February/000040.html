@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r509 - upwatch/trunk/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r509%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200602182248.k1IMmE9A012220%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000041.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r509 - upwatch/trunk/uw_process</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r509%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200602182248.k1IMmE9A012220%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r509 - upwatch/trunk/uw_process">raarts at berlios.de
+       </A><BR>
+    <I>Sat Feb 18 23:48:14 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000041.html">[Upwatch-commits] r510 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-02-18 23:48:13 +0100 (Sat, 18 Feb 2006)
+New Revision: 509
+
+Modified:
+   upwatch/trunk/uw_process/iptraf.c
+   upwatch/trunk/uw_process/sysstat.c
+Log:
+Extra error report on insert error
+Remove superfluous '0' value from insert query. Totally messed things up.
+
+
+Modified: upwatch/trunk/uw_process/iptraf.c
+===================================================================
+--- upwatch/trunk/uw_process/iptraf.c	2006-01-04 21:45:35 UTC (rev 508)
++++ upwatch/trunk/uw_process/iptraf.c	2006-02-18 22:48:13 UTC (rev 509)
+@@ -52,7 +52,7 @@
+   if (res-&gt;color &gt; def-&gt;slotday_max_color) {
+     def-&gt;slotday_max_color = res-&gt;color;
+   }
+-  sprintf(buf, &quot;(DEFAULT, '%u', '%f', '%f', '0', '%u', '%u', '%f', '%f', '')&quot;,
++  sprintf(buf, &quot;(DEFAULT, '%u', '%f', '%f', '%u', '%u', '%f', '%f', '')&quot;,
+                def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color,
+                res-&gt;incoming, res-&gt;outgoing);
+ 
+
+Modified: upwatch/trunk/uw_process/sysstat.c
+===================================================================
+--- upwatch/trunk/uw_process/sysstat.c	2006-01-04 21:45:35 UTC (rev 508)
++++ upwatch/trunk/uw_process/sysstat.c	2006-02-18 22:48:13 UTC (rev 509)
+@@ -44,6 +44,7 @@
+   if (mysql_errno(t-&gt;probe-&gt;db) == ER_DUP_ENTRY) {
+     t-&gt;seen_before = TRUE;
+   } else if (mysql_errno(t-&gt;probe-&gt;db)) {
++    LOG(LOG_WARNING, &quot;%s:[%u] %s&quot;, &quot;insert into pr_sysstat_raw&quot;, mysql_errno(t-&gt;probe-&gt;db), mysql_error(t-&gt;probe-&gt;db));
+     return 0; // other failure
+   }
+   return 1; // success
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000041.html">[Upwatch-commits] r510 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

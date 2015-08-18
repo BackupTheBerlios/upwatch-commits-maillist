@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r539%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200603310953.k2V9ron5028938%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000069.html">
+   <LINK REL="Next"  HREF="000071.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r539%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200603310953.k2V9ron5028938%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Mar 31 11:53:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000069.html">[Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes
+</A></li>
+        <LI>Next message: <A HREF="000071.html">[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-31 11:53:48 +0200 (Fri, 31 Mar 2006)
+New Revision: 539
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc
+Removed:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+Log:
+Add lots of regexes, including a dmesg.
+While there: remove netland specific files, they are not usefull in the berlios repository. 
+We need a tree of our own for this. Then use this tree for generating our own rpm.
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-31 09:53:48 UTC (rev 539)
+@@ -6,3 +6,5 @@
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
++
++red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] apmd[PID]: Charge: \* \* \* \(-[NUM]% unknown\)
+ green [LOGDATE] apmd[PID]: Exiting
+ green [LOGDATE] apmd[PID]: Version [NUM]\.[NUM]final \(APM BIOS [NUM]\.[NUM], Linux driver [NUM]\.[NUM]\)
++green [LOGDATE] apmd[PID]: apmd .* interfacing with apm driver .* and APM BIOS 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1 +1,2 @@
+ green [LOGDATE] auditd[PID]: Audit daemon rotating log files
++green [LOGDATE] auditd[PID]: Init complete, auditd .* listening for events
+
+Deleted: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,2 +0,0 @@
+-green [LOGDATE] fast[PID]: ssh connection for [USER] to \(\) finished
+-green [LOGDATE] fast[PID]: ssh connection for [USER] to [IPADDR] \(.*\) finished
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -7,3 +7,4 @@
+ green [LOGDATE] httpd: \[[SMONTH] [LOGDATE]\] \[warn\] module status_module is already loaded, skipping
+ green [LOGDATE] httpd: \[[SMONTH] [LOGDATE]\] \[warn\] NameVirtualHost [IPADDR]:[NUM] has no VirtualHosts
+ green [LOGDATE] httpd: [USER]
++green [LOGDATE] logger: HTTP down: return value was 0
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 09:53:48 UTC (rev 539)
+@@ -4,7 +4,8 @@
+ green [LOGDATE] kernel: ACPI: BOOT
+ green [LOGDATE] kernel: ACPI: DSDT
+ green [LOGDATE] kernel: ACPI: FADT
+-green [LOGDATE] kernel: ACPI: Interpreter enabled
++green [LOGDATE] kernel: ACPI: Interpreter (enabled|disabled)
++green [LOGDATE] kernel: pnp: PnP ACPI: (disabled|enabled)
+ green [LOGDATE] kernel: ACPI: IRQ[NUM] SCI: Edge set to Level Trigger
+ green [LOGDATE] kernel: ACPI: MADT
+ green [LOGDATE] kernel: ACPI: PCI Interrupt Link \[LNK[A-Z]\] enabled at IRQ [NUM]
+@@ -20,6 +21,8 @@
+ green [LOGDATE] kernel: ACPI: \(supports S[NUM] S[NUM] S[NUM] S[NUM] S[NUM]\)
+ green [LOGDATE] kernel: ACPI table found: (APIC|BOOT|FACP|RSDT|SPCR) v[NUM]
+ green [LOGDATE] kernel: ACPI: Using PIC for interrupt routing
++green [LOGDATE] kernel: ACPI: BIOS age \([NUM]\) fails cutoff \([NUM]\), acpi=force is required to enable ACPI
++green [LOGDATE] kernel: ACPI: Disabling ACPI support
+ green [LOGDATE] kernel: Activating ISA DMA hang workarounds\.
+ green [LOGDATE] kernel: adb: finished probe task\.\.\.
+ green [LOGDATE] kernel: ADB keyboard at [NUM], handler [NUM]
+@@ -69,7 +72,7 @@
+ green [LOGDATE] kernel: \.\.\.changing IO-APIC physical APIC ID to [NUM] \.\.\. ok\.
+ green [LOGDATE] kernel: Checking for popad bug\.\.\. OK\.
+ green [LOGDATE] kernel: Checking 'hlt' instruction\.\.\.
+-green [LOGDATE] kernel: checking if image is initramfs\.\.\.it isn't \(no cpio magic\); looks like an initrd
++green [LOGDATE] kernel: checking if image is initramfs
+ green [LOGDATE] kernel: Checking if this processor honours the WP bit even in supervisor mode\.\.\. Ok\.
+ green [LOGDATE] kernel: Checking [NUM]/[NUM] coupling\.\.\. Ok, fpu using exception [NUM] error reporting\. 
+ green [LOGDATE] kernel: Checking ReiserFS transaction log \(device [NUM]:[NUM]\) \.\.\.
+@@ -459,7 +462,7 @@
+ green [LOGDATE] kernel: PCI: Sharing IRQ [NUM] with [NUM]:[HEX]\.[NUM]
+ green [LOGDATE] kernel: PCI: Using ACPI for IRQ routing
+ green [LOGDATE] kernel: PCI: Using configuration type [NUM]
+-green [LOGDATE] kernel: PCI: Using IRQ router [WORD] \[[NUM]/[NUM]\] at [NUM]:[HEX]\.[NUM]
++green [LOGDATE] kernel: PCI: Using IRQ router [WORD]
+ green [LOGDATE] kernel: PCI: Via IRQ fixup for [NUM]:[NUM]\.[NUM], from [NUM] to [NUM]
+ green [LOGDATE] kernel: \*pde = [NUM]
+ green [LOGDATE] kernel: per-CPU timeslice cutoff: [NUM]\.[NUM] usecs\.
+@@ -562,7 +565,7 @@
+ green [LOGDATE] kernel: SELinux:  Unregistering netfilter hooks
+ green [LOGDATE] kernel: sending pkt_too_big \(len[PID] pmtu[PID]\) to self
+ green [LOGDATE] kernel: Serial driver version
+-green [LOGDATE] kernel: Serial: [NUM]/[NUM] driver \$Revision: 1.5 $ [NUM] ports, IRQ sharing enabled
++green [LOGDATE] kernel: Serial: [NUM]/[NUM] driver \$Revision: [NUM]\.[NUM] $ [NUM] ports, IRQ sharing enabled
+ green [LOGDATE] kernel:   Serial sub-system self-test: passed\.
+ green [LOGDATE] kernel: serio: .* port at [HEX],[HEX] irq [NUM]
+ green [LOGDATE] kernel: Setting [NUM] in the phys_id_present_map
+@@ -645,7 +648,7 @@
+ green [LOGDATE] kernel: using fastest function: p[I\d]*_mmx \([NUM]\.[NUM] MB/sec\)
+ green [LOGDATE] kernel: using i2c address: [NUM] from device-tree
+ green [LOGDATE] kernel: Using local APIC timer interrupts\.
+-green [LOGDATE] kernel: Using pmtmr for high-res timesource
++green [LOGDATE] kernel: Using [WORD] for high-res timesource
+ green [LOGDATE] kernel: Using r[NUM] hash to sort names
+ green [LOGDATE] kernel: __va_range\([HEX], [HEX]\): idx=[NUM] mapped at [HEX]
+ green [LOGDATE] kernel:   Vendor: .* Model: .* Rev: .*
+@@ -667,6 +670,27 @@
+ green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
+ green [LOGDATE] kernel: MD5 Hash NOT expected but found \([IPADDR], [NUM]\)-&gt;\([IPADDR], [NUM]\)
+ green [LOGDATE] kernel: printk: [NUM] messages suppressed.
++green [LOGDATE] kernel: Using x86 segment limits to approximate NX protection
++green [LOGDATE] kernel: Security Framework v.* initialized
++green [LOGDATE] kernel: Mount-cache hash table entries: [NUM]
++green [LOGDATE] kernel: PCI quirk: region .* claimed by
++green [LOGDATE] kernel: PCI: Bridge: 
++green [LOGDATE] kernel: IO window:
++green [LOGDATE] kernel: MEM window:
++green [LOGDATE] kernel: PREFETCH window: 
++green [LOGDATE] kernel: ksign: Installing public key data
++green [LOGDATE] kernel: Loading keyring
++green [LOGDATE] kernel: - Added public key
++green [LOGDATE] kernel: - User ID: .* (Kernel Module GPG key)
++green [LOGDATE] kernel: io scheduler [WORD] registered
++green [LOGDATE] kernel: PNP: No PS/2 controller found. Probing ports directly
++green [LOGDATE] kernel: md: bitmap version [NUM]\.[NUM]
++green [LOGDATE] kernel: IP route cache hash table entries: [NUM]
++green [LOGDATE] kernel: TCP established hash table entries: [NUM]
++green [LOGDATE] kernel: TCP bind hash table entries: [NUM]
++green [LOGDATE] kernel: TCP [WORD] registered
++green [LOGDATE] kernel: Using IPI Shortcut mode
++green [LOGDATE] kernel: Write protecting the kernel read-only data: [NUM]k
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
+ 
+@@ -678,3 +702,5 @@
+ red [LOGDATE] kernel: SCSI disk error : host [NUM] channel [NUM] id [NUM] lun [NUM] return code = [NUM]
+ red [LOGDATE] kernel: scsi[HEX]:[HEX]:[HEX]:[HEX]: Attempting to abort cmd
+ red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
++red [LOGDATE] kernel: attempt to access beyond end of device
++red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+
+Deleted: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,2 +0,0 @@
+-green [LOGDATE] make-backup.sh[PID]: backup done
+-
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -12,4 +12,5 @@
+ green [LOGDATE] ntpd[PID]: Lost child: child exited
+ green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
+ green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
++green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc	2006-03-31 09:53:48 UTC (rev 539)
+@@ -0,0 +1 @@
++green [LOGDATE] rpc.statd[PID]: gethostbyname error for [WORD]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,3 +1,5 @@
+ green [LOGDATE] snmpd: snmpd shutdown failed
+ green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
++green [LOGDATE] snmpd[PID]: [smux_accept] accepted fd [NUM] from  \[[IPADDR]\]:[NUM]
++green [LOGDATE] snmpd[20178]: accepted smux peer: oid SNMPv2-SMI::enterprises\.[NUM]\.[NUM]\.[NUM]\.[NUM], descr 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000069.html">[Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes
+</A></li>
+	<LI>Next message: <A HREF="000071.html">[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

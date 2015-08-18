@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r642 - in upwatch/libdbi: common config
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r642%20-%20in%20upwatch/libdbi%3A%20common%20config&In-Reply-To=%3C200608221457.k7MEv2Ie029736%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000175.html">
+   <LINK REL="Next"  HREF="000177.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r642 - in upwatch/libdbi: common config</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r642%20-%20in%20upwatch/libdbi%3A%20common%20config&In-Reply-To=%3C200608221457.k7MEv2Ie029736%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r642 - in upwatch/libdbi: common config">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Aug 22 16:57:02 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000175.html">[Upwatch-commits] r641 - upwatch/libdbi/common
+</A></li>
+        <LI>Next message: <A HREF="000177.html">[Upwatch-commits] r643 - in upwatch/libdbi: common config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#176">[ date ]</a>
+              <a href="thread.html#176">[ thread ]</a>
+              <a href="subject.html#176">[ subject ]</a>
+              <a href="author.html#176">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-22 16:57:02 +0200 (Tue, 22 Aug 2006)
+New Revision: 642
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+   upwatch/libdbi/config/upwatch-full.mysql
+Log:
+Prevent name clashes in the database schema. 
+With these changes I am able to create a correct postgresql schema automatically using SQL::Translator.
+
+There should be no functional change
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 14:37:04 UTC (rev 641)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 14:57:02 UTC (rev 642)
+@@ -97,8 +97,8 @@
+ ESAC type +][+ ENDFOR def+]
+   PRIMARY KEY  (id),
+   KEY tbldomid (tblid, domid, id),
+-  KEY server (server),
+-  KEY notify (notify),
++  KEY server_key_[+name+] (server),
++  KEY notify_key_[+name+] (notify),
+   KEY ipaddress (ipaddress),
+   KEY domtbl (domid, tblid)
+ ) TYPE=MyISAM;
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:37:04 UTC (rev 641)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:57:02 UTC (rev 642)
+@@ -32,7 +32,7 @@
+   UNIQUE KEY probtime (probe,stattime),
+   UNIQUE KEY probclstat (probe,class,stattime),
+   KEY stattime (stattime),
+-  KEY contact (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
+@@ -57,10 +57,10 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY uprobe (class,probe),
+   KEY class (class),
+-  KEY probe (probe),
+-  KEY server (server),
++  KEY probe_key (probe),
++  KEY server_key (server),
+   KEY expires (expires),
+-  KEY contact (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_status set id = '1', message = 'do NOT delete!';
+@@ -108,7 +108,7 @@
+   status enum('enabled', 'disabled', 'ok') NOT NULL default 'enabled',
+   comment text NOT NULL,
+   PRIMARY KEY  (id),
+-  KEY (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO notify set id = '1', name = 'empty', status = 'disabled', comment = 'do NOT delete!';
+@@ -133,7 +133,7 @@
+   persist enum('yes', 'no') NOT NULL default 'no',
+   comment text NOT NULL,
+   PRIMARY KEY  (id),
+-  KEY (notify)
++  KEY notify_key (notify)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO notifycond set id = '1', notify = '1';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000175.html">[Upwatch-commits] r641 - upwatch/libdbi/common
+</A></li>
+	<LI>Next message: <A HREF="000177.html">[Upwatch-commits] r643 - in upwatch/libdbi: common config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#176">[ date ]</a>
+              <a href="thread.html#176">[ thread ]</a>
+              <a href="subject.html#176">[ subject ]</a>
+              <a href="author.html#176">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

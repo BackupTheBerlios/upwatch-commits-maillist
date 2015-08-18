@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r629 - upwatch/trunk/doc
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r629%20-%20upwatch/trunk/doc&In-Reply-To=%3C200606261345.k5QDjHPU008335%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000162.html">
+   <LINK REL="Next"  HREF="000164.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r629 - upwatch/trunk/doc</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r629%20-%20upwatch/trunk/doc&In-Reply-To=%3C200606261345.k5QDjHPU008335%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r629 - upwatch/trunk/doc">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Jun 26 15:45:17 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000162.html">[Upwatch-commits] r628 - in upwatch/trunk: . st-1.7 st-1.7/docs st-1.7/examples st-1.7/extensions
+</A></li>
+        <LI>Next message: <A HREF="000164.html">[Upwatch-commits] r630 - upwatch/trunk/uw_purple
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#163">[ date ]</a>
+              <a href="thread.html#163">[ thread ]</a>
+              <a href="subject.html#163">[ subject ]</a>
+              <a href="author.html#163">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-26 15:45:17 +0200 (Mon, 26 Jun 2006)
+New Revision: 629
+
+Modified:
+   upwatch/trunk/doc/about.xml
+   upwatch/trunk/doc/client-configuration.xml
+Log:
+A few documentation fixes.
+
+* update operating systems to reality
+* &quot;forget&quot; to mention the gui because we don't have one (yet).
+* remove blurb about mbmon on OpenBSD, we don't use that anymore since we query  the hw.sensors sysctls. Much more secure.
+
+
+
+Modified: upwatch/trunk/doc/about.xml
+===================================================================
+--- upwatch/trunk/doc/about.xml	2006-06-26 11:04:28 UTC (rev 628)
++++ upwatch/trunk/doc/about.xml	2006-06-26 13:45:17 UTC (rev 629)
+@@ -30,13 +30,15 @@
+     &lt;listitem&gt;&lt;para&gt;Extensive and complete documentation, partly generated from source&lt;/para&gt;&lt;/listitem&gt;
+     &lt;listitem&gt;&lt;para&gt;Multi-tenanting: multiple companies can run monitoring services for network
+     of multiple client-companies using the same backend+probe serverpark&lt;/para&gt;&lt;/listitem&gt;
+-    &lt;listitem&gt;&lt;para&gt;OS support: clients available for Linux, Windows, FreeBSD, Solaris, server runs on
+-    linux or freeBSD, remote monitoring is linux only.&lt;/para&gt;&lt;/listitem&gt;
++    &lt;listitem&gt;&lt;para&gt;OS support: clients available for Linux, OpenBSD, NetBSD, Windows, FreeBSD, Solaris, server runs on
++    Linux, OpenBSD or NetBSD, remote monitoring is linux only.&lt;/para&gt;&lt;/listitem&gt;
+     &lt;listitem&gt;&lt;para&gt;Monitoring results are in XML, and can be pre- and postprocessed&lt;/para&gt;&lt;/listitem&gt;
+-    &lt;listitem&gt;&lt;para&gt;Secure: run as ordinary user, developed with security in mind&lt;/para&gt;&lt;/listitem&gt;
++    &lt;listitem&gt;&lt;para&gt;Secure: runs mostly as ordinary user, developed with security in mind&lt;/para&gt;&lt;/listitem&gt;
+     &lt;listitem&gt;&lt;para&gt;Compatible with all Big Brother clients, imports bb-hosts file&lt;/para&gt;&lt;/listitem&gt;
++&lt;!-- We have no GUI
+     &lt;listitem&gt;&lt;para&gt;GUI is multi-language enabled (uses gettext)&lt;/para&gt;&lt;/listitem&gt;
+-    &lt;listitem&gt;&lt;para&gt;GUI has mobile client support&lt;/para&gt;&lt;/listitem&gt;
++    &lt;listitem&gt;&lt;para&gt;GUI has mobile client support&lt;/para&gt;&lt;/listitem&gt; 
++--&gt;
+     &lt;listitem&gt;&lt;para&gt;Generates realtime graphs from the database&lt;/para&gt;&lt;/listitem&gt;
+     &lt;listitem&gt;&lt;para&gt;Notifications by email or SMS.&lt;/para&gt;&lt;/listitem&gt;
+     &lt;listitem&gt;&lt;para&gt;Clients for: HTTP GET, IMAP, MSSQL, MySQL, PING, POP3, PostgreSQL, SMTP, 
+@@ -44,7 +46,8 @@
+     &lt;listitem&gt;&lt;para&gt;Local client detects: CPU load, loadavg, swap use, I/O use, memory use, and
+     where supported hardware info like CPU temperature, fan speed and Power voltages. Also you can
+     set it up to scan any logfile using regular expressions you supply.&lt;/para&gt;&lt;/listitem&gt;
+-    &lt;listitem&gt;&lt;para&gt;Fully opensource: GUI built on Apache/PHP, Backend on C/Perl, 
++    &lt;listitem&gt;&lt;para&gt;Fully opensource: Backend on C/Perl, 
++    &lt;!-- &lt;listitem&gt;&lt;para&gt;Fully opensource: GUI built on Apache/PHP, Backend on C/Perl,  --&gt;
+     Database is MySQL. Uses GNU configure.&lt;/para&gt;&lt;/listitem&gt;
+     &lt;/itemizedlist&gt;
+     &lt;/sect1&gt;
+
+Modified: upwatch/trunk/doc/client-configuration.xml
+===================================================================
+--- upwatch/trunk/doc/client-configuration.xml	2006-06-26 11:04:28 UTC (rev 628)
++++ upwatch/trunk/doc/client-configuration.xml	2006-06-26 13:45:17 UTC (rev 629)
+@@ -163,42 +163,6 @@
+       &lt;/itemizedlist&gt;
+ 
+        &lt;/sect3&gt;
+-       &lt;sect3 id=&quot;OpenBSD_problems&quot;&gt;
+-       &lt;title&gt;OpenBSD problems&lt;/title&gt;
+-&lt;para&gt;
+-&lt;literallayout&gt;
+-&gt;From: &quot;andreas guetl&quot; 
+-&gt;To: 
+-&gt;Subject: fix for mbmon on openbsd
+-&gt;Date: Fri, 5 Sep 2003 10:35:37 +0200
+-
+-hello!
+-
+-i tried various progs for monitoring cpu-temp on openbsd boxes
+-but none of them worked. then i found the solution on
+-<A HREF="http://archives.neohapsis.com/archives/openbsd/2001-02/2550.html">http://archives.neohapsis.com/archives/openbsd/2001-02/2550.html</A>
+-and id simply did the trick, not only for healthd (which gave me
+-wrong values) but also for mbmon which works very fine.
+-
+-1.) enable the option APERTURE in the kernel
+-enabled by default but disabled in any selfmade kernel, who needs
+-x on openbsd ;)
+-
+-2.) uncomment machdep.allowaperture in /etc/sysctl.conf and change
+-the value from 2 to 1
+-
+-after rebooting with the new kernel the monitoring works really
+-fine.
+-
+-thanks for your fine program!!
+-
+-(but what has the agp-aperture to do with monitoring hw?)
+-
+-so long,
+-andy 
+-&lt;/literallayout&gt;
+-&lt;/para&gt;
+-       &lt;/sect3&gt;
+        &lt;/sect2&gt;
+     &lt;/sect1&gt;
+     &lt;sect1 id=&quot;Monitoring_specific_logfiles&quot;&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000162.html">[Upwatch-commits] r628 - in upwatch/trunk: . st-1.7 st-1.7/docs st-1.7/examples st-1.7/extensions
+</A></li>
+	<LI>Next message: <A HREF="000164.html">[Upwatch-commits] r630 - upwatch/trunk/uw_purple
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#163">[ date ]</a>
+              <a href="thread.html#163">[ thread ]</a>
+              <a href="subject.html#163">[ subject ]</a>
+              <a href="author.html#163">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

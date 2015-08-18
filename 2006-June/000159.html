@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r625 - upwatch/trunk/uw_mysqlstats
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r625%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200606201704.k5KH4DUm016991%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000158.html">
+   <LINK REL="Next"  HREF="000160.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r625 - upwatch/trunk/uw_mysqlstats</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r625%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200606201704.k5KH4DUm016991%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r625 - upwatch/trunk/uw_mysqlstats">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Jun 20 19:04:13 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000158.html">[Upwatch-commits] r624 - upwatch/trunk/uw_process
+</A></li>
+        <LI>Next message: <A HREF="000160.html">[Upwatch-commits] r626 - upwatch/trunk/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#159">[ date ]</a>
+              <a href="thread.html#159">[ thread ]</a>
+              <a href="subject.html#159">[ subject ]</a>
+              <a href="author.html#159">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-20 19:03:42 +0200 (Tue, 20 Jun 2006)
+New Revision: 625
+
+Modified:
+   upwatch/trunk/uw_mysqlstats/run.c
+Log:
+Make sure there is usefull information in the database.
+The database fields are named like insertq, updateq etc so update the result file to reality.
+
+
+Modified: upwatch/trunk/uw_mysqlstats/run.c
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/run.c	2006-06-20 13:15:27 UTC (rev 624)
++++ upwatch/trunk/uw_mysqlstats/run.c	2006-06-20 17:03:42 UTC (rev 625)
+@@ -210,10 +210,10 @@
+   sprintf(buffer, &quot;%d&quot;, ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60)); 
+     xmlSetProp(mysqlstats, &quot;expires&quot;, buffer);
+   sprintf(buffer, &quot;%d&quot;, color);               xmlSetProp(mysqlstats, &quot;color&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;selectq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;select&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;insertq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;insert&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;updateq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;update&quot;, buffer);
+-  sprintf(buffer, &quot;%llu&quot;, probe-&gt;deleteq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;delete&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;selectq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;selectq&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;insertq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;insertq&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;updateq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;updateq&quot;, buffer);
++  sprintf(buffer, &quot;%llu&quot;, probe-&gt;deleteq);      subtree = xmlNewChild(mysqlstats, NULL, &quot;deleteq&quot;, buffer);
+   if (probe-&gt;msg) {
+     subtree = xmlNewTextChild(mysqlstats, NULL, &quot;info&quot;, probe-&gt;msg);
+     free(probe-&gt;msg);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000158.html">[Upwatch-commits] r624 - upwatch/trunk/uw_process
+</A></li>
+	<LI>Next message: <A HREF="000160.html">[Upwatch-commits] r626 - upwatch/trunk/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#159">[ date ]</a>
+              <a href="thread.html#159">[ thread ]</a>
+              <a href="subject.html#159">[ subject ]</a>
+              <a href="author.html#159">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

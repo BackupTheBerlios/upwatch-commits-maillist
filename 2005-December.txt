@@ -1,0 +1,64 @@
+From wijnand at berlios.de  Thu Dec 29 16:53:55 2005
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 29 Dec 2005 16:53:55 +0100
+Subject: [Upwatch-commits] r506 - upwatch/trunk/libstatgrab
+Message-ID: <200512291553.jBTFrtxS004050@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-12-29 16:53:54 +0100 (Thu, 29 Dec 2005)
+New Revision: 506
+
+Modified:
+   upwatch/trunk/libstatgrab/configure.in
+Log:
+Recognize netbsd3 and the newer versions.
+
+
+Modified: upwatch/trunk/libstatgrab/configure.in
+===================================================================
+--- upwatch/trunk/libstatgrab/configure.in	2005-10-22 20:19:06 UTC (rev 505)
++++ upwatch/trunk/libstatgrab/configure.in	2005-12-29 15:53:54 UTC (rev 506)
+@@ -95,7 +95,7 @@
+ 	AC_DEFINE(ALLBSD, , [Building on a BSD-derived system])
+ 	AC_DEFINE(NETBSD, , [Building on NetBSD])
+ 	;;
+-netbsdelf2*)
++netbsdelf2*|netbsdelf*)
+ 	AC_DEFINE(ALLBSD, , [Building on a BSD-derived system])
+ 	AC_DEFINE(NETBSD, , [Building on NetBSD])
+ 	AC_DEFINE(NETBSD2, , [Building on NetBSD 2.x])
+
+
+
+From wijnand at berlios.de  Thu Dec 29 16:54:20 2005
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 29 Dec 2005 16:54:20 +0100
+Subject: [Upwatch-commits] r507 - upwatch/trunk/libstatgrab/src/libstatgrab
+Message-ID: <200512291554.jBTFsKV7004124@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-12-29 16:54:20 +0100 (Thu, 29 Dec 2005)
+New Revision: 507
+
+Modified:
+   upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+Log:
+statfs -> statvfs for BSD.
+
+
+Modified: upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+===================================================================
+--- upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2005-12-29 15:53:54 UTC (rev 506)
++++ upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2005-12-29 15:54:20 UTC (rev 507)
+@@ -122,7 +122,7 @@
+ #endif
+ #ifdef ALLBSD
+ 	int nummnt;
+-	struct statfs *mp;
++	struct statvfs *mp;
+ #endif
+ 
+ #ifdef ALLBSD
+
+
+

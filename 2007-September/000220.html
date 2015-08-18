@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r685 - in upwatch/trunk: common util uw_accept	uw_send
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-September/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r685%20-%20in%20upwatch/trunk%3A%20common%20util%20uw_accept%0A%09uw_send&In-Reply-To=%3C200709191946.l8JJkH3v010886%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000221.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r685 - in upwatch/trunk: common util uw_accept	uw_send</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r685%20-%20in%20upwatch/trunk%3A%20common%20util%20uw_accept%0A%09uw_send&In-Reply-To=%3C200709191946.l8JJkH3v010886%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r685 - in upwatch/trunk: common util uw_accept	uw_send">raarts at mail.berlios.de
+       </A><BR>
+    <I>Wed Sep 19 21:46:17 CEST 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000221.html">[Upwatch-commits] r686 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#220">[ date ]</a>
+              <a href="thread.html#220">[ thread ]</a>
+              <a href="subject.html#220">[ subject ]</a>
+              <a href="author.html#220">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-09-19 21:46:16 +0200 (Wed, 19 Sep 2007)
+New Revision: 685
+
+Modified:
+   upwatch/trunk/common/dbase_options.def
+   upwatch/trunk/common/dbase_options_ign.def
+   upwatch/trunk/common/generic_options.def
+   upwatch/trunk/common/main.c
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_accept/Makefile.am
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_send/run.c
+Log:
+Fixes for using newer (and much stricter Grmmbl) autogen.
+
+
+Modified: upwatch/trunk/common/dbase_options.def
+===================================================================
+--- upwatch/trunk/common/dbase_options.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/dbase_options.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -25,7 +25,6 @@
+ };  
+     
+ flag = {
+-    must-set;
+     name      = dbport;
+     arg_type  = numeric;   /* option argument indication  */
+     arg-default = 3306;
+
+Modified: upwatch/trunk/common/dbase_options_ign.def
+===================================================================
+--- upwatch/trunk/common/dbase_options_ign.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/dbase_options_ign.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -1,6 +1,5 @@
+ flag = {
+     name      = dbtype;
+-    value     = T;        /* flag style option character */
+     arg-default = mysql;
+     arg_type  = string;   /* option argument indication  */
+     descrip   = &quot;ignored&quot;;
+@@ -8,7 +7,6 @@
+ 
+ flag = {
+     name      = dbhost;
+-    value     = h;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = &quot;ignored&quot;;
+ };  
+@@ -22,21 +20,18 @@
+     
+ flag = {
+     name      = dbname;
+-    value     = n;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = &quot;ignored&quot;;
+ };  
+     
+ flag = {
+     name      = dbuser;   
+-    value     = u;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = &quot;ignored&quot;;
+ };
+ 
+ flag = {
+     name      = dbpasswd;
+-    value     = p;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = &quot;ignored&quot;;
+ };  
+
+Modified: upwatch/trunk/common/generic_options.def
+===================================================================
+--- upwatch/trunk/common/generic_options.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/generic_options.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -2,6 +2,7 @@
+     name      = syslog;
+     value     = s;
+     arg_type  = bool;
++    arg-default = false;
+     descrip   = &quot;Use syslog for runtime messages&quot;;
+     doc       =
+ 'If this options is enabled (which it default is), the program writes 
+@@ -13,6 +14,7 @@
+     settable;
+     value     = e;
+     arg_type  = bool;
++    arg-default = true;
+     descrip   = &quot;Write non-debug messages to stderr&quot;;
+     doc       =
+ 'If this options is enabled (which it default is), the program writes 
+@@ -23,7 +25,7 @@
+     name      = debug;
+     value     = d;
+     arg_type  = number;
+-    arg-default = 0;
++    arg-default = 1;
+     arg-range = '0-&gt;9';
+     descrip   = &quot;Debug mode&quot;;
+     doc       =
+@@ -37,7 +39,7 @@
+     name      = logfile;
+     value     = l;
+     arg_type  = string;
+-    arg-default = &quot;/var/log/upwatch/upwatch.log&quot;;
++    arg-default = &quot;/var/log/upwatch/messages&quot;;
+     descrip   = &quot;Log messages to this file&quot;;
+     doc       =
+ 'Specify the outputfile where all log messages should be written
+@@ -45,4 +47,3 @@
+ The logfile is written in the same format as the system log uses, i.e. date/time, 
+ hostname, program name + process id, message.';
+ };
+-
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/main.c	2007-09-19 19:46:16 UTC (rev 685)
+@@ -96,7 +96,7 @@
+ 
+   if (OPT_VALUE_STDERR)  _log2stderr  = TRUE;
+   if (OPT_VALUE_SYSLOG)  _log2syslog  = TRUE;
+-  if (HAVE_OPT(LOGFILE)) _logfilename = OPT_ARG(LOGFILE);
++  if (OPT_ARG(LOGFILE))  _logfilename = OPT_ARG(LOGFILE);
+ 
+   LOG(LOG_NOTICE, &quot;start (Version %s-%s, date %s %s)&quot;, VERSION, RELEASE, __DATE__, __TIME__);
+   LOG(LOG_INFO, &quot;using GCC %s&quot;, __VERSION__);
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/util/Makefile.am	2007-09-19 19:46:16 UTC (rev 685)
+@@ -77,7 +77,7 @@
+ slot_LDADD = @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += slot_options.h
+ EXTRA_DIST += slot_options.def
+-CLEAN_FILES +=  slot_options.c slot_options.h
++CLEAN_FILES += slot_options.c slot_options.h
+ 
+ slot_options.h: slot_options.def ../common/minimal_options.def
+ 	autogen -b slot_options $(AGDEFINES) $(GENINCL) -L $(top_srcdir)/common slot_options.def
+@@ -91,7 +91,7 @@
+ chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += chklog_options.h
+ EXTRA_DIST += chklog_options.def
+-CLEAN_FILES +=  chklog_options.c chklog_options.h
++CLEAN_FILES += chklog_options.c chklog_options.h
+ 
+ chklog_options.h: chklog_options.def ../common/minimal_options.def
+ 	autogen -b chklog_options $(AGDEFINES) $(GENINCL) -L $(top_srcdir)/common chklog_options.def
+
+Modified: upwatch/trunk/uw_accept/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_accept/Makefile.am	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_accept/Makefile.am	2007-09-19 19:46:16 UTC (rev 685)
+@@ -14,6 +14,7 @@
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) 
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+ EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def)
++CLEAN_FILES = uw_accept.h uw_accept.c
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_accept/uw_accept.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -67,6 +67,7 @@
+     name      = spooldir;
+     value     = S;
+     arg_type  = string;
++    arg_default = &quot;/var/spool/upwatch&quot;;
+     descrip   = &quot;maildir-type spooldirectory for result files&quot;;
+     doc       =
+ 'This probe generates files with data. These are put in maildir style
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_send/run.c	2007-09-19 19:46:16 UTC (rev 685)
+@@ -153,7 +153,7 @@
+     }
+     q-&gt;user = strdup(buf);
+     q-&gt;pwd = strdup(pwd[i]);
+-    q-&gt;maxthreads = thr[i] ? atoi(thr[i]) : 1;
++    q-&gt;maxthreads = (thr &amp;&amp; thr[i]) ? atoi(thr[i]) : 1;
+   }
+   if (HAVE_OPT(ONCE)) {
+     every = ONE_SHOT;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000221.html">[Upwatch-commits] r686 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#220">[ date ]</a>
+              <a href="thread.html#220">[ thread ]</a>
+              <a href="subject.html#220">[ subject ]</a>
+              <a href="author.html#220">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

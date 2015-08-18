@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r555 - in upwatch/trunk: . uw_iptraf uw_process uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r555%20-%20in%20upwatch/trunk%3A%20.%20uw_iptraf%20uw_process%20uw_sysstat&In-Reply-To=%3C200604061704.k36H49L2012074%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000085.html">
+   <LINK REL="Next"  HREF="000087.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r555 - in upwatch/trunk: . uw_iptraf uw_process uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r555%20-%20in%20upwatch/trunk%3A%20.%20uw_iptraf%20uw_process%20uw_sysstat&In-Reply-To=%3C200604061704.k36H49L2012074%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r555 - in upwatch/trunk: . uw_iptraf uw_process uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr  6 19:04:09 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000085.html">[Upwatch-commits] r554 - upwatch/trunk/st-1.6
+</A></li>
+        <LI>Next message: <A HREF="000087.html">[Upwatch-commits] r556 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-06 19:03:50 +0200 (Thu, 06 Apr 2006)
+New Revision: 555
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/uw_iptraf/run.c
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_process/iptraf.c
+   upwatch/trunk/uw_sysstat/Makefile.am
+Log:
+Only build uw_iptraf when the build host is Linux.
+When only --enable-server is specified generate the monitors and uw_iptraf Makefile too since it is still needed for uw_process.
+Add sys/types.h to uw_process/iptraf.h so uw_process can be built on other Operating systems.
+Add LIBGTHREAD2_LIBS to uw_process/Makefile.am so we have more exact threading options in the LDADD flags.
+
+It seems it is now possible to run upwatch servers on other Operating Systems, without breaking Linux
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-04-06 15:10:44 UTC (rev 554)
++++ upwatch/trunk/configure.ac	2006-04-06 17:03:50 UTC (rev 555)
+@@ -217,7 +217,11 @@
+ then
+   enable_server=yes
+   enable_monitors=yes
+-  enable_iptraf=yes
++  case $host in
++    i?86-*-linux*)
++    enable_iptraf=yes
++    ;;
++  esac
+ fi
+ 
+ AM_CONDITIONAL(ENABLE_SERVER, test x$enable_all = xyes)
+@@ -684,8 +688,25 @@
+ if test &quot;$enable_server&quot; = &quot;yes&quot; -o &quot;$enable_monitors&quot; = &quot;yes&quot;
+ then
+ AC_CONFIG_FILES([st-1.6/Makefile])
++AC_CONFIG_FILES([uw_httpget/Makefile])
++AC_CONFIG_FILES([uw_dns/Makefile])
++AC_CONFIG_FILES([uw_ping/Makefile])
++AC_CONFIG_FILES([uw_mysql/Makefile])
++AC_CONFIG_FILES([uw_mysqlstats/Makefile])
++AC_CONFIG_FILES([uw_pop3/Makefile])
++AC_CONFIG_FILES([uw_smtp/Makefile])
++AC_CONFIG_FILES([uw_tcpconnect/Makefile])
++AC_CONFIG_FILES([uw_imap/Makefile])
++AC_CONFIG_FILES([uw_snmpget/Makefile])
++AC_CONFIG_FILES([uw_mssql/Makefile])
++AC_CONFIG_FILES([uw_postgresql/Makefile])
+ fi
+ 
++if test &quot;$enable_server&quot; = &quot;yes&quot; -o &quot;$enable_iptraf&quot; = &quot;yes&quot;
++then
++AC_CONFIG_FILES([uw_iptraf/Makefile])
++fi
++
+ # server 
+ if test &quot;$enable_server&quot; = &quot;yes&quot;
+ then
+@@ -703,29 +724,6 @@
+ AC_CONFIG_FILES([compat/bb/bbhimport/Makefile])
+ fi
+ 
+-# monitors
+-if test &quot;$enable_monitors&quot; = &quot;yes&quot;
+-then
+-AC_CONFIG_FILES([uw_httpget/Makefile])
+-AC_CONFIG_FILES([uw_dns/Makefile])
+-AC_CONFIG_FILES([uw_ping/Makefile])
+-AC_CONFIG_FILES([uw_mysql/Makefile])
+-AC_CONFIG_FILES([uw_mysqlstats/Makefile])
+-AC_CONFIG_FILES([uw_pop3/Makefile])
+-AC_CONFIG_FILES([uw_smtp/Makefile])
+-AC_CONFIG_FILES([uw_tcpconnect/Makefile])
+-AC_CONFIG_FILES([uw_imap/Makefile])
+-AC_CONFIG_FILES([uw_snmpget/Makefile])
+-AC_CONFIG_FILES([uw_mssql/Makefile])
+-AC_CONFIG_FILES([uw_postgresql/Makefile])
+-fi
+-
+-# extra
+-if test &quot;$enable_iptraf&quot; = &quot;yes&quot;
+-then
+-AC_CONFIG_FILES([uw_iptraf/Makefile])
+-fi
+-
+ ( cd libstatgrab-0.13 ; ./configure --disable-manpages --disable-examples \
+   --disable-statgrab --disable-saidar --disable-shared ; cd .. )
+ 
+
+Modified: upwatch/trunk/uw_iptraf/run.c
+===================================================================
+--- upwatch/trunk/uw_iptraf/run.c	2006-04-06 15:10:44 UTC (rev 554)
++++ upwatch/trunk/uw_iptraf/run.c	2006-04-06 17:03:50 UTC (rev 555)
+@@ -3,6 +3,7 @@
+ 
+ #include &lt;unistd.h&gt;
+ #include &lt;sys/socket.h&gt;
++#include &lt;sys/types.h&gt;
+ #include &lt;arpa/inet.h&gt;
+ #include &lt;netinet/in_systm.h&gt;
+ #include &lt;netinet/in.h&gt;
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2006-04-06 15:10:44 UTC (rev 554)
++++ upwatch/trunk/uw_process/Makefile.am	2006-04-06 17:03:50 UTC (rev 555)
+@@ -36,7 +36,7 @@
+ uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+   $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
+ uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ \
+-  @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
++  @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) ../probes.enum
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_process/iptraf.c
+===================================================================
+--- upwatch/trunk/uw_process/iptraf.c	2006-04-06 15:10:44 UTC (rev 554)
++++ upwatch/trunk/uw_process/iptraf.c	2006-04-06 17:03:50 UTC (rev 555)
+@@ -1,5 +1,6 @@
+ #include &quot;config.h&quot;
+ #include &lt;string.h&gt;
++#include &lt;sys/types.h&gt;
+ #include &lt;sys/socket.h&gt;
+ #include &lt;netinet/in.h&gt;
+ #include &lt;arpa/inet.h&gt;
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2006-04-06 15:10:44 UTC (rev 554)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2006-04-06 17:03:50 UTC (rev 555)
+@@ -27,7 +27,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_sysstat_SOURCES = run.c uw_sysstat.c uw_sysstat.h $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_sysstat_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@
++uw_sysstat_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@ @LIBGTHREAD2_CFLAGS@
+ uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) $(LIBOPTS) \
+   $(FREEBSDLIBS) $(SOLARISLIBS) $(LIBSTATGRAB) \
+   $(LIBUPWATCH) @LIBXML2_LIBS@ @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000085.html">[Upwatch-commits] r554 - upwatch/trunk/st-1.6
+</A></li>
+	<LI>Next message: <A HREF="000087.html">[Upwatch-commits] r556 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

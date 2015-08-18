@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r562 - upwatch/trunk/cfg
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r562%20-%20upwatch/trunk/cfg&In-Reply-To=%3C200604062119.k36LJsGc030057%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000091.html">
+   <LINK REL="Next"  HREF="000094.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r562 - upwatch/trunk/cfg</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r562%20-%20upwatch/trunk/cfg&In-Reply-To=%3C200604062119.k36LJsGc030057%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r562 - upwatch/trunk/cfg">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr  6 23:19:54 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000091.html">[Upwatch-commits] r561 - upwatch/trunk/uw_send
+</A></li>
+        <LI>Next message: <A HREF="000094.html">[Upwatch-commits] r563 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#92">[ date ]</a>
+              <a href="thread.html#92">[ thread ]</a>
+              <a href="subject.html#92">[ subject ]</a>
+              <a href="author.html#92">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-06 23:19:54 +0200 (Thu, 06 Apr 2006)
+New Revision: 562
+
+Modified:
+   upwatch/trunk/cfg/bootstrap
+Log:
+Simplify the glibtoolize test in cfg/bootstrap since we are only comparing numbers, not strings.
+Prevents some warnings on other shells.
+
+
+Modified: upwatch/trunk/cfg/bootstrap
+===================================================================
+--- upwatch/trunk/cfg/bootstrap	2006-04-06 21:16:29 UTC (rev 561)
++++ upwatch/trunk/cfg/bootstrap	2006-04-06 21:19:54 UTC (rev 562)
+@@ -3,7 +3,7 @@
+ # test if libtoolize is called glibtoolize (MacOSX)
+ BOGUS=`glibtoolize -n 2&gt;/dev/null`
+ TEST=$?
+-if [ x$TEST == &quot;x0&quot; ]
++if [ $TEST -eq 0 ]
+ then
+ 	LIBTOOLIZE=glibtoolize
+ else
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000091.html">[Upwatch-commits] r561 - upwatch/trunk/uw_send
+</A></li>
+	<LI>Next message: <A HREF="000094.html">[Upwatch-commits] r563 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#92">[ date ]</a>
+              <a href="thread.html#92">[ thread ]</a>
+              <a href="subject.html#92">[ subject ]</a>
+              <a href="author.html#92">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

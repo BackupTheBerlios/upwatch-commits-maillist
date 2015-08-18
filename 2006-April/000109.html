@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r578 - upwatch/trunk/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r578%20-%20upwatch/trunk/util&In-Reply-To=%3C200604132210.k3DMAYYW026996%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000107.html">
+   <LINK REL="Next"  HREF="000110.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r578 - upwatch/trunk/util</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r578%20-%20upwatch/trunk/util&In-Reply-To=%3C200604132210.k3DMAYYW026996%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r578 - upwatch/trunk/util">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 14 00:10:34 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000107.html">[Upwatch-commits] r577 - upwatch/trunk/uw_send
+</A></li>
+        <LI>Next message: <A HREF="000110.html">[Upwatch-commits] r579 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-14 00:10:34 +0200 (Fri, 14 Apr 2006)
+New Revision: 578
+
+Modified:
+   upwatch/trunk/util/chklog.c
+   upwatch/trunk/util/uwregexp.c
+Log:
+Fix compiler warnings
+
+
+Modified: upwatch/trunk/util/chklog.c
+===================================================================
+--- upwatch/trunk/util/chklog.c	2006-04-13 21:35:36 UTC (rev 577)
++++ upwatch/trunk/util/chklog.c	2006-04-13 22:10:34 UTC (rev 578)
+@@ -33,7 +33,7 @@
+ 
+   setvbuf(stdout, (char *)NULL, _IOLBF, 0); // make stdout linebuffered
+ 
+-  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, OPT_ARG(TYPE));
++  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) &amp;OPT_ARG(TYPE));
+ 
+   if (strcmp(*argv, &quot;-&quot;) == 0) {
+     in = stdin;
+@@ -57,7 +57,7 @@
+     }
+     buffer[strlen(buffer)-1] = 0;
+     if (HAVE_OPT(MATCH)) {
+-      if (logregex_matchline(OPT_ARG(TYPE), buffer, &amp;color)) {
++      if (logregex_matchline((char *) &amp;OPT_ARG(TYPE), buffer, &amp;color)) {
+         if (HAVE_OPT(LINE_INFO)) {
+           printf(&quot;line %u: %d: &quot;, line, color);
+         }
+@@ -65,13 +65,13 @@
+       }
+     }
+     if (HAVE_OPT(REVERSE)) {
+-      logregex_rmatchline(OPT_ARG(TYPE), buffer);
++      logregex_rmatchline((char *) &amp;OPT_ARG(TYPE), buffer);
+       printf(&quot;green %s\n&quot;, buffer);
+     }
+   }
+   fclose(in);
+   if (HAVE_OPT(STATS)) {
+-    logregex_print_stats(OPT_ARG(TYPE));
++    logregex_print_stats((char *) &amp;OPT_ARG(TYPE));
+   }
+   return 0;
+ }
+
+Modified: upwatch/trunk/util/uwregexp.c
+===================================================================
+--- upwatch/trunk/util/uwregexp.c	2006-04-13 21:35:36 UTC (rev 577)
++++ upwatch/trunk/util/uwregexp.c	2006-04-13 22:10:34 UTC (rev 578)
+@@ -38,7 +38,7 @@
+       break;
+     }
+ 
+-    logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, style);
++    logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) &amp;style);
+     logregex_expand_macros(style, regexp, buf);
+ 
+     printf(&quot;Resulting regex: %s\n&quot;, buf);
+@@ -58,5 +58,6 @@
+     free(regexp);
+   }
+   printf(&quot;\n&quot;);
++  exit(0);
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000107.html">[Upwatch-commits] r577 - upwatch/trunk/uw_send
+</A></li>
+	<LI>Next message: <A HREF="000110.html">[Upwatch-commits] r579 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

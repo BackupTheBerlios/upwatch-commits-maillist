@@ -1,0 +1,3593 @@
+From wijnand at berlios.de  Thu Mar  2 10:36:31 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 2 Mar 2006 10:36:31 +0100
+Subject: [Upwatch-commits] r511 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603020936.k229aVN3026285@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-02 10:36:24 +0100 (Thu, 02 Mar 2006)
+New Revision: 511
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+More openntpd.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-02-23 21:59:14 UTC (rev 510)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-02 09:36:24 UTC (rev 511)
+@@ -5,4 +5,6 @@
+ green [LOGDATE] services[NUM] ntpd[PID]: listening on [IPADDR]
+ green [LOGDATE] services[NUM] ntpd[PID]: ntp engine ready
+ green [LOGDATE] services[NUM] ntpd[PID]: peer [IPADDR] now valid
+-
++green [LOGDATE] ntpd[PID]: adjusting local clock by
++green [LOGDATE] ntpd[PID]: Terminating
++red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+
+From wijnand at berlios.de  Thu Mar  2 10:48:43 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 2 Mar 2006 10:48:43 +0100
+Subject: [Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603020948.k229mhqG023140@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-02 10:48:33 +0100 (Thu, 02 Mar 2006)
+New Revision: 512
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+And more openntpd lines I forgot
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-02 09:36:24 UTC (rev 511)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-02 09:48:33 UTC (rev 512)
+@@ -7,4 +7,7 @@
+ green [LOGDATE] services[NUM] ntpd[PID]: peer [IPADDR] now valid
+ green [LOGDATE] ntpd[PID]: adjusting local clock by
+ green [LOGDATE] ntpd[PID]: Terminating
++green [LOGDATE] ntpd[PID]: ntp engine exiting
++green [LOGDATE] ntpd[PID]: dispatch_imsg in main: pipe closed
++green [LOGDATE] ntpd[PID]: Lost child: child exited
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+
+From raarts at berlios.de  Fri Mar  3 20:34:27 2006
+From: raarts at berlios.de (raarts at BerliOS)
+Date: Fri, 3 Mar 2006 20:34:27 +0100
+Subject: [Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+Message-ID: <200603031934.k23JYRqX019434@sheep.berlios.de>
+
+Author: raarts
+Date: 2006-03-03 20:34:07 +0100 (Fri, 03 Mar 2006)
+New Revision: 513
+
+Added:
+   upwatch/trunk/common/dbase_options_ign.def
+   upwatch/trunk/common/generic_options_ign.def
+   upwatch/trunk/common/option_realm_ign.def
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/RELEASE
+   upwatch/trunk/common/generic_options.def
+   upwatch/trunk/common/license_gpl.def
+   upwatch/trunk/common/minimal_options.def
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/admin-guide.html
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/program-guide.html
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/upwatch.html
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/upwatch-spec.tpl
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/util/chklog_options.def
+   upwatch/trunk/util/ctime_options.def
+   upwatch/trunk/util/slot_options.def
+   upwatch/trunk/util/uwq_options.def
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_httpget/uw_httpget.def
+   upwatch/trunk/uw_imap/uw_imap.def
+   upwatch/trunk/uw_iptraf/uw_iptraf.def
+   upwatch/trunk/uw_mssql/uw_mssql.def
+   upwatch/trunk/uw_mysql/uw_mysql.def
+   upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+   upwatch/trunk/uw_null/uw_null.conf
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_ping/uw_ping.def
+   upwatch/trunk/uw_pop3/uw_pop3.def
+   upwatch/trunk/uw_postgresql/uw_postgresql.def
+   upwatch/trunk/uw_process/uw_process.def
+   upwatch/trunk/uw_process/uw_tnot.def
+   upwatch/trunk/uw_purple/uw_purple.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_send/run.c
+   upwatch/trunk/uw_send/uw_send.def
+   upwatch/trunk/uw_setip/uw_setip.def
+   upwatch/trunk/uw_smtp/uw_smtp.def
+   upwatch/trunk/uw_snmpget/uw_snmpget.def
+   upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+   upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+Log:
+Build fixes for autogen 5.8.3. Please use a fresh checkout.
+Build fixes for Fedora Core 4
+Fix uw_sent to actually timeout read() en write().
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/Makefile.am	2006-03-03 19:34:07 UTC (rev 513)
+@@ -85,6 +85,7 @@
+   ${SERVER_DIST} \
+   install-sh config.sub mkinstalldirs depcomp cfg/cvs2cl.pl
+ 
++
+ upwatch.spec: force upwatch-spec.def upwatch-spec.tpl common/spec.tpl \
+   uw_*/*.spec-files uw_*/*.spec-requires  uw_*/*.spec-buildrequires
+ 	autogen -b upwatch -Dconfargs="$(CONFARGS)" upwatch-spec.def
+@@ -105,6 +106,10 @@
+ ChangeLog:
+ 	svn log > ChangeLog
+ 
++RELEASE: force
++	svnversion . > RELEASE
++	rm -f force
++
+ CLEANFILES = upwatch.mysql upwatch.spec upwatch-*.tar.gz
+ 
+ install-data-local:
+@@ -126,7 +131,7 @@
+ 	  mkdir -p ${DESTDIR}/var/run/upwatch ;\
+ 	fi
+ 
+-rpm: all dist upwatch.spec 
++rpm: all dist upwatch.spec RELEASE
+ 	SED=sed $(RPMBUILD) -ta upwatch-${VERSION}.tar.gz
+ 
+ dist-hook:
+
+Modified: upwatch/trunk/RELEASE
+===================================================================
+--- upwatch/trunk/RELEASE	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/RELEASE	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1 +1 @@
+-0
++510M
+
+Added: upwatch/trunk/common/dbase_options_ign.def
+===================================================================
+--- upwatch/trunk/common/dbase_options_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/dbase_options_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,44 @@
++flag = {
++    name      = dbtype;
++    value     = T;        /* flag style option character */
++    arg-default = mysql;
++    arg_type  = string;   /* option argument indication  */
++    descrip   = "ignored";
++};
++
++flag = {
++    name      = dbhost;
++    value     = h;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = "ignored";
++};  
++    
++flag = {
++    name      = dbport;
++    arg_type  = numeric;   /* option argument indication  */
++    arg-default = 3306;
++    descrip   = "ignored";
++};  
++    
++flag = {
++    name      = dbname;
++    value     = n;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = "ignored";
++};  
++    
++flag = {
++    name      = dbuser;   
++    value     = u;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = "ignored";
++};
++
++flag = {
++    name      = dbpasswd;
++    value     = p;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = "ignored";
++};  
++
++
+
+Modified: upwatch/trunk/common/generic_options.def
+===================================================================
+--- upwatch/trunk/common/generic_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/generic_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,12 +1,3 @@
+-export        = "#include <config.h>";
+-export        = "#include <limits.h>";
+-export        = "#include <stdio.h>";
+-export        = "#include <stdlib.h>";
+-
+-explain;
+-long-opts;
+-gnu-usage;
+-
+ flag = {
+     name      = syslog;
+     value     = s;
+
+Added: upwatch/trunk/common/generic_options_ign.def
+===================================================================
+--- upwatch/trunk/common/generic_options_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/generic_options_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,32 @@
++flag = {
++    name      = syslog;
++    value     = s;
++    arg_type  = bool;
++    descrip   = "ignored";
++};
++
++flag = {
++    name      = stderr;
++    settable;
++    value     = e;
++    arg_type  = bool;
++    descrip   = "ignored";
++};
++
++flag = {
++    name      = debug;
++    value     = d;
++    arg_type  = number;
++    arg-default = 0;
++    arg-range = '0->9';
++    descrip   = "ignored";
++};
++
++flag = {
++    name      = logfile;
++    value     = l;
++    arg_type  = string;
++    arg-default = "/var/log/upwatch/upwatch.log";
++    descrip   = "ignored";
++};
++
+
+Modified: upwatch/trunk/common/license_gpl.def
+===================================================================
+--- upwatch/trunk/common/license_gpl.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/license_gpl.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,3 +1,12 @@
++export        = "#include <config.h>";
++export        = "#include <limits.h>";
++export        = "#include <stdio.h>";
++export        = "#include <stdlib.h>";
++
++explain;
++long-opts;
++gnu-usage;
++
+ copyright = {
+   date = "2002";
+   author=  "Ron Arts";
+
+Modified: upwatch/trunk/common/minimal_options.def
+===================================================================
+--- upwatch/trunk/common/minimal_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/minimal_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,21 +1,3 @@
+-export        = "#include <config.h>";
+-export        = "#include <limits.h>";
+-export        = "#include <stdio.h>";
+-export        = "#include <stdlib.h>";
+-
+-explain;
+-long-opts;
+-
+-copyright = {
+-  date = "2002";
+-  author=  "Ron Arts";
+-  owner = "Upwatch BV";
+-  eaddr = "info at upwatch.com";
+-  type = "NOTE";
+-  text = 
+-'Redistribution Prohibited. Violation will be prosecuted to the maximum extent possible by applicable law.';
+-};
+-
+ flag = {
+     name      = verbose;
+     value     = v;
+
+Added: upwatch/trunk/common/option_realm_ign.def
+===================================================================
+--- upwatch/trunk/common/option_realm_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/option_realm_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,6 @@
++flag = {
++    name      = realm;
++    value     = R;
++    arg_type  = string;
++    descrip   = "ignored";
++};
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/configure.ac	2006-03-03 19:34:07 UTC (rev 513)
+@@ -278,7 +278,7 @@
+ )
+ AC_SUBST(LIBOPTS_INC_PREFIX)
+ 
+-for incpath in /usr/include/ $LIBOPTS_LIB_PREFIX /usr/local/include/ /cygdrive/c/include /usr/pkg/include/
++for incpath in /usr/include $LIBOPTS_LIB_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
+ do
+   if test -f $incpath/options.h
+   then
+@@ -399,7 +399,7 @@
+   LIBPCRE_CFLAGS="`pcre-config --cflags`"
+   LIBPCRE_LIBS="`pcre-config --libs-posix`"
+ fi
+-if test -z "$LIBPCRE_CFLAGS"
++if test -z "$LIBPCRE_LIBS"
+ then
+   HAVE_LIBPCRE="0"
+ else
+@@ -558,11 +558,13 @@
+ if test $HAVE_LIBREADLINE -eq 1
+ then
+ 	LIBREADLINE_LIBS=-lreadline
++        AC_DEFINE(HAVE_LIBREADLINE,1,[Do we have the readline library])
+ else 
+ 	AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lcurses)
+ 	if test $HAVE_LIBREADLINE -eq 1
+ 	then
+ 		LIBREADLINE_LIBS=-lreadline
++                AC_DEFINE(HAVE_LIBREADLINE,1,[Do we have the readline library])
+ 	fi
+ fi
+ AM_CONDITIONAL(HAVE_LIBREADLINE, test $HAVE_LIBREADLINE -eq 1)
+
+Modified: upwatch/trunk/doc/admin-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch-spec.tpl
+===================================================================
+--- upwatch/trunk/upwatch-spec.tpl	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/upwatch-spec.tpl	2006-03-03 19:34:07 UTC (rev 513)
+@@ -6,7 +6,7 @@
+ Release: [+ release +]
+ Source: http://www.upwatch.com/%{name}-%{version}.tar.gz
+ Packager: Ron Arts <raarts at upwatch.com>
+-Copyright: GPL
++License: GPL
+ Group: Application/Monitoring
+ BuildRoot: %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+ BuildRequires: gzip glib2-devel autogen libxslt lynx readline-devel
+@@ -193,7 +193,7 @@
+ %package monitor
+ Summary: UpWatch - programs for a monitoring station
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch
+ [+ FOR monitorprog +]# [+monitorprog+] requirements:
+ [+ include (string-append (get "monitorprog") "/" (get "monitorprog") ".spec-requires") ;+]
+@@ -253,7 +253,7 @@
+ %package server
+ Summary: UpWatch - server programs
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch 
+ [+ FOR serverprog +]# [+serverprog+] requirements:
+ [+ include (string-append (get "serverprog") "/" (get "serverprog") ".spec-requires") ;+]
+@@ -320,7 +320,7 @@
+ %package [+ extraprog +]
+ Summary: UpWatch - monitor IP traffic
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch libxml2 >= 2.4.19 libpcap glib2 >= 2.0.4
+ 
+ %description [+ extraprog +]
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/Makefile.am	2006-03-03 19:34:07 UTC (rev 513)
+@@ -59,6 +59,7 @@
+ 	autogen -b uwq $(AGDEFINES) $(GENINCL) -T $(MAN1TPL) uwq_options.def
+ 
+ ctime_SOURCES = ctime.c ctime_options.c ctime_options.h ctime_options.def 
++ctime_CFLAGS = @LIBOPTS_CFLAGS@
+ ctime_LDADD = $(LIBOPTS) 
+ BUILT_SOURCES += ctime_options.h ctime.1
+ EXTRA_DIST += ctime_options.def
+
+Modified: upwatch/trunk/util/chklog_options.def
+===================================================================
+--- upwatch/trunk/util/chklog_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/chklog_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -58,4 +58,7 @@
+ in /etc/upwatch.d/logwatch.d";
+ };
+ 
++#include license_gpl.def
+ #include minimal_options.def
++#include dbase_options_ignored.def
++
+
+Modified: upwatch/trunk/util/ctime_options.def
+===================================================================
+--- upwatch/trunk/util/ctime_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/ctime_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -10,5 +10,6 @@
+ argument      = "[string]";
+ 
+ #include minimal_options.def
++#include dbase_options_ignored.def
+ #include license_gpl.def
+ 
+
+Modified: upwatch/trunk/util/slot_options.def
+===================================================================
+--- upwatch/trunk/util/slot_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/slot_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -11,5 +11,6 @@
+ argument      = "[string]";
+ 
+ #include minimal_options.def
++#include dbase_options_ignored.def
+ #include license_gpl.def
+ 
+
+Modified: upwatch/trunk/util/uwq_options.def
+===================================================================
+--- upwatch/trunk/util/uwq_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/uwq_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -33,5 +33,9 @@
+ 'For really long queues, this option speeds up display';
+ };
+ 
+-#include generic_options.def
++#include license_gpl.def
++#include minimal_options.def
+ 
++#include dbase_options_ign.def
++#include generic_options_ign.def
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_accept/uw_accept.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -74,7 +74,7 @@
+ For some more info about maildir see http://www.qmail.org/man/man5/maildir.html.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+-#include ../common/generic_options.def
+-#include license_gpl.def
++#include generic_options.def
+ 
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -75,6 +75,6 @@
+ For some more info about maildir see http://www.qmail.org/man/man5/maildir.html.';
+ };
+ 
+-#include ../common/generic_options.def
+ #include license_gpl.def
++#include generic_options.def
+ 
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_dns/uw_dns.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -110,7 +110,7 @@
+     descrip   = "UpWatch password";
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_httpget/uw_httpget.def
+===================================================================
+--- upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -110,5 +110,6 @@
+     descrip   = "UpWatch password";
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_imap/uw_imap.def
+===================================================================
+--- upwatch/trunk/uw_imap/uw_imap.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_imap/uw_imap.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_iptraf/uw_iptraf.def
+===================================================================
+--- upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -134,4 +134,5 @@
+ (192.168.170.0/24)";
+ };
+ 
++#include license_gpl.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_mssql/uw_mssql.def
+===================================================================
+--- upwatch/trunk/uw_mssql/uw_mssql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mssql/uw_mssql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_mysql/uw_mysql.def
+===================================================================
+--- upwatch/trunk/uw_mysql/uw_mysql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mysql/uw_mysql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,6 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+
+Modified: upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -90,7 +90,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.conf
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.conf	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_null/uw_null.conf	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,14 +1 @@
+-route httpget q_httpget
+-route imap q_imap
+-route iptraf q_iptraf
+-route httpget q_httpget
+-route mssql q_mssql
+-route mysql q_mysql
+-route ping q_ping
+-route pop3 q_pop3
+-route postgresql q_postgresql
+-route snmpget q_snmpget
+-route sysstat q_sysstat
+-route errlog q_errlog
+-route diskfree q_diskfree
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_null/uw_null.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -78,7 +78,8 @@
+ This is useful is you want to run uw_null under cron or for debugging.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
++#include option_realm_ign.def
+ 
+
+Modified: upwatch/trunk/uw_ping/uw_ping.def
+===================================================================
+--- upwatch/trunk/uw_ping/uw_ping.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_ping/uw_ping.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -121,7 +121,7 @@
+     descrip   = "UpWatch password";
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_pop3/uw_pop3.def
+===================================================================
+--- upwatch/trunk/uw_pop3/uw_pop3.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_pop3/uw_pop3.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_postgresql/uw_postgresql.def
+===================================================================
+--- upwatch/trunk/uw_postgresql/uw_postgresql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_postgresql/uw_postgresql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_process/uw_process.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_process.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_process/uw_process.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -213,7 +213,7 @@
+ then start the debugger and run the program with `-d3 --slave q_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_process/uw_tnot.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_tnot.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_process/uw_tnot.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -244,7 +244,7 @@
+ then start the debugger and run the program with `-d3 --slave q_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_purple/uw_purple.def
+===================================================================
+--- upwatch/trunk/uw_purple/uw_purple.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_purple/uw_purple.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -57,7 +57,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_route/uw_route.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -98,7 +98,7 @@
+ you want to put iptraf probes into the uw_iptraf queue, use `route iptraf uw_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_send/run.c	2006-03-03 19:34:07 UTC (rev 513)
+@@ -11,14 +11,29 @@
+ #ifdef USE_ST
+ #include <st.h>
+ #else
++void sigalarm_handler (int signum)
++{
++  LOG(LOG_NOTICE, "SIGALRM received", signum);
++}
++
+ int st_read(int fd, void *buf, size_t size, int timeout)
+ {
+-  return(read(fd, buf, size));
++  int ret;
++
++  alarm(timeout/1000000L);
++  ret = read(fd, buf, size);
++  alarm(0);
++  return ret;
+ }
+ 
+ int st_write(int fd, void *buf, size_t size, int timeout)
+ {
+-  return(write(fd, buf, size));
++  int ret;
++
++  alarm(timeout/1000000L);
++  ret = write(fd, buf, size);
++  alarm(0);
++  return ret;
+ }
+ #define st_netfd_fileno 
+ #define st_netfd_t int
+@@ -62,11 +77,20 @@
+ 
+ int init(void)
+ {
++
+   int ct = 0;
+   char **input;
+   char **host, **port, **user, **pwd, **thr;
+   int i = 0;
++#ifndef USE_ST
++  struct sigaction new_action;
+ 
++  new_action.sa_handler = sigalarm_handler;
++  sigemptyset (&new_action.sa_mask);
++  new_action.sa_flags = 0;
++  sigaction (SIGALRM, &new_action, NULL);
++#endif
++
+   hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, queue_free);
+ 
+   if (!HAVE_OPT(THREADS)) {
+
+Modified: upwatch/trunk/uw_send/uw_send.def
+===================================================================
+--- upwatch/trunk/uw_send/uw_send.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_send/uw_send.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -145,4 +145,6 @@
+ 'This script is called if uw_send is done sending data';
+ };
+ 
++#include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_setip/uw_setip.def
+===================================================================
+--- upwatch/trunk/uw_setip/uw_setip.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_setip/uw_setip.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -61,5 +61,6 @@
+ filled with ip address, nat-router address and customer number, in that order.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+-#include ../common/generic_options.def
++#include generic_options.def
+
+Modified: upwatch/trunk/uw_smtp/uw_smtp.def
+===================================================================
+--- upwatch/trunk/uw_smtp/uw_smtp.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_smtp/uw_smtp.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_snmpget/uw_snmpget.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/uw_snmpget.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_snmpget/uw_snmpget.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+===================================================================
+--- upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -57,7 +57,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -160,7 +160,6 @@
+ };
+ 
+ flag = {
+-    must-set; 
+     name      = ipaddress;
+     arg_type  = string;   /* option argument indication  */
+     arg_default = "127.0.0.1";
+@@ -239,6 +238,7 @@
+ };
+ 
+ 
++#include license_gpl.def
+ #include generic_options.def
+-#include license_gpl.def
++#include dbase_options_ign.def
+ 
+
+Modified: upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+
+
+From raarts at berlios.de  Fri Mar  3 21:42:09 2006
+From: raarts at berlios.de (raarts at BerliOS)
+Date: Fri, 3 Mar 2006 21:42:09 +0100
+Subject: [Upwatch-commits] r514 - upwatch/trunk
+Message-ID: <200603032042.k23Kg90F026430@sheep.berlios.de>
+
+Author: raarts
+Date: 2006-03-03 21:41:38 +0100 (Fri, 03 Mar 2006)
+New Revision: 514
+
+Removed:
+   upwatch/trunk/RELEASE
+Log:
+The RELEASE file ai auto-generated and should not be under version contrl
+
+
+Deleted: upwatch/trunk/RELEASE
+===================================================================
+--- upwatch/trunk/RELEASE	2006-03-03 19:34:07 UTC (rev 513)
++++ upwatch/trunk/RELEASE	2006-03-03 20:41:38 UTC (rev 514)
+@@ -1 +0,0 @@
+-510M
+
+
+
+From wijnand at berlios.de  Mon Mar  6 09:47:06 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 09:47:06 +0100
+Subject: [Upwatch-commits] r515 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603060847.k268l626016922@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 09:47:04 +0100 (Mon, 06 Mar 2006)
+New Revision: 515
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+Connection refused is not a problem, there are other peers.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-03 20:41:38 UTC (rev 514)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-06 08:47:04 UTC (rev 515)
+@@ -10,4 +10,5 @@
+ green [LOGDATE] ntpd[PID]: ntp engine exiting
+ green [LOGDATE] ntpd[PID]: dispatch_imsg in main: pipe closed
+ green [LOGDATE] ntpd[PID]: Lost child: child exited
++green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+
+From wijnand at berlios.de  Mon Mar  6 11:11:14 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 11:11:14 +0100
+Subject: [Upwatch-commits] r516 - upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga
+Message-ID: <200603061011.k26ABEH4024926@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 11:11:13 +0100 (Mon, 06 Mar 2006)
+New Revision: 516
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+Log:
+make our routers somewhat greener.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-06 08:47:04 UTC (rev 515)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-06 10:11:13 UTC (rev 516)
+@@ -1 +1,3 @@
+ green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
++green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] (afi [NUM]) reaches [NUM], max [NUM]
++green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2006-03-06 08:47:04 UTC (rev 515)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2006-03-06 10:11:13 UTC (rev 516)
+@@ -3,3 +3,4 @@
+ green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
+ green [LOGDATE] ZEBRA: Terminating on signal
+ green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
++green [LOGDATE] ZEBRA: SMUX_CLOSE with reason: [NUM]
+
+
+
+From wijnand at berlios.de  Mon Mar  6 11:26:14 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 11:26:14 +0100
+Subject: [Upwatch-commits] r517 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603061026.k26AQEhE028686@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 11:26:13 +0100 (Mon, 06 Mar 2006)
+New Revision: 517
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+Log:
+Harmless postgresl message.
+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-03-06 10:11:13 UTC (rev 516)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-03-06 10:26:13 UTC (rev 517)
+@@ -0,0 +1 @@
++green [LOGDATE] postgres[PID]: [1-1] LOG: recycled transaction log file
+
+
+
+From wijnand at berlios.de  Mon Mar  6 11:30:08 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 11:30:08 +0100
+Subject: [Upwatch-commits] r518 - upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog
+Message-ID: <200603061030.k26AU8OV029302@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 11:30:08 +0100 (Mon, 06 Mar 2006)
+New Revision: 518
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+Log:
+Sendmail rejecting messages because of loadavg is bad.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-06 10:26:13 UTC (rev 517)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-06 10:30:08 UTC (rev 518)
+@@ -5,4 +5,5 @@
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+-
++green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
++red [LOGDATE] sendmail[PID]: rejecting connections on daemon MTA: load average: [NUM]
+
+
+
+From wijnand at berlios.de  Mon Mar  6 11:38:24 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 11:38:24 +0100
+Subject: [Upwatch-commits] r519 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603061038.k26AcOw8030256@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 11:38:24 +0100 (Mon, 06 Mar 2006)
+New Revision: 519
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/selinux
+Log:
+Skip selinux messages for now. It will take some time to get this right.
+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/selinux
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/selinux	2006-03-06 10:30:08 UTC (rev 518)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/selinux	2006-03-06 10:38:24 UTC (rev 519)
+@@ -0,0 +1 @@
++green [LOGDATE] kernel: audit
+
+
+
+From wijnand at berlios.de  Mon Mar  6 11:49:27 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 11:49:27 +0100
+Subject: [Upwatch-commits] r520 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603061049.k26AnRs7031797@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 11:49:26 +0100 (Mon, 06 Mar 2006)
+New Revision: 520
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+Log:
+We don't care if a peer is ignored for a while
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-06 10:38:24 UTC (rev 519)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-06 10:49:26 UTC (rev 520)
+@@ -11,4 +11,5 @@
+ green [LOGDATE] ntpd[PID]: dispatch_imsg in main: pipe closed
+ green [LOGDATE] ntpd[PID]: Lost child: child exited
+ green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
++green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+
+
+From wijnand at berlios.de  Mon Mar  6 14:00:15 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 6 Mar 2006 14:00:15 +0100
+Subject: [Upwatch-commits] r521 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+Message-ID: <200603061300.k26D0FZM027395@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-06 14:00:13 +0100 (Mon, 06 Mar 2006)
+New Revision: 521
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/amavisd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+Log:
+Mostly Harmless
+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/amavisd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/amavisd	2006-03-06 10:49:26 UTC (rev 520)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/amavisd	2006-03-06 13:00:13 UTC (rev 521)
+@@ -0,0 +1,9 @@
++green [LOGDATE] amavis[PID]: Perl version 
++green [LOGDATE] amavis[PID]: Module
++green [LOGDATE] amavis[PID]: [WORD]::[WORD] code loaded
++green [LOGDATE] amavis[PID]: [WORD] code loaded
++green [LOGDATE] amavis[PID]: [WORD]::[WORD] code NOT loaded
++green [LOGDATE] amavis[PID]: [WORD] code NOT loaded
++green [LOGDATE] amavis[PID]: Found $[WORD] at [PATH]
++green [LOGDATE] amavis[PID]: No $[WORD], not using it
++green [LOGDATE] amavis[PID]: Creating db in
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-06 10:49:26 UTC (rev 520)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-06 13:00:13 UTC (rev 521)
+@@ -41,6 +41,9 @@
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX <CRLF>\.<CRLF> workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
++green [LOGDATE] postfix/anvil[PID]: statistics: max connection rate [NUM]/[NUM]s for (smtp:[IPADDR]) at [WORD] [NUM] [NUM]:[NUM]:[NUM]
++green [LOGDATE] postfix/anvil[PID]: statistics: max connection count [NUM] for (smtp:[IPADDR]) at [WORD] [NUM] [NUM]:[NUM]:[NUM]
++green [LOGDATE] postfix/anvil[PID]: statistics: max cache size [NUM] at [WORD] [NUM] [NUM]:[NUM]:[NUM]
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-06 10:49:26 UTC (rev 520)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-06 13:00:13 UTC (rev 521)
+@@ -3,3 +3,5 @@
+ green [LOGDATE] dhcpd: DHCPDISCOVER from [MACADDR]
+ green [LOGDATE] dhcpd: Wrote [NUM] leases to leases file\.
+ green [LOGDATE] dhcpd: No hostname for [IPADDR]
++green [LOGDATE] dhcpd: ip length [NUM] disagrees with bytes received [NUM].
++green [LOGDATE] dhcpd: accepting packet with data after udp payload.
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-06 10:49:26 UTC (rev 520)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-06 13:00:13 UTC (rev 521)
+@@ -0,0 +1,674 @@
++green [LOGDATE] 3w-xxxx[PID]: INFORMATION:
++green [LOGDATE] kernel: 8139too Fast Ethernet driver [NUM]\.[NUM]\.[NUM]
++green [LOGDATE] kernel: ac[NUM]_codec: AC[NUM] Audio codec, vendor id[NUM]: [NUM], id[NUM]: [NUM] \(Unknown\)
++green [LOGDATE] kernel: ACPI: BOOT
++green [LOGDATE] kernel: ACPI: DSDT
++green [LOGDATE] kernel: ACPI: FADT
++green [LOGDATE] kernel: ACPI: Interpreter enabled
++green [LOGDATE] kernel: ACPI: IRQ[NUM] SCI: Edge set to Level Trigger
++green [LOGDATE] kernel: ACPI: MADT
++green [LOGDATE] kernel: ACPI: PCI Interrupt Link \[LNK[A-Z]\] enabled at IRQ [NUM]
++green [LOGDATE] kernel: ACPI: PCI Interrupt Link \[LNK[A-Z]\] \(IRQs
++green [LOGDATE] kernel: ACPI: PCI Root Bridge \[PCI[HEX]\] \([HEX]:[HEX]\)
++green [LOGDATE] kernel: ACPI: PM-Timer IO Port: [HEX]
++green [LOGDATE] kernel: ACPI: Power Button
++green [LOGDATE] kernel: ACPI: Processor \[CPU[NUM]\] \(supports C[NUM]\)
++green [LOGDATE] kernel: ACPI: RSDP
++green [LOGDATE] kernel: ACPI: RSDT
++green [LOGDATE] kernel: ACPI: Searched entire block, no RSDP was found
++green [LOGDATE] kernel: ACPI: Subsystem revision [NUM]
++green [LOGDATE] kernel: ACPI: \(supports S[NUM] S[NUM] S[NUM] S[NUM] S[NUM]\)
++green [LOGDATE] kernel: ACPI table found: (APIC|BOOT|FACP|RSDT|SPCR) v[NUM]
++green [LOGDATE] kernel: ACPI: Using PIC for interrupt routing
++green [LOGDATE] kernel: Activating ISA DMA hang workarounds\.
++green [LOGDATE] kernel: adb: finished probe task\.\.\.
++green [LOGDATE] kernel: ADB keyboard at [NUM], handler [NUM]
++green [LOGDATE] kernel: ADB mouse at [NUM], handler set to [NUM]
++green [LOGDATE] kernel: Adaptec I2O RAID controller [NUM] irq=[NUM]
++green [LOGDATE] kernel: Adding [NUM]k swap on [PATH]  Priority:[NUM] extents:[NUM]
++green [LOGDATE] kernel: Adding Swap: [NUM]k swap-space \(priority -[NUM]\)
++green [LOGDATE] kernel: AE-Init snapper mixer
++green [LOGDATE] kernel: agpgart: AGP aperture is [NUM]M @ [HEX]
++green [LOGDATE] kernel: agpgart: Detected
++green [LOGDATE] kernel: agpgart: Maximum main memory to use for agp memory: [NUM]M
++green [LOGDATE] kernel: AGP special page: [HEX]
++green [LOGDATE] kernel: allocated [NUM] pages and [NUM] bhs reserved for the highmem bounces
++green [LOGDATE] kernel: All processors have done init_idle
++green [LOGDATE] kernel: Alpha port and SMP sponsored by [HOSTNAME], alpha port by [HOSTNAME] and [HOSTNAME]\.
++green [LOGDATE] kernel: An unexpected IO-APIC was found\. If this kernel release is less than
++green [LOGDATE] kernel: apm: BIOS not found
++green [LOGDATE] kernel: apm: BIOS version
++green [LOGDATE] kernel: apm: disabled - APM is not SMP safe
++green [LOGDATE] kernel: apm_emu: APM Emulation [NUM]\.[NUM] initialized\.
++green [LOGDATE] kernel: apm: overridden by ACPI
++green [LOGDATE] kernel: Appletalk [NUM]\.[NUM] for Linux NET[NUM]\.[NUM] 
++green [LOGDATE] kernel: ATAPI device hd[a-z]:
++green [LOGDATE] kernel: Attached scsi .* at scsi[NUM], channel [NUM], id [NUM], lun [NUM]
++green [LOGDATE] kernel: Audio jack unplugged, enabling speakers\.
++green [LOGDATE] kernel: audit: initializing netlink socket \(disabled\)
++green [LOGDATE] kernel: audit\([NUM]\.[NUM]:[NUM]\): initialized
++green [LOGDATE] kernel: autodetecting RAID arrays
++green [LOGDATE] kernel: autorun \.\.\.
++green [LOGDATE] kernel: \.\.\. autorun DONE\.
++green [LOGDATE] kernel: Based upon Swansea University Computer Society NET[NUM]\.[NUM]
++green [LOGDATE] kernel:  BIOS-e[NUM]: [HEX] - [HEX] \(.*\)
++green [LOGDATE] kernel: BIOS-provided physical RAM map:
++green [LOGDATE] kernel: blk: queue [HEX], I/O limit [NUM]Mb \(mask [HEX]\)
++green [LOGDATE] kernel: block: [NUM] slots per queue, batch=[NUM]
++green [LOGDATE] kernel:   Board assembly [HEX]-[NUM], Physical connectors present: RJ[NUM]
++green [LOGDATE] kernel: Booting processor [NUM]/[NUM] eip [NUM]
++green [LOGDATE] kernel: Buffer[- ]cache hash table entries: [NUM]
++green [LOGDATE] kernel: Built [NUM] zonelists
++green [LOGDATE] kernel: Bus scan for [NUM] returning with max=[NUM]
++green [LOGDATE] kernel: calibrating APIC timer \.\.\.
++green [LOGDATE] kernel: Calibrating delay loop.*BogoMIPS
++green [LOGDATE] kernel: Capability LSM initialized
++green [LOGDATE] kernel: cat uses obsolete [PATH] interface
++green [LOGDATE] kernel: cdrom: open failed
++green [LOGDATE] kernel: change_[USER]: old [USER] has d_count=[NUM]
++green [LOGDATE] kernel: \.\.\.changing IO-APIC physical APIC ID to [NUM] \.\.\. ok\.
++green [LOGDATE] kernel: Checking for popad bug\.\.\. OK\.
++green [LOGDATE] kernel: Checking 'hlt' instruction\.\.\.
++green [LOGDATE] kernel: checking if image is initramfs\.\.\.it isn't \(no cpio magic\); looks like an initrd
++green [LOGDATE] kernel: Checking if this processor honours the WP bit even in supervisor mode\.\.\. Ok\.
++green [LOGDATE] kernel: Checking [NUM]/[NUM] coupling\.\.\. Ok, fpu using exception [NUM] error reporting\. 
++green [LOGDATE] kernel: Checking ReiserFS transaction log \(device [NUM]:[NUM]\) \.\.\.
++green [LOGDATE] kernel: checking TSC synchronization across CPUs: passed\.
++green [LOGDATE] kernel: .*: chipset revision [NUM]
++green [LOGDATE] kernel: CLK_PIN_CNTL on wakeup was: [NUM]
++green [LOGDATE] kernel: Code: [HEX] [HEX] [HEX] [HEX] [HEX]
++green [LOGDATE] kernel: Console: colour dummy device [NUM]x[NUM]
++green [LOGDATE] kernel: Console: colour VGA\+ [HEX][NUM]
++green [LOGDATE] kernel: Console: [NUM] point font, [NUM] scans 
++green [LOGDATE] kernel: Console: switching to colour frame buffer device [NUM]x[NUM]
++green [LOGDATE] kernel:     Controller on PCI bus [NUM] function [NUM] 
++green [LOGDATE] kernel: Copyright.* 
++green [LOGDATE] kernel: Core driver edition [NUM]\.[NUM] : PowerMac Built-in Sound driver edition [NUM]\.[NUM]
++green [LOGDATE] kernel: CPU: .* cache: 
++green [LOGDATE] kernel: \.\.\.\.\. CPU clock speed is [NUM]\.[NUM] MHz\.
++green [LOGDATE] kernel: CPU\d*: .* stepping [HEX]
++green [LOGDATE] kernel: CPU HID[NUM] : [NUM]
++green [LOGDATE] kernel: CPU:    [NUM]
++green [LOGDATE] kernel: cpu: [NUM], clocks: [NUM], slice: [NUM]
++green [LOGDATE] kernel: CPU: Physical Processor ID: [NUM]
++green [LOGDATE] kernel: CPU#[NUM]: Intel P[NUM]/Xeon Extended MCE MSRs \([NUM]\) available
++green [LOGDATE] kernel: CPU [NUM] irqstacks, hard=[NUM] soft=[NUM]
++green [LOGDATE] kernel: CPU [NUM] \([NUM]\) enabledProcessor
++green [LOGDATE] kernel: \s*cpu cycle saver enabled
++green [LOGDATE] kernel: CPU[NUM]<T[NUM]:[NUM],T[NUM]:[NUM],D:[NUM],S:[NUM],C:[NUM]>
++green [LOGDATE] kernel: CPU serial number disabled\.
++green [LOGDATE] kernel: CPU: Trace cache: [NUM]K uops, L[NUM] D cache: [NUM]K
++green [LOGDATE] kernel: cpu_sibling_map[PID] = [NUM]
++green [LOGDATE] kernel: CSLIP: code copyright [NUM] Regents of the University of California
++green [LOGDATE] kernel: Dentry cache hash table entries: [NUM] \(order: [NUM], [NUM] bytes\)
++green [LOGDATE] kernel: Dentry hash table entries: [NUM] \(order [NUM], [NUM]k\)
++green [LOGDATE] kernel: Detected ADB keyboard
++green [LOGDATE] kernel: Detected .* processor
++green [LOGDATE] kernel: Detected PS/[NUM] Mouse Port\.
++green [LOGDATE] kernel: Detected scsi .* at scsi[NUM], channel [NUM], id [NUM], lun [NUM]
++green [LOGDATE] kernel: Detecting Adaptec I2O RAID controllers
++green [LOGDATE] kernel: device eth[NUM](\.[NUM])* (entered|left) promiscuous mode
++green [LOGDATE] kernel: device-mapper: [NUM]\.[NUM]\.[NUM]-ioctl \([NUM][NUM][NUM]\) initialised: [EMAIL]
++green [LOGDATE] kernel: dev_mc_discard: multicast leakage! dmi_users=[NUM]
++green [LOGDATE] kernel: Disabled Privacy Extensions on device
++green [LOGDATE] kernel:   DMA zone: [NUM] pages, LIFO batch:[NUM]
++green [LOGDATE] kernel: DMI [NUM]\.[NUM] present
++green [LOGDATE] kernel: \.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\. done\.
++green [LOGDATE] kernel: Dquot-cache hash table entries: [NUM] \(order [NUM], [NUM] bytes\)
++green [LOGDATE] kernel: dpti: If you have a lot of devices this could take a few minutes\.
++green [LOGDATE] kernel: dpti[NUM]: Reading the hardware resource table\.
++green [LOGDATE] kernel: drivers[PATH]: v[NUM]\.[NUM]:USB HID core driver
++green [LOGDATE] kernel: eepro100\.c: \$Revision:
++green [LOGDATE] kernel: eepro100\.c:v[NUM]\.[NUM]j-t [NUM][PATH] Donald Becker http:/[PATH]
++green [LOGDATE] kernel: ehci_hcd [HEX]:[HEX]:[HEX]\.[HEX]:
++green [LOGDATE] kernel: Elsa: IPAC version [NUM]
++green [LOGDATE] kernel: Elsa: Microlink PCI defined at [HEX][NUM]/[HEX][NUM] IRQ [NUM]
++green [LOGDATE] kernel: Elsa PCI: IRQ [NUM] count [NUM]
++green [LOGDATE] kernel: Elsa: QS [NUM] PCI defined at [HEX][NUM]/[HEX][NUM] IRQ [NUM]
++green [LOGDATE] kernel: enabled ExtINT on CPU#[NUM]
++green [LOGDATE] kernel: Enabling APIC mode: Flat\.\^IUsing [NUM] I/O APICs
++green [LOGDATE] kernel: Enabling fast FPU save and restore\.\.\. done\.
++green [LOGDATE] kernel: ENABLING IO-APIC IRQs
++green [LOGDATE] kernel: Enabling SiS [NUM]x SMBus\.
++green [LOGDATE] kernel: Enabling the CPU's according to the ACPI table
++green [LOGDATE] kernel: Enabling unmasked SIMD FPU exception support\.\.\. done\.
++green [LOGDATE] kernel: e[NUM]: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
++green [LOGDATE] kernel: e[NUM]: eth[NUM] NIC Link is Up [NUM] Mbps Full duplex
++green [LOGDATE] kernel: eth[NUM]: MII #[HEX] registers are: [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX]\. 
++green [LOGDATE] kernel: eth[NUM]: Airport entering sleep mode
++green [LOGDATE] kernel: eth[NUM]: Airport waking up
++green [LOGDATE] kernel: eth[NUM]: .* at [HEX], IRQ [NUM], [MACADDR]
++green [LOGDATE] kernel: eth[NUM](\.[NUM])*: dev_set_promiscuity\(master, [NUM]\)
++green [LOGDATE] kernel: eth[NUM]: Found BCM[NUM] PHY
++green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], I/O at [HEX][HEX], IRQ [NUM]
++green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], IRQ [NUM]
++green [LOGDATE] kernel: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
++green [LOGDATE] kernel: eth[NUM]: Media Link On [NUM]mbps full-duplex 
++green [LOGDATE] kernel: eth[NUM]: Promiscuous mode enabled
++green [LOGDATE] kernel: eth[NUM]: Realtek RTL[NUM] PHY transceiver found at address [NUM]\.
++green [LOGDATE] kernel: eth[NUM]: resuming
++green [LOGDATE] kernel: eth[NUM]: Setting (full|half)-duplex based on MII #[NUM] link partner ability of [HEX]
++green [LOGDATE] kernel: eth[NUM]: Setting\s.*(full|half)-duplex based on auto-negotiated partner ability [HEX]
++green [LOGDATE] kernel: eth[NUM]: SiS [NUM] PCI Fast Ethernet at [NUM], IRQ [NUM], [MACADDR]\.
++green [LOGDATE] kernel: eth[NUM]: [SMONTH] GEM \(PCI\) [NUM][PATH] Ethernet [MACADDR] 
++green [LOGDATE] kernel: eth[NUM]: suspending, WakeOnLan disabled
++green [LOGDATE] kernel: eth[NUM]:  Tx descriptor [NUM] is [HEX] 
++green [LOGDATE] kernel: eth[NUM]: Tx queue start entry [NUM]  dirty entry [NUM]\. 
++green [LOGDATE] kernel: eth[NUM]: Using transceiver found at address [NUM] as default
++green [LOGDATE] kernel: EXT[NUM]-fs: hda[NUM]: [NUM] orphan inodes deleted
++green [LOGDATE] kernel: EXT[NUM]-fs: hda[NUM]: orphan cleanup on readonly fs
++green [LOGDATE] kernel: EXT[NUM]-fs: ide[NUM]\([NUM],[NUM]\): orphan cleanup on readonly fs
++green [LOGDATE] kernel: EXT[NUM]-fs: (ide|scsi)[NUM]\([NUM],[NUM]\): [NUM] orphan inodes? deleted
++green [LOGDATE] kernel: EXT[NUM]-fs: INFO: recovery required on readonly filesystem\.
++green [LOGDATE] kernel: EXT[NUM]-fs: mounted filesystem with ordered data mode\.
++green [LOGDATE] kernel: EXT[NUM] FS on hda[NUM], internal journal
++green [LOGDATE] kernel: EXT[NUM] FS .* on (sd|ide).*, internal journal
++green [LOGDATE] kernel: EXT[NUM]-fs: recovery complete\.
++green [LOGDATE] kernel: EXT[NUM]-fs: sd\([NUM],[NUM]\): [NUM] orphan inodes deleted
++green [LOGDATE] kernel: EXT[NUM]-fs: sd\([NUM],[NUM]\): orphan cleanup on readonly fs
++green [LOGDATE] kernel: EXT[NUM]-fs warning: checktime reached, running e[NUM]fsck is recommended
++green [LOGDATE] kernel: EXT[NUM]-fs: write access will be enabled during recovery\.
++green [LOGDATE] kernel: Failure registering capabilities with the kernel
++green [LOGDATE] kernel: FDC [NUM] is a
++green [LOGDATE] kernel: Fixup res [NUM] \([NUM]\) of dev [NUM]:[NUM]\.[NUM]: [NUM] -> [NUM]
++green [LOGDATE] kernel: Fixups for bus [NUM]
++green [LOGDATE] kernel: Floppy drive\(s\): fd[NUM] is [NUM]\.[NUM]M
++green [LOGDATE] kernel: floppy[NUM]: Unable to grab IRQ[NUM] for the floppy driver
++green [LOGDATE] kernel: floppy[NUM]: no floppy controllers found
++green [LOGDATE] kernel: Found and enabled local APIC!
++green [LOGDATE] kernel: Found a Pangea mac-io controller, rev: [NUM], mapped at [HEX]
++green [LOGDATE] kernel: Found [HEX]:[HEX] \[[HEX]/[HEX]\] [HEX] [HEX]
++green [LOGDATE] kernel: Found KeyWest i2c on ".*", [NUM] channel, stepping: [NUM] bits
++green [LOGDATE] kernel: found SMP MP-table at [HEX]
++green [LOGDATE] kernel: Found Uninorth memory controller & host bridge, revision: [NUM]
++green [LOGDATE] kernel: Found UniNorth PCI host bridge at [NUM]xf[NUM]\. Firmware bus number: [NUM]->[NUM]
++green [LOGDATE] kernel: Freeing initrd memory: [NUM]k freed
++green [LOGDATE] kernel: Freeing unused kernel memory: [NUM]k freed
++green [LOGDATE] kernel: Freeing unused kernel memory: [NUM]k init [NUM]k chrp [NUM]k prep
++green [LOGDATE] kernel: GDT CTR[NUM]: Configuring GDT-PCI HA at [NUM]/[NUM] IRQ [NUM]
++green [LOGDATE] kernel: GDT: Found [NUM] PCI Storage RAID Controllers
++green [LOGDATE] kernel: GDT: Storage RAID Controller Driver\. Version: [NUM]\.[NUM] 
++green [LOGDATE] kernel:   General self-test: passed\.
++green [LOGDATE] kernel: GMT Delta read from XPRAM: [NUM] minutes, DST: (off|on)
++green [LOGDATE] kernel: hda: max request size: [NUM]KiB
++green [LOGDATE] kernel: hd[a-z]: .*, ATA DISK drive
++green [LOGDATE] kernel: hd[a-z]: .*ATAPI
++green [LOGDATE] kernel: hd[a-z]: attached ide-(disk|cdrom) driver\.
++green [LOGDATE] kernel: hd[a-z]: channel busy
++green [LOGDATE] kernel: hd[a-z]: C[PATH]=[NUM][PATH] from BIOS ignored
++green [LOGDATE] kernel: hd[a-z]: DMA disabled
++green [LOGDATE] kernel: hd[a-z]: Enabling MultiWord DMA [NUM]
++green [LOGDATE] kernel: hd[a-z]: Enabling Ultra DMA [NUM]
++green [LOGDATE] kernel: hd[a-z]: FUJITSU MHM[NUM]AT, ATA DISK drive
++green [LOGDATE] kernel: hd[a-z]: host protected area => [NUM]
++green [LOGDATE] kernel: hd[a-z]: .*, [NUM]MB w/[NUM]kB Cache, CHS=[NUM][PATH]
++green [LOGDATE] kernel: hd[a-z]: [NUM] sectors \([NUM] MB\) w/[NUM]KiB Cache, CHS=[NUM][PATH], UDMA\([NUM]\)
++green [LOGDATE] kernel:  hd[a-z]: \[PTBL\] \[[NUM][PATH]\] hd[a-z][NUM]
++green [LOGDATE] kernel:  hd[a-z]:((\shd[a-z]\d|<|>))*
++green [LOGDATE] kernel: [HEX]$
++green [LOGDATE] kernel:        [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] 
++green [LOGDATE] kernel:   "[HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] "
++green [LOGDATE] kernel: HFC-PCI: No PCI card found
++green [LOGDATE] kernel: hid-core\.c: USB HID support drivers
++green [LOGDATE] kernel: hid-core\.c: v[NUM]\.[NUM]\.[NUM] Andreas Gal, Vojtech Pavlik <[EMAIL]>
++green [LOGDATE] kernel:   HighMem zone: [NUM] pages, LIFO batch:[NUM]
++green [LOGDATE] kernel: HiSax: Approval
++green [LOGDATE] kernel: HiSax: Approved
++green [LOGDATE] kernel: HiSax: Card .* not installed !
++green [LOGDATE] kernel: HiSax: Card [NUM] Protocol EDSS[NUM] Id=line[NUM] \([NUM]\)
++green [LOGDATE] kernel: HiSax: .* driver Rev\.
++green [LOGDATE] kernel: HiSax: DSS[NUM] Rev
++green [LOGDATE] kernel: HiSax: EU \(D[NUM]J\) CETECOM ICT Services GmbH
++green [LOGDATE] kernel: HiSax: German D[NUM]J CETECOM ICT Services GmbH
++green [LOGDATE] kernel: HiSax: LinkLayer Revision
++green [LOGDATE] kernel: HiSax: Linux Driver for passive ISDN cards
++green [LOGDATE] kernel: HiSax: MAX_WAITING_CALLS added
++green [LOGDATE] kernel: HiSax module removed
++green [LOGDATE] kernel: HiSax: Note! module load syntax has changed\.
++green [LOGDATE] kernel: HiSax: [NUM] channels added
++green [LOGDATE] kernel: HiSax: .* Revision
++green [LOGDATE] kernel: HiSax: SI=[NUM], AI=[NUM] 
++green [LOGDATE] kernel: HiSax: unauthorized source code changes
++green [LOGDATE] kernel: HiSax: using protocol EURO
++green [LOGDATE] kernel: HiSax: Version 
++green [LOGDATE] kernel: HiSax: Warning - no protocol specified
++green [LOGDATE] kernel: hm, page [HEX] reserved twice\.
++green [LOGDATE] kernel: hose pci, pci_mem_offset: [NUM], start[NUM]: [HEX]
++green [LOGDATE] kernel: \.\.\.\.\. host bus clock speed is [NUM]\.[NUM] MHz\.
++green [LOGDATE] kernel: HSM sponsored by [HOSTNAME]
++green [LOGDATE] kernel:   http:/[PATH]
++green [LOGDATE] kernel: hub\.c: new USB device [NUM]:[NUM]\.[NUM]-[NUM], assigned address [NUM]
++green [LOGDATE] kernel: hub\.c: [NUM] ports detected
++green [LOGDATE] kernel: hub\.c: USB hub found
++green [LOGDATE] kernel: hub [NUM][NUM]:[NUM]\.[NUM]: [NUM] ports detected
++green [LOGDATE] kernel: hub [NUM][NUM]:[NUM]\.[NUM]: over-current change on port [NUM]
++green [LOGDATE] kernel: hub [NUM][NUM]:[NUM]\.[NUM]: USB hub found
++green [LOGDATE] kernel: i2c-core\.o: adapter .* [NUM] registered as adapter [NUM]\.
++green [LOGDATE] kernel: i2c-core\.o: client \[.*\] registered to adapter
++green [LOGDATE] kernel: i2c-core\.o: driver TAS[NUM] driver V [NUM]\.[NUM] registered\.
++green [LOGDATE] kernel: i2c-core\.o: i2c core module
++green [LOGDATE] kernel: IA[NUM] Microcode Update Driver: v[NUM]\.[NUM] <[EMAIL]>
++green [LOGDATE] kernel: IBM machine detected\. Enabling interrupts during APM calls\.
++green [LOGDATE] kernel: ICALLslv: ippp[NUM] 
++green [LOGDATE] kernel: ICH\d*: chipset revision [NUM]
++green [LOGDATE] kernel: ICH\d*: IDE controller at PCI slot [NUM]:[NUM]f\.[NUM]
++green [LOGDATE] kernel: ICH\d*: not [NUM]%% native mode: will probe irqs later
++green [LOGDATE] kernel: ide: Assuming [NUM]MHz system bus speed for PIO modes; override with idebus=xx
++green [LOGDATE] kernel: .*: IDE controller at PCI slot [HEX]:[HEX]\.[HEX]
++green [LOGDATE] kernel: .*: IDE controller at PCI slot [NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: .*: IDE controller on PCI bus [NUM] dev [HEX]
++green [LOGDATE] kernel: .*: IDE controller on PCI bus [NUM] dev [NUM]
++green [LOGDATE] kernel: ide-floppy driver [HOSTNAME]wide
++green [LOGDATE] kernel: ide: Intel [NUM] \(single FIFO\) DMA Bus Mastering IDE  
++green [LOGDATE] kernel: ide[NUM] at [HEX]-[HEX],[HEX] on irq [NUM]
++green [LOGDATE] kernel:     ide[NUM]: BM-DMA at
++green [LOGDATE] kernel: ide[NUM]: Found Apple KeyLargo ATA[NUM] controller, bus ID [NUM]
++green [LOGDATE] kernel: ide[NUM]: ports already in use, skipping probe
++green [LOGDATE] kernel: ide_setup: hd[a-z]=ide-scsi
++green [LOGDATE] kernel: ide: timings == [NUM] 
++green [LOGDATE] kernel: idx=[NUM] drv=[NUM] ch=[NUM] 
++green [LOGDATE] kernel: Initializing CPU#[NUM]
++green [LOGDATE] kernel: Initializing Cryptographic API
++green [LOGDATE] kernel: Initializing IPsec netlink socket
++green [LOGDATE] kernel: Initializing RT netlink socket
++green [LOGDATE] kernel: Initializing USB Mass Storage driver\.\.\.
++green [LOGDATE] kernel: Inode cache hash table entries: [NUM] \(order: [NUM], [NUM] bytes\)
++green [LOGDATE] kernel: Inode-cache hash table entries: [NUM] \(order: [NUM], [NUM] bytes\)
++green [LOGDATE] kernel: input: AT Translated Set [NUM] keyboard on isa[NUM]/serio[NUM]
++green [LOGDATE] kernel: input[NUM]: ADB HID on ID [HEX]:[HEX]\.[HEX]
++green [LOGDATE] kernel: input[NUM]: Macintosh mouse button emulation
++green [LOGDATE] kernel: inserting floppy driver for
++green [LOGDATE] kernel: Inspecting [PATH]
++green [LOGDATE] kernel: Installing knfsd \(copyright \(C\) [NUM] [EMAIL]\)\.
++green [LOGDATE] kernel: INT_SRC_OVR \(bus[PID] irq\[[NUM]\] global_irq\[[NUM]\] polarity\[[NUM]\] trigger\[[NUM]\]\)
++green [LOGDATE] kernel: Intel machine check architecture supported\.
++green [LOGDATE] kernel: Intel machine check reporting enabled on CPU#[NUM]\.
++green [LOGDATE] kernel: Intel MultiProcessor Specification v[NUM]\.[NUM]
++green [LOGDATE] kernel: Intel [NUM] \+ AC[NUM] Audio, version [NUM]\.[NUM], [NUM]:[NUM]:[NUM] Mar [NUM] [NUM]
++green [LOGDATE] kernel: Intel Pentium with F[NUM] [NUM]F bug - workaround enabled\.
++green [LOGDATE] kernel: Intel\(R\) PRO/[NUM] Network Driver - version.*
++green [LOGDATE] kernel:   Internal registers self-test: passed\.
++green [LOGDATE] kernel: i[NUM]_audio: Found [NUM] audio device\(s\)\.
++green [LOGDATE] kernel: i[NUM]: Intel ICH [NUM]AA found at IO [HEX][NUM] and [HEX][NUM], IRQ [NUM]
++green [LOGDATE] kernel:   Invalid field in command packet -- \(asc=[NUM], ascq=[NUM]\)
++green [LOGDATE] kernel: IOAPIC \(id\[[NUM]\] address\[[HEX]\] global_irq_base\[[NUM]\]\)
++green [LOGDATE] kernel: I/O APIC #[NUM] Version [NUM] at [HEX]\.
++green [LOGDATE] kernel:   io_base_virt: [HEX], io_base_phys: [HEX], isa_mem_base: [HEX]
++green [LOGDATE] kernel:  I/O error: dev [NUM]:[NUM], sector [NUM]
++green [LOGDATE] kernel: [IPADDR] sent an invalid ICMP error to a broadcast\.
++green [LOGDATE] kernel: ip_conntrack \([NUM] buckets, [NUM] max\)
++green [LOGDATE] kernel: ip_conntrack: max number of expected connections.*reusing
++green [LOGDATE] kernel: ip_conntrack version [NUM]\.[NUM] \([NUM] buckets, [NUM] max\) - [NUM] bytes per conntrack
++green [LOGDATE] kernel: IP fw-(in|fwd|out) deny
++green [LOGDATE] kernel: ippp_ccp: allocated reset data structure [HEX]
++green [LOGDATE] kernel: ippp_ccp: freeing reset data structure [HEX]
++green [LOGDATE] kernel: ippp[NUM]: all channels busy - requeuing!
++green [LOGDATE] kernel: ippp[NUM]: call from [NUM] -> [NUM] accepted 
++green [LOGDATE] kernel: ippp[NUM]: call from [NUM] -> [NUM], start callback 
++green [LOGDATE] kernel: ippp[NUM]: Chargesum is [NUM]
++green [LOGDATE] kernel: ippp[NUM]: dialing [NUM] [NUM]\.\.\.
++green [LOGDATE] kernel: ippp[NUM]: HL driver queue full
++green [LOGDATE] kernel: ippp[NUM]: [NUM] bogocps 
++green [LOGDATE] kernel: ippp[NUM]: remote abort \([NUM]\) 
++green [LOGDATE] kernel: ippp[NUM]: remote hangup
++green [LOGDATE] kernel: ippp, open, slot: [NUM], minor: [NUM], state: [NUM]
++green [LOGDATE] kernel: IP Protocols:
++green [LOGDATE] kernel: IP: routing cache hash table of [NUM] buckets, [NUM]Kbytes
++green [LOGDATE] kernel: IPSEC EVENT: KLIPS device ipsec[NUM] shut down\.
++green [LOGDATE] kernel: ip_tables: \(C\) [NUM]-[NUM] Netfilter core team
++green [LOGDATE] kernel: iptables: [WORD] IN=
++green [LOGDATE] kernel: IPv[NUM] over IPv[NUM] tunneling driver
++green [LOGDATE] kernel: IPVS: Connection hash table configured \(size=[NUM], memory=[NUM]Kbytes\)
++green [LOGDATE] kernel: IPX Portions Copyright \(c\) [NUM]
++green [LOGDATE] kernel: isapnp: No Plug & Play device found
++green [LOGDATE] kernel: isapnp: Scanning for PnP cards\.\.\.
++green [LOGDATE] kernel: isdn: Global Mode running 
++green [LOGDATE] kernel: isdn: line[NUM],ch[NUM] cause: [HEX]
++green [LOGDATE] kernel: isdn_net: call from [NUM] -> [NUM] [NUM] ignored 
++green [LOGDATE] kernel: isdn_net: call from [NUM],[NUM],[NUM] -> [NUM] 
++green [LOGDATE] kernel: isdn_net: chargetime of ippp[NUM] now [NUM] 
++green [LOGDATE] kernel: isdn_net: Incoming call without OAD, assuming '[NUM]' 
++green [LOGDATE] kernel: isdn_net: ippp[NUM] connected
++green [LOGDATE] kernel: isdn_net: local hangup ippp[NUM]
++green [LOGDATE] kernel: isdn_net: Service-Indicator not [NUM], ignored 
++green [LOGDATE] kernel: isdn: Rejecting Call 
++green [LOGDATE] kernel: ISDN subsystem Rev: .* loaded
++green [LOGDATE] kernel: ISDN-subsystem unloaded
++green [LOGDATE] kernel: isdn_tty: call from [NUM] -> [NUM] ignored
++green [LOGDATE] kernel: isdn_tty: Incoming call without OAD, assuming '[NUM]'
++green [LOGDATE] kernel: isdn_tx_timeout dev ippp[NUM] dialstate [NUM]
++green [LOGDATE] kernel: isdn: Verbose-Level is [NUM] 
++green [LOGDATE] kernel: Journalled Block Device driver loaded
++green [LOGDATE] kernel: Kernel command line:
++green [LOGDATE] kernel: Kernel log daemon terminating\.
++green [LOGDATE] kernel: Kernel logging \(proc\) stopped\.
++green [LOGDATE] kernel: klips_error:ipsec_tunnel_start_xmit: ip_send\(\) failed, err=[NUM]
++green [LOGDATE] kernel: klips_info:cleanup_module: ipsec module unloaded\.
++green [LOGDATE] kernel: klips_info:ipsec_alg_init: calling ipsec_alg_static_init\(\)
++green [LOGDATE] kernel: klips_info:ipsec_alg_init: KLIPS alg v=[NUM]\.[NUM]\.[NUM]-[NUM] \(EALG_MAX=[NUM], AALG_MAX=[NUM]\)
++green [LOGDATE] kernel: klips_info:ipsec_init: KLIPS startup, FreeS/WAN IPSec version: 
++green [LOGDATE] kernel: klips_info:pfkey_cleanup: shutting down PF_KEY domain sockets\.
++green [LOGDATE] kernel: klogd [NUM]\.[NUM]\.[NUM], ---------- state change ----------
++green [LOGDATE] kernel: kmod: failed to exec [PATH] -s -k scsi_hostadapter, errno = [NUM]
++green [LOGDATE] kernel: less uses obsolete [PATH] interface
++green [LOGDATE] kernel: LAPIC \(acpi_id\[[NUM]\] id\[[NUM]\] enabled[PID]\)
++green [LOGDATE] kernel: LAPIC_NMI \(acpi_id\[[NUM]\] polarity\[[NUM]\] trigger\[[NUM]\] lint\[[NUM]\]\)
++green [LOGDATE] kernel: Limiting direct PCI/PCI transfers\.
++green [LOGDATE] kernel: Linux agpgart interface v[NUM]\.[NUM] \(c\) Dave Jones
++green [LOGDATE] kernel: Linux agpgart interface v[NUM]\.[NUM] \(c\) Jeff Hartmann
++green [LOGDATE] kernel: Linux IP multicast router [NUM]\.[NUM] plus PIM-SM
++green [LOGDATE] kernel: Linux NET[NUM]\.[NUM] for Linux [NUM]\.[NUM]
++green [LOGDATE] kernel: Linux Plug and Play Support v[NUM]\.[NUM] \(c\) Adam Belay
++green [LOGDATE] kernel: Linux Tulip driver version
++green [LOGDATE] kernel: Linux version
++green [LOGDATE] kernel: Loaded [NUM] symbols from
++green [LOGDATE] kernel: Loading Adaptec I2O RAID: Version 
++green [LOGDATE] kernel: Local APIC address [HEX]
++green [LOGDATE] kernel: Local APIC disabled by BIOS -- reenabling\.
++green [LOGDATE] kernel: loop: loaded \(max [NUM] devices\)
++green [LOGDATE] kernel: Macintosh non-volatile memory driver v[NUM]\.[NUM]
++green [LOGDATE] kernel: Mapped at [HEX]
++green [LOGDATE] kernel: mapped [NUM]G/[NUM]G trampoline to ffff[NUM]\.
++green [LOGDATE] kernel: masked ExtINT on CPU#[NUM]
++green [LOGDATE] kernel: master=ippp[NUM] 
++green [LOGDATE] kernel: master (on|off)line 
++green [LOGDATE] kernel: md: Autodetecting RAID arrays\.
++green [LOGDATE] kernel: md: autorun \.\.\.
++green [LOGDATE] kernel: md: \.\.\. autorun DONE\.
++green [LOGDATE] kernel: md\.c: sizeof\(mdp_super_t\) = [NUM]
++green [LOGDATE] kernel: md driver
++green [LOGDATE] kernel: md: md driver
++green [LOGDATE] kernel: Memory BAT mapping: BAT[NUM]=[NUM]Mb, BAT[NUM]=[NUM]Mb, residual: [NUM]Mb
++green [LOGDATE] kernel: Memory: [NUM]k available \([NUM]k kernel code, [NUM]k data, [NUM]k init, [NUM]k highmem\)
++green [LOGDATE] kernel: Memory: [NUM]k/[NUM]k available
++green [LOGDATE] kernel: Memory: sized by int[NUM] [HEX]h 
++green [LOGDATE] kernel: mesh: configured for synchronous [NUM] MB/s
++green [LOGDATE] kernel: mice: PS/[NUM] mouse device common for all mice
++green [LOGDATE] kernel: microcode: No suitable data for cpu [NUM]
++green [LOGDATE] kernel: Microstar [NUM] with broken BIOS detected\. Refusing to enable the local APIC\.
++green [LOGDATE] kernel: mlpf: [NUM] 
++green [LOGDATE] kernel: Mount[- ]cache hash table entries: [NUM] \(order: [NUM], [NUM] bytes\)
++green [LOGDATE] kernel: mtrr: detected mtrr type:
++green [LOGDATE] kernel: mtrr: probably your BIOS does not setup all CPUs
++green [LOGDATE] kernel: mtrr: v[NUM]\.[HEX] \([NUM]\) Richard Gooch \([EMAIL]\)
++green [LOGDATE] kernel: mtrr: v[NUM]\.[NUM] \([NUM]\)
++green [LOGDATE] kernel: mtrr: your CPUs had inconsistent variable MTRR settings
++green [LOGDATE] kernel: .*: neither IDE port enabled \(BIOS\)
++green [LOGDATE] kernel: ne2k-pci\.c:v[NUM]\.[NUM] [NUM][PATH] D\. Becker/P\. Gortmaker
++green [LOGDATE] kernel: NETDEV WATCHDOG: (eth|ippp)[NUM]: transmit timed out
++green [LOGDATE] kernel: NET[NUM]: AppleTalk
++green [LOGDATE] kernel: NET[NUM]: Frame Diverter
++green [LOGDATE] kernel: NET[NUM]: Linux IPX
++green [LOGDATE] kernel: NET[NUM]: Linux TCP/IP
++green [LOGDATE] kernel: NET[NUM]: Unix domain sockets
++green [LOGDATE] kernel: NET: Registered protocol family [NUM]
++green [LOGDATE] kernel: nfsd: last server has exited
++green [LOGDATE] kernel: nfs: server [IPADDR] OK
++green [LOGDATE] kernel: nfsd: unexporting all filesystems
++green [LOGDATE] kernel:   Normal zone: [NUM] pages, LIFO batch:[NUM]
++green [LOGDATE] kernel: .*: not [NUM]%* native mode: will probe irqs later
++green [LOGDATE] kernel: .*: not [NUM]%% native mode: will probe irqs later
++green [LOGDATE] kernel: [NUM]MB (HIGH|LOW)MEM available\.
++green [LOGDATE] kernel: [NUM] -> [NUM]
++green [LOGDATE] kernel: [NUM]:[NUM]: rw=[NUM], want=[NUM], limit=[NUM]
++green [LOGDATE] kernel: [NUM] CPUs total
++green [LOGDATE] kernel:    [NUM]regs .* MB/sec
++green [LOGDATE] kernel: OEM ID: OEM[NUM] Product ID: PROD[NUM] APIC at: [HEX]
++green [LOGDATE] kernel: OEM ID:   Product ID: .* at: [HEX]
++green [LOGDATE] kernel: ohci_hcd [NUM]:[NUM]:[NUM]\.[NUM]: irq [NUM], pci mem [NUM]
++green [LOGDATE] kernel: ohci_hcd [NUM]:[NUM]:[NUM]\.[NUM]: irq [NUM], pci mem [NUM]a[NUM]
++green [LOGDATE] kernel: ohci_hcd [NUM]:[NUM]:[NUM]\.[NUM]: new USB bus registered, assigned bus number [NUM]
++green [LOGDATE] kernel: ohci_hcd [NUM]:[NUM]:[NUM]\.[NUM]: OHCI Host Controller
++green [LOGDATE] kernel: ohci[NUM]_[NUM]: OHCI[NUM] [NUM]\.[NUM] \(PCI\): IRQ=[PID]
++green [LOGDATE] kernel: ohci[NUM]_[NUM]: Unexpected PCI resource length of [NUM]!
++green [LOGDATE] kernel: ohci[NUM]: \$Rev: [NUM] \$ Ben Collins <[EMAIL]>
++green [LOGDATE] kernel: On node [NUM] totalpages: [NUM]
++green [LOGDATE] kernel: OPEN: [IPADDR] -> [IPADDR]
++green [LOGDATE] kernel: OpenPIC timer frequency is [NUM]\.[NUM] MHz
++green [LOGDATE] kernel: OpenPIC Version [NUM]\.[NUM] \([NUM] CPUs and [NUM] IRQ sources\) at [HEX]
++green [LOGDATE] kernel: Packet log: (input|output) DENY (eth|ippp)[NUM] PROTO=[NUM]
++green [LOGDATE] kernel: Page[- ]cache hash table entries: [NUM]
++green [LOGDATE] kernel: parport[NUM]: irq [NUM] detected
++green [LOGDATE] kernel: parport[NUM]: PC-style at [NUM]
++green [LOGDATE] kernel: parport_pc: Via [NUM]A parallel port
++green [LOGDATE] kernel: Partition check:
++green [LOGDATE] kernel: PCI->APIC IRQ transform: \(B[NUM],I[NUM],P[NUM]\) -> [NUM]
++green [LOGDATE] kernel: PCI: Assigned IRQ [NUM] for device [NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: pcibios_init : BIOS[NUM] Service Directory
++green [LOGDATE] kernel: pcibios_init : PCI BIOS revision [NUM]\.[NUM] entry at [HEX][NUM] 
++green [LOGDATE] kernel: PCI: cache line size of [NUM] is not supported by device [NUM]:[NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: PCI: Discovered primary peer bus [NUM] \[IRQ\]
++green [LOGDATE] kernel: PCI: Enabling bus mastering for device [NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: PCI: Enabling device [HEX]:[HEX]\.[HEX] \([HEX] -> [HEX]\)
++green [LOGDATE] kernel: PCI: Enabling Via external APIC routing
++green [LOGDATE] kernel: PCI: Found IRQ [NUM] for device [HEX]:[HEX]\.[HEX]
++green [LOGDATE] kernel: PCI:[HEX]:[HEX]\.[HEX]: Resource [HEX]: [HEX]-[HEX] \(f=[HEX]\), vd: [HEX], dev: [HEX]
++green [LOGDATE] kernel: pci_hotplug: PCI Hot Plug PCI Core version: [NUM]\.[NUM]
++green [LOGDATE] kernel: PCI_IDE: not [NUM]% native mode: will probe irqs later
++green [LOGDATE] kernel: PCI_IDE: unknown IDE controller on PCI bus [NUM] device f[NUM], VID=[NUM], DID=[NUM]
++green [LOGDATE] kernel: PCI: if you experience problems, try using option 'pci=noacpi' or even 'acpi=off'
++green [LOGDATE] kernel: PCI: Ignoring BAR[NUM]-[NUM] of IDE controller [NUM]:[NUM]f\.[NUM]
++green [LOGDATE] kernel: PCI: Increasing latency timer of device [NUM]:fd to [NUM]
++green [LOGDATE] kernel: PCI: [NUM]:[NUM]\.[NUM] PCI cache line size corrected to [NUM]\.
++green [LOGDATE] kernel: PCI: [NUM]:[NUM]\.[NUM] PCI cache line size set incorrectly \([NUM] bytes\) by BIOS/FW\.
++green [LOGDATE] kernel: PCI->OF bus map:
++green [LOGDATE] kernel: PCI: PCI BIOS revision [NUM]\.[NUM] entry at [HEX]
++green [LOGDATE] kernel: PCI: Probing PCI hardware
++green [LOGDATE] kernel: PCI: Setting latency timer of device [NUM]:[HEX]\.[NUM] to [NUM]
++green [LOGDATE] kernel: PCI: Sharing IRQ [NUM] with [NUM]:[HEX]\.[NUM]
++green [LOGDATE] kernel: PCI: Using ACPI for IRQ routing
++green [LOGDATE] kernel: PCI: Using configuration type [NUM]
++green [LOGDATE] kernel: PCI: Using IRQ router [WORD] \[[NUM]/[NUM]\] at [NUM]:[HEX]\.[NUM]
++green [LOGDATE] kernel: PCI: Via IRQ fixup for [NUM]:[NUM]\.[NUM], from [NUM] to [NUM]
++green [LOGDATE] kernel: \*pde = [NUM]
++green [LOGDATE] kernel: per-CPU timeslice cutoff: [NUM]\.[NUM] usecs\.
++green [LOGDATE] kernel: PID hash table entries: [NUM] \(order [NUM]: [NUM] bytes\)
++green [LOGDATE] kernel:    p[I\d]*_mmx .* MB/sec
++green [LOGDATE] kernel: PMU driver [NUM] initialized for Core[NUM], firmware: [HEX]
++green [LOGDATE] kernel: POSIX conformance testing by UNIFIX
++green [LOGDATE] kernel: possible SYN flooding on port [NUM]\. Sending cookies\.
++green [LOGDATE] kernel: PowerMac motherboard: iBook [NUM] rev\. [NUM]
++green [LOGDATE] kernel: PowerMac Snapper  DMA sound driver rev [NUM] installed
++green [LOGDATE] kernel: PowerMac using OpenPIC irq controller
++green [LOGDATE] kernel: PowerMac Z[NUM] serial driver version [NUM]\.[NUM]
++green [LOGDATE] kernel: PPP BSD Compression module registered
++green [LOGDATE] kernel: PPP Deflate Compression module registered
++green [LOGDATE] kernel: PPP line discipline registered\.
++green [LOGDATE] kernel: PPP: ppp line discipline successfully unregistered
++green [LOGDATE] kernel: PPP: version [NUM]\.[NUM]\.[NUM] \(demand dialling\)
++green [LOGDATE] kernel:   Primary interface chip i[NUM] PHY #[NUM]\.
++green [LOGDATE] kernel: Primary Sponsor [HOSTNAME]
++green [LOGDATE] kernel:  printing eip:
++green [LOGDATE] kernel: Probing IDE interface ide[NUM]\.\.\.
++green [LOGDATE] kernel: Probing PCI hardware\. 
++green [LOGDATE] kernel: Processor NAP mode on idle enabled\.
++green [LOGDATE] kernel: Processor #[NUM] Pentium\(tm\) Pro APIC version [NUM]
++green [LOGDATE] kernel: Processors: [NUM]
++green [LOGDATE] kernel: Process [WORD] \(pid: [NUM], stackpage=c[HEX]\)
++green [LOGDATE] kernel: PS/[NUM] auxiliary pointing device detected -- driver installed\. 
++green [LOGDATE] kernel: pty: [NUM] Unix[NUM] ptys configured
++green [LOGDATE] kernel: radeonfb: ATI Radeon M[NUM] LW DDR SGRAM [NUM] MB
++green [LOGDATE] kernel: radeonfb: CRT port no monitor connected
++green [LOGDATE] kernel: radeonfb: detected DFP panel size from EDID: [NUM]x[NUM]
++green [LOGDATE] kernel: radeonfb: DVI port LCD monitor connected
++green [LOGDATE] kernel: radeonfb: Power Management enabled for Mobility chipsets
++green [LOGDATE] kernel: radeonfb: ref_clk=[NUM], ref_div=[NUM], xclk=[NUM] from OF
++green [LOGDATE] kernel: raid[NUM]: measuring checksumming speed
++green [LOGDATE] kernel: raid[NUM]: MMX detected, trying high-speed MMX checksum routines
++green [LOGDATE] kernel: Raid Tuning sponsored by [HOSTNAME]
++green [LOGDATE] kernel: RAMDISK: Compressed image found at block [NUM]
++green [LOGDATE] kernel: Ramdisk driver initialized : [NUM] ramdisks of [NUM]K size 
++green [LOGDATE] kernel: RAM disk driver initialized:  [NUM] RAM disks of [NUM]K size
++green [LOGDATE] kernel: RAMDISK driver initialized: [NUM] RAM disks of [NUM]K size [NUM] blocksize
++green [LOGDATE] kernel: Real Time Clock Driver v[HEX]\.[HEX]
++green [LOGDATE] kernel:   Receiver lock-up bug exists -- enabling work-around\.
++green [LOGDATE] kernel:   Receiver lock-up workaround activated\.
++green [LOGDATE] kernel: Registered "ati" backlight controller, level: [NUM]/[NUM]
++green [LOGDATE] kernel: registered device ppp[NUM]
++green [LOGDATE] kernel: Registered tone zone [NUM]
++green [LOGDATE] kernel: reiserfs: checking transaction log \(device [NUM]:[NUM]\) \.\.\.
++green [LOGDATE] kernel: reiserfs: using [NUM]\.[NUM]\.x disk format
++green [LOGDATE] kernel: ReiserFS version [NUM]\.[NUM]\.[NUM]
++green [LOGDATE] kernel:   \(reserved error code\) -- \(asc=[NUM]a, ascq=[NUM]\)
++green [LOGDATE] kernel:   ROM checksum self-test: passed \([HEX]\)\.
++green [LOGDATE] kernel: RSD PTR  v[NUM] \[PTLTD \]
++green [LOGDATE] kernel: rtl[NUM]\.c:v[NUM]\.[NUM] [NUM][PATH] Donald Becker http:/[PATH] 
++green [LOGDATE] kernel:\s*$
++green [LOGDATE] kernel:\s*<Adaptec.*adapter> 
++green [LOGDATE] kernel: \s*aic[NUM].* Channel [A-D], SCSI Id=[NUM], [NUM]/[NUM] SCBs
++green [LOGDATE] kernel: \s*BAR[NUM] [HEX] - size= [NUM]
++green [LOGDATE] kernel: \s*Hardware receive checksums enabled
++green [LOGDATE] kernel: Scanning bus [NUM]
++green [LOGDATE] kernel: scsi : detected [NUM] SCSI disk total\. 
++green [LOGDATE] kernel: scsi : detected total\.
++green [LOGDATE] kernel: SCSI device sd[a-z]: hdwr sector= [NUM] bytes\. Sectors= [NUM] \[[NUM] MB\] \[[NUM]\.[NUM] GB\]
++green [LOGDATE] kernel: SCSI device sd[a-z]: [NUM] [NUM]-byte hdwr sectors \([NUM] MB\)
++green [LOGDATE] kernel: scsi[NUM] : Adaptec AHA[HEX][PATH] \(EISA[PATH] SCSI\) [NUM]\.[NUM]\.[NUM]/[NUM]\.[NUM]\.[NUM]
++green [LOGDATE] kernel: \(scsi[NUM]\) <Adaptec AHA-[NUM]A Ultra SCSI host adapter> found at PCI [NUM]/[NUM] 
++green [LOGDATE] kernel: \(scsi[NUM]\) <Adaptec AHA-[NUM]X SCSI host adapter> found at PCI [NUM][PATH]
++green [LOGDATE] kernel: scsi[NUM] : Adaptec AIC[NUM]XXX EISA[PATH] SCSI HBA DRIVER, Rev [NUM]\.[NUM]\.[NUM]
++green [LOGDATE] kernel: \(scsi[NUM]:A:[NUM]:[NUM]\): Locking max tag count at [NUM]
++green [LOGDATE] kernel: \(scsi[NUM]:A:[NUM]\): [NUM]\.[NUM]MB/s transfers
++green [LOGDATE] kernel: scsi[NUM]:A:[NUM]:[NUM]: Tagged Queuing enabled\.  Depth [NUM]
++green [LOGDATE] kernel: \(scsi[NUM]\) Cables present \(Int-[NUM] YES, Ext-[NUM] NO\) 
++green [LOGDATE] kernel: \(scsi[NUM]\) Downloading sequencer code\.\.\. [NUM] instructions downloaded
++green [LOGDATE] kernel: \(scsi[NUM]\) during machine bootup\. 
++green [LOGDATE] kernel: scsi[NUM] : GDT[NUM]RP
++green [LOGDATE] kernel: scsi[NUM] : GDT[NUM]RS
++green [LOGDATE] kernel: scsi[NUM] : Vendor: Adaptec  Model: [NUM]S            FW:[NUM]E
++green [LOGDATE] kernel: scsi : [NUM] hosts?\.
++green [LOGDATE] kernel: \(scsi[NUM]\) If not, then please properly set the device termination 
++green [LOGDATE] kernel: \(scsi[NUM]\) in the Adaptec SCSI BIOS by hitting CTRL-A when prompted 
++green [LOGDATE] kernel: \(scsi[NUM]\) Narrow Channel, SCSI ID=[NUM], [NUM]/[NUM] SCBs
++green [LOGDATE] kernel: scsi[NUM]:[NUM]:[NUM]:[NUM]: Command found on device queue
++green [LOGDATE] kernel: scsi[NUM]:[NUM]:[NUM]:[NUM]: Command not found
++green [LOGDATE] kernel: \(scsi[NUM]:[NUM]:[NUM]:[NUM]\) Synchronous at [NUM]\.[NUM] Mbyte/sec, offset [NUM]\.
++green [LOGDATE] kernel: \(scsi[NUM]\) Please verify driver detected settings are correct\. 
++green [LOGDATE] kernel: scsi[NUM] : SCSI emulation for USB Mass Storage devices
++green [LOGDATE] kernel: scsi[NUM] : SCSI host adapter emulation for IDE ATAPI devices
++green [LOGDATE] kernel: \(scsi[NUM]\) Warning - detected auto-termination 
++green [LOGDATE] kernel: SCSI subsystem driver Revision: [NUM]\.[NUM]
++green [LOGDATE] kernel: SCSI subsystem initialized
++green [LOGDATE] kernel: sda: assuming drive cache: write through
++green [LOGDATE] kernel: sda: assuming Write Enabled
++green [LOGDATE] kernel:  sd[a-z]:((\ssd[a-z]\d|<|>))*
++green [LOGDATE] kernel:     Secondary interface chip i[NUM]\.
++green [LOGDATE] kernel: Security Scaffold v[NUM]\.[NUM]\.[NUM] initialized
++green [LOGDATE] kernel: SELinux:  Disabled at runtime
++green [LOGDATE] kernel: SELinux:  Initializing\.
++green [LOGDATE] kernel: SELinux:  Registering netfilter hooks
++green [LOGDATE] kernel: selinux_register_security:  Registering secondary module capability
++green [LOGDATE] kernel: SELinux:  Unregistering netfilter hooks
++green [LOGDATE] kernel: sending pkt_too_big \(len[PID] pmtu[PID]\) to self
++green [LOGDATE] kernel: Serial driver version
++green [LOGDATE] kernel: Serial: [NUM]/[NUM] driver \$Revision: 1.5 $ [NUM] ports, IRQ sharing enabled
++green [LOGDATE] kernel:   Serial sub-system self-test: passed\.
++green [LOGDATE] kernel: serio: .* port at [HEX],[HEX] irq [NUM]
++green [LOGDATE] kernel: Setting [NUM] in the phys_id_present_map
++green [LOGDATE] kernel: Simple Boot Flag at [HEX] set to [NUM]
++green [LOGDATE] kernel: sis[NUM]\.c: v[NUM]\.[NUM]\.[NUM] [NUM][PATH]
++green [LOGDATE] kernel: SIS[NUM]: IDE controller at PCI slot [NUM]:[NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: SIS[NUM]: SiS [NUM]/[NUM] MuTIOL IDE UDMA[NUM] controller
++green [LOGDATE] kernel: SMBFS: need mount version [NUM]
++green [LOGDATE] kernel: smb_open: temp/don't let [HOSTNAME]m open failed, result=-[NUM]
++green [LOGDATE] kernel: smb_open: \.Trash-marc/\.[HOSTNAME]p open failed, result=-[NUM]
++green [LOGDATE] kernel: smb_readpage_sync: temp/don't let [HOSTNAME]m open failed, error=-[NUM]
++green [LOGDATE] kernel: smb_request: result -[NUM], setting invalid
++green [LOGDATE] kernel: smb_retry: successful, new pid=[NUM], generation=[NUM]
++green [LOGDATE] kernel: smp_num_cpus: [NUM]\.
++green [LOGDATE] kernel: SMP motherboard not detected\.
++green [LOGDATE] kernel: spurious [NUM]A interrupt: IRQ[NUM]\.
++green [LOGDATE] kernel: sr[NUM]: scsi-[NUM] drive
++green [LOGDATE] kernel: sr[NUM]: scsi[NUM]-mmc drive: [NUM]x/[NUM]x writer cd/rw xa/form[NUM] cdda tray
++green [LOGDATE] kernel: st: Version [NUM], bufsize [NUM], max init\. bufs [NUM], s/g segs [NUM]
++green [LOGDATE] kernel: sungem\.c:v[NUM]\.[NUM] [NUM][PATH] David S\. Miller \([EMAIL]\)
++green [LOGDATE] kernel: Swansea University Computer Society
++green [LOGDATE] kernel: Symbols match kernel version [NUM]\.[NUM]\.[NUM]\.
++green [LOGDATE] kernel: sysctl: ip forwarding enabled 
++green [LOGDATE] kernel: sysctl: ip forwarding off 
++green [LOGDATE] kernel: tas driver \[TAS[NUM] driver V [NUM]\.[NUM]\]\)
++green [LOGDATE] kernel: task migration cache decay timeout: [NUM] msecs\.
++green [LOGDATE] kernel: tcpdump uses obsolete \(PF_INET,SOCK_P[TCPFLAG]ET\)
++green [LOGDATE] kernel: TCP: Hash tables configured
++green [LOGDATE] kernel: TCP: Treason uncloaked! Peer [IPADDR]:[NUM]/[NUM] shrinks window [NUM]:[NUM]\. Repaired\.
++green [LOGDATE] kernel: Teles[NUM]: membase configured DOSish, assuming [HEX][NUM]
++green [LOGDATE] kernel: Teles: [NUM]\.[NUM] Byte at d[NUM] is ff
++green [LOGDATE] kernel: Teles[NUM]: [NUM]\.[NUM] Byte at d[NUM] is ff
++green [LOGDATE] kernel: testing the IO APIC\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.
++green [LOGDATE] kernel: There is already a security framework initialized, register_security failed\.
++green [LOGDATE] kernel: Thermal assist unit using timers, shrink_timer: [NUM] jiffies
++green [LOGDATE] kernel: three months old please report this to [EMAIL]
++green [LOGDATE] kernel: TID [NUM]  Vendor:
++green [LOGDATE] kernel: time_init: decrementer frequency = [NUM]\.[NUM] MHz
++green [LOGDATE] kernel: \.\.TIMER: vector=[NUM] pin[NUM]=[NUM] pin[NUM]=[NUM]
++green [LOGDATE] kernel: Toshiba System Managment Mode driver v[NUM]\.[NUM] [NUM][PATH]
++green [LOGDATE] kernel: Total HugeTLB memory allocated, [NUM]
++green [LOGDATE] kernel: Total memory = [NUM]MB; using [NUM]kB for hash table \(at [HEX]\)
++green [LOGDATE] kernel: Total of [NUM] processors activated \([NUM]\.[NUM] BogoMIPS\)\.
++green [LOGDATE] kernel: Transparent bridge - Intel Corp\. .* PCI Bridge
++green [LOGDATE] kernel: Trying to unmount old [USER] \.\.\. okay
++green [LOGDATE] kernel: tty[NUM] at [HEX] \(irq = [NUM]\) is a 
++green [LOGDATE] kernel: ttyS[NUM] at [HEX] \(irq = [NUM]\) is a
++green [LOGDATE] kernel: ttyS[NUM] at I/O [HEX] \(irq = [NUM]\) is a 
++green [LOGDATE] kernel: ttyS: [NUM] input overrun\(s\)
++green [LOGDATE] kernel: ttyS[NUM]: LSR safety check engaged!
++green [LOGDATE] kernel: tulip[NUM]:  EEPROM default media type Autosense\.
++green [LOGDATE] kernel: tulip[NUM]:  Index #[NUM] - Media MII \(#[NUM]\) described by a [NUM] MII PHY \([NUM]\) block\.
++green [LOGDATE] kernel: tulip[NUM]:  MII transceiver #[NUM] config [NUM] status [NUM]d advertising [HEX]\.
++green [LOGDATE] kernel: tulip[NUM]:  [NUM] media #[NUM], [NUM]baseT\.
++green [LOGDATE] kernel: tulip[NUM]:  [NUM] media #[NUM], [NUM]baseT-FDX\.
++green [LOGDATE] kernel: tulip[NUM]: [NUM] Media table, default media [NUM] \(Autosense\)\.
++green [LOGDATE] kernel:   Type: .* ANSI SCSI revision: [NUM]
++green [LOGDATE] kernel: udf: registering filesystem
++green [LOGDATE] kernel: .*: \(U\)DMA Burst Bit ENABLED Primary MASTER Mode Secondary MASTER Mode\.
++green [LOGDATE] kernel: Uniform .* driver Revision:
++green [LOGDATE] kernel: Unknown bridge resource [NUM]: assuming transparent
++green [LOGDATE] kernel: usb\.c: new USB bus registered, assigned bus number [NUM]
++green [LOGDATE] kernel: usbcore: registered new driver 
++green [LOGDATE] kernel: usb\.c: registered new driver
++green [LOGDATE] kernel: usb\.c: USB device [NUM] \(vend/prod [HEX]/[NUM]\) is not claimed by any active driver\.
++green [LOGDATE] kernel: usb\.c: USB new device connect, assigned device number [NUM]
++green [LOGDATE] kernel: USB Mass Storage support registered\.
++green [LOGDATE] kernel: usb [NUM][NUM]: new full speed USB device using address [NUM]
++green [LOGDATE] kernel: usb-ohci\.c: USB continue: usb[NUM]:[NUM]\.[NUM] from host wakeup
++green [LOGDATE] kernel: usb-ohci\.c: usb[NUM]:[NUM]\.[NUM], Apple Computer Inc\. KeyLargo/Pangea USB
++green [LOGDATE] kernel: usb-ohci\.c: USB OHCI at membase [HEX], IRQ [NUM]
++green [LOGDATE] kernel: usb-ohci\.c: USB suspend: usb[NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: usb-uhci\.c: Detected [NUM] ports
++green [LOGDATE] kernel: usb-uhci\.c: High bandwidth mode enabled
++green [LOGDATE] kernel: usb-uhci\.c: Intel USB controller: setting latency timer to [NUM]
++green [LOGDATE] kernel: usb-uhci\.c: \$Revision:
++green [LOGDATE] kernel: usb-uhci\.c: USB UHCI at I/O [HEX][NUM], IRQ [NUM]
++green [LOGDATE] kernel: usb-uhci\.c: v[NUM]\.[NUM]:USB Universal Host Controller Interface driver
++green [LOGDATE] kernel: Using cfq io scheduler
++green [LOGDATE] kernel: using fastest function: p[I\d]*_mmx \([NUM]\.[NUM] MB/sec\)
++green [LOGDATE] kernel: using i2c address: [NUM] from device-tree
++green [LOGDATE] kernel: Using local APIC timer interrupts\.
++green [LOGDATE] kernel: Using pmtmr for high-res timesource
++green [LOGDATE] kernel: Using r[NUM] hash to sort names
++green [LOGDATE] kernel: __va_range\([HEX], [HEX]\): idx=[NUM] mapped at [HEX]
++green [LOGDATE] kernel:   Vendor: .* Model: .* Rev: .*
++green [LOGDATE] kernel: VFS: Disk quotas
++green [LOGDATE] kernel: VFS: Diskquotas version .* initialized
++green [LOGDATE] kernel: VFS: Mounted
++green [LOGDATE] kernel: .*: VIA vt[HEX]a \(rev [NUM]\) IDE UDMA[NUM] controller on pci[NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel: .*: VIA vt[HEX]b \(rev [NUM]\) IDE UDMA[NUM] controller on pci[NUM]:[NUM]\.[NUM]
++green [LOGDATE] kernel:     Virtual Wire compatibility mode\.
++green [LOGDATE] kernel: Waiting on wait_init_idle \(map = [HEX]\)
++green [LOGDATE] kernel: Warning: possible [TCPFLAG] flood from [IPADDR] on [IPADDR]:[NUM]\.  Sending cookies\. 
++green [LOGDATE] kernel: W[NUM]: No PCI card found
++green [LOGDATE] kernel: [WORD]: IN=
++green [LOGDATE] kernel: Working around Cyrix MediaGX virtual DMA bugs\.
++green [LOGDATE] kernel: Write will use    [NUM] fragments of   [NUM] bytes as default
++green [LOGDATE] kernel: Zapata Telephony Interface Registered on major [NUM]
++green [LOGDATE] kernel: Zapata Telephony Interface Unloaded
++green [LOGDATE] kernel: zapping low mappings\.
++green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
++
++red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
++red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
++red [LOGDATE] kernel: hd[a-z]: dma_intr: error=[NUM]
++red [LOGDATE] kernel: hd[a-z]: dma_intr: status=[NUM] \{ DriveReady SeekComplete Error \}
++red [LOGDATE] kernel: hd[a-z]: packet command error:
++red [LOGDATE] kernel: SCSI disk error : host [NUM] channel [NUM] id [NUM] lun [NUM] return code = [NUM]
++red [LOGDATE] kernel: scsi[HEX]:[HEX]:[HEX]:[HEX]: Attempting to abort cmd
+
+
+
+From wijnand at berlios.de  Tue Mar  7 10:01:32 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Tue, 7 Mar 2006 10:01:32 +0100
+Subject: [Upwatch-commits] r522 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch
+Message-ID: <200603070901.k2791W9h025290@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-07 10:01:11 +0100 (Tue, 07 Mar 2006)
+New Revision: 522
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+More log regexes.
+
+It's not easy getting green...
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-07 09:01:11 UTC (rev 522)
+@@ -1,3 +1,3 @@
+ green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+-green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] (afi [NUM]) reaches [NUM], max [NUM]
++green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+ green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-07 09:01:11 UTC (rev 522)
+@@ -664,6 +664,8 @@
+ green [LOGDATE] kernel: Zapata Telephony Interface Unloaded
+ green [LOGDATE] kernel: zapping low mappings\.
+ green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
++ignore [LOGDATE] kernel: MD5 Hash NOT expected but found ([IPADDR], [NUM])->([IPADDR], [NUM])
++ignore [LOGDATE] kernel: printk: [NUM] messages suppressed.
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-07 09:01:11 UTC (rev 522)
+@@ -28,6 +28,8 @@
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading fileblock
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading PASS response
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading USER string
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading OK enter password
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [PATH]: empty file
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): reading info from database
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): running [NUM] probes
+
+
+
+From wijnand at berlios.de  Wed Mar  8 19:12:26 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Wed, 8 Mar 2006 19:12:26 +0100
+Subject: [Upwatch-commits] r523 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+Message-ID: <200603081812.k28ICQJc001841@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-08 19:12:24 +0100 (Wed, 08 Mar 2006)
+New Revision: 523
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+Log:
+Sync my regexes.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-07 09:01:11 UTC (rev 522)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-08 18:12:24 UTC (rev 523)
+@@ -36,14 +36,14 @@
+ green [LOGDATE] postfix/smtpd[PID]: warning: Illegal address syntax from [HOSTNAME]\[[IPADDR]\] in
+ green [LOGDATE] postfix/smtpd[PID]: [MSGID]: discard: [WORD] from [HOSTNAME]\[[IPADDR]\]: <.*>:
+ green [LOGDATE] postfix/smtpd[PID]: NOQUEUE: reject: [WORD] from [HOSTNAME]\[[IPADDR]\]
++green [LOGDATE] postfix/smtp[PID]: connect to .* \[[IPADDR]\]: read timeout \(port [NUM]\)
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after [WORD] from [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: 
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX <CRLF>\.<CRLF> workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
+-green [LOGDATE] postfix/anvil[PID]: statistics: max connection rate [NUM]/[NUM]s for (smtp:[IPADDR]) at [WORD] [NUM] [NUM]:[NUM]:[NUM]
+-green [LOGDATE] postfix/anvil[PID]: statistics: max connection count [NUM] for (smtp:[IPADDR]) at [WORD] [NUM] [NUM]:[NUM]:[NUM]
+-green [LOGDATE] postfix/anvil[PID]: statistics: max cache size [NUM] at [WORD] [NUM] [NUM]:[NUM]:[NUM]
++green [LOGDATE] postfix/anvil[PID]: statistics: 
++green [LOGDATE] postfix/scache[PID]: statistics: 
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-07 09:01:11 UTC (rev 522)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-08 18:12:24 UTC (rev 523)
+@@ -6,4 +6,5 @@
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+ green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
++yellow [LOGDATE] sendmail[PID]: alias database [PATH] out of date
+ red [LOGDATE] sendmail[PID]: rejecting connections on daemon MTA: load average: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-07 09:01:11 UTC (rev 522)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-08 18:12:24 UTC (rev 523)
+@@ -664,8 +664,8 @@
+ green [LOGDATE] kernel: Zapata Telephony Interface Unloaded
+ green [LOGDATE] kernel: zapping low mappings\.
+ green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
+-ignore [LOGDATE] kernel: MD5 Hash NOT expected but found ([IPADDR], [NUM])->([IPADDR], [NUM])
+-ignore [LOGDATE] kernel: printk: [NUM] messages suppressed.
++green [LOGDATE] kernel: MD5 Hash NOT expected but found \([IPADDR], [NUM]\)->\([IPADDR], [NUM]\)
++green [LOGDATE] kernel: printk: [NUM] messages suppressed.
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-07 09:01:11 UTC (rev 522)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-08 18:12:24 UTC (rev 523)
+@@ -3,8 +3,8 @@
+ green [LOGDATE] named[PID]: check_hints: A records for J\.ROOT-SERVERS\.NET class [NUM] do not match hint records
+ green [LOGDATE] named[PID]: Cleaned cache of [NUM] RRset
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: bad zone transfer request: '[HOSTNAME]/IN': non-authoritative zone \(NOTAUTH\)
+-ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
+-ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
++green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
++green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: no more recursive clients: quota reached
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update forwarding denied
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update '[HOSTNAME]/IN' denied
+@@ -55,7 +55,7 @@
+ green [LOGDATE] named[PID]: Response from unexpected source \(\[[IPADDR]\]\.[NUM]\)
+ green [LOGDATE] named[PID]: running
+ green [LOGDATE] named[PID]: shutting down
+-ignore [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
++green [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
+ green [LOGDATE] named[PID]: stopping command channel on [IPADDR]#[NUM]
+ green [LOGDATE] named[PID]: suppressing duplicate notify \("[HOSTNAME]" IN SOA\)
+ green [LOGDATE] named[PID]: sysquery: no addrs found for [USER] NS \(\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-07 09:01:11 UTC (rev 522)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-08 18:12:24 UTC (rev 523)
+@@ -1 +1,3 @@
+ green [LOGDATE] snmpd: snmpd shutdown failed
++green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
++green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+
+
+
+From wijnand at berlios.de  Thu Mar  9 11:18:16 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 9 Mar 2006 11:18:16 +0100
+Subject: [Upwatch-commits] r524 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+Message-ID: <200603091018.k29AIGHN001348@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-09 11:18:15 +0100 (Thu, 09 Mar 2006)
+New Revision: 524
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+Log:
+Fix the LOGDATE macro, the regex was not good enough so we were having false positives.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-08 18:12:24 UTC (rev 523)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [-A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-08 18:12:24 UTC (rev 523)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-08 18:12:24 UTC (rev 523)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
+@@ -2,7 +2,7 @@
+ # choose your macronames carefully. regular expressions should never
+ # match a macroname!!
+ # entries are matched in the order specified
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+ IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
+
+
+
+From wijnand at berlios.de  Thu Mar  9 11:43:31 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 9 Mar 2006 11:43:31 +0100
+Subject: [Upwatch-commits] r525 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog upwatch
+Message-ID: <200603091043.k29AhVD7004701@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-09 11:43:30 +0100 (Thu, 09 Mar 2006)
+New Revision: 525
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync my current regex tree.
+
+AKA: Pimp my regexes.
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [-A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-09 10:43:30 UTC (rev 525)
+@@ -36,14 +36,11 @@
+ green [LOGDATE] postfix/smtpd[PID]: warning: Illegal address syntax from [HOSTNAME]\[[IPADDR]\] in
+ green [LOGDATE] postfix/smtpd[PID]: [MSGID]: discard: [WORD] from [HOSTNAME]\[[IPADDR]\]: <.*>:
+ green [LOGDATE] postfix/smtpd[PID]: NOQUEUE: reject: [WORD] from [HOSTNAME]\[[IPADDR]\]
+-green [LOGDATE] postfix/smtp[PID]: connect to .* \[[IPADDR]\]: read timeout \(port [NUM]\)
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after [WORD] from [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: 
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX <CRLF>\.<CRLF> workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
+-green [LOGDATE] postfix/anvil[PID]: statistics: 
+-green [LOGDATE] postfix/scache[PID]: statistics: 
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-09 10:43:30 UTC (rev 525)
+@@ -5,6 +5,4 @@
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+-green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+-yellow [LOGDATE] sendmail[PID]: alias database [PATH] out of date
+-red [LOGDATE] sendmail[PID]: rejecting connections on daemon MTA: load average: [NUM]
++green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+ green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+ green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
++yellow [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(OPEN Message Error/Authentication Failure\) [NUM] bytes
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -0,0 +1 @@
++green [LOGDATE] auditd[PID]: Audit daemon rotating log files
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,5 +3,3 @@
+ green [LOGDATE] dhcpd: DHCPDISCOVER from [MACADDR]
+ green [LOGDATE] dhcpd: Wrote [NUM] leases to leases file\.
+ green [LOGDATE] dhcpd: No hostname for [IPADDR]
+-green [LOGDATE] dhcpd: ip length [NUM] disagrees with bytes received [NUM].
+-green [LOGDATE] dhcpd: accepting packet with data after udp payload.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-03-09 10:43:30 UTC (rev 525)
+@@ -5,25 +5,3 @@
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Received higher prio advert
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) removing protocol Virtual Routes
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Transition to MASTER STATE
+-ignore [LOGDATE] Keepalived: Watchdog: Error while sending data to Healthcheck Child\. error=\(Broken pipe\)\.
+-green [LOGDATE] Keepalived: Watchdog: success connecting /tmp/\.healthcheckers wdog socket
+-green [LOGDATE] Keepalived: Watchdog: Healthcheck Child no longer exist, restarting\.\.\.
+-green [LOGDATE] Keepalived: Remove a zombie pid file /var/run/keepalived_checkers.pid
+-green [LOGDATE] Keepalived_healthcheckers: Timeout connect, timeout server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Removing service \[[IPADDR]:[NUM]\] from VS \[[IPADDR]:[NUM]\]
+-green [LOGDATE] Keepalived_healthcheckers: Remote SMTP server \[[IPADDR]:[NUM]\] connected\.
+-green [LOGDATE] Keepalived_healthcheckers: SMTP alert successfully sent\.
+-green [LOGDATE] Keepalived_healthcheckers: HTTP status code success to \[[IPADDR]:[NUM]\] url\([NUM]\)\.
+-green [LOGDATE] Keepalived_healthcheckers: Remote Web server \[[IPADDR]:[NUM]\] succeed on service\.
+-green [LOGDATE] Keepalived_healthcheckers: Adding service \[[IPADDR]:[NUM]\] to VS \[[IPADDR]:[NUM]\]
+-green [LOGDATE] Keepalived_healthcheckers: Connection trouble to: \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Read error with server \[[IPADDR]:[NUM]\]: Connection reset by peer
+-ignore [LOGDATE] Keepalived_healthcheckers: Error connecting server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Timeout WEB read server \[[IPADDR]:[NUM]\]\.
+-green [LOGDATE] Keepalived_healthcheckers: Netlink reflector reports IP [IPADDR] added
+-green [LOGDATE] Keepalived_healthcheckers: Registering Kernel netlink reflector
+-green [LOGDATE] Keepalived_healthcheckers: Registering Kernel netlink comand channel
+-green [LOGDATE] Keepalived_healthcheckers: Configuration is using : [NUM] Bytes
+-green [LOGDATE] Keepalived_healthcheckers: IPVS : Service already exists
+-green [LOGDATE] Keepalived_healthcheckers: IPVS : Destination already exists
+-green [LOGDATE] Keepalived_healthcheckers: Activating healtchecker for service \[[IPADDR]:[NUM]\]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-09 10:43:30 UTC (rev 525)
+@@ -133,7 +133,8 @@
+ green [LOGDATE] kernel: Enabling the CPU's according to the ACPI table
+ green [LOGDATE] kernel: Enabling unmasked SIMD FPU exception support\.\.\. done\.
+ green [LOGDATE] kernel: e[NUM]: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
+-green [LOGDATE] kernel: e[NUM]: eth[NUM] NIC Link is Up [NUM] Mbps Full duplex
++green [LOGDATE] kernel: e[NUM]: eth[NUM] NIC Link is Up [NUM] Mbps [WORD] duplex
++green [LOGDATE] kernel: e[NUM]: eth[NUM]: e[NUM]_watchdog_task: NIC Link is Up [NUM] Mbps [WORD] Duplex
+ green [LOGDATE] kernel: eth[NUM]: MII #[HEX] registers are: [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX] [HEX]\. 
+ green [LOGDATE] kernel: eth[NUM]: Airport entering sleep mode
+ green [LOGDATE] kernel: eth[NUM]: Airport waking up
+@@ -143,7 +144,7 @@
+ green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], I/O at [HEX][HEX], IRQ [NUM]
+ green [LOGDATE] kernel: eth[NUM]: .* [MACADDR], IRQ [NUM]
+ green [LOGDATE] kernel: eth[NUM]: Intel\(R\) PRO/[NUM] Network Connection
+-green [LOGDATE] kernel: eth[NUM]: Media Link On [NUM]mbps full-duplex 
++green [LOGDATE] kernel: eth[NUM]: Media Link On [NUM]mbps [WORD]-duplex 
+ green [LOGDATE] kernel: eth[NUM]: Promiscuous mode enabled
+ green [LOGDATE] kernel: eth[NUM]: Realtek RTL[NUM] PHY transceiver found at address [NUM]\.
+ green [LOGDATE] kernel: eth[NUM]: resuming
+@@ -667,6 +668,8 @@
+ green [LOGDATE] kernel: MD5 Hash NOT expected but found \([IPADDR], [NUM]\)->\([IPADDR], [NUM]\)
+ green [LOGDATE] kernel: printk: [NUM] messages suppressed.
+ 
++yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
++
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+ red [LOGDATE] kernel: hd[a-z]: dma_intr: error=[NUM]
+@@ -674,3 +677,4 @@
+ red [LOGDATE] kernel: hd[a-z]: packet command error:
+ red [LOGDATE] kernel: SCSI disk error : host [NUM] channel [NUM] id [NUM] lun [NUM] return code = [NUM]
+ red [LOGDATE] kernel: scsi[HEX]:[HEX]:[HEX]:[HEX]: Attempting to abort cmd
++red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-03-09 10:43:30 UTC (rev 525)
+@@ -3,8 +3,8 @@
+ green [LOGDATE] named[PID]: check_hints: A records for J\.ROOT-SERVERS\.NET class [NUM] do not match hint records
+ green [LOGDATE] named[PID]: Cleaned cache of [NUM] RRset
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: bad zone transfer request: '[HOSTNAME]/IN': non-authoritative zone \(NOTAUTH\)
+-green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
+-green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
++ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
++ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: no more recursive clients: quota reached
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update forwarding denied
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update '[HOSTNAME]/IN' denied
+@@ -55,7 +55,7 @@
+ green [LOGDATE] named[PID]: Response from unexpected source \(\[[IPADDR]\]\.[NUM]\)
+ green [LOGDATE] named[PID]: running
+ green [LOGDATE] named[PID]: shutting down
+-green [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
++ignore [LOGDATE] named[PID]: socket\.c:[NUM]: unexpected error:
+ green [LOGDATE] named[PID]: stopping command channel on [IPADDR]#[NUM]
+ green [LOGDATE] named[PID]: suppressing duplicate notify \("[HOSTNAME]" IN SOA\)
+ green [LOGDATE] named[PID]: sysquery: no addrs found for [USER] NS \(\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,3 +1,3 @@
+ green [LOGDATE] snmpd: snmpd shutdown failed
++green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
+-green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/xinetd	2006-03-09 10:43:30 UTC (rev 525)
+@@ -1,2 +1 @@
+ green [LOGDATE] xinetd[PID]: Exiting\.\.\.
+-green [LOGDATE] xinetd[PID]: [NUM] .* no services. Exiting...
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
+@@ -2,7 +2,7 @@
+ # choose your macronames carefully. regular expressions should never
+ # match a macroname!!
+ # entries are matched in the order specified
+-LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+ IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-09 10:18:15 UTC (rev 524)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-09 10:43:30 UTC (rev 525)
+@@ -28,8 +28,6 @@
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading fileblock
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading PASS response
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading USER string
+-green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
+-green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading OK enter password
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [PATH]: empty file
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): reading info from database
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): running [NUM] probes
+
+
+
+From wijnand at berlios.de  Mon Mar 13 09:48:24 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 13 Mar 2006 09:48:24 +0100
+Subject: [Upwatch-commits] r526 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+Message-ID: <200603130848.k2D8mO6P018672@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-13 09:48:20 +0100 (Mon, 13 Mar 2006)
+New Revision: 526
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+Log:
+Fix the LOGDATE macro again, I don't know how it happened, but my last commit reverted this change.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-13 08:48:20 UTC (rev 526)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [-A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-13 08:48:20 UTC (rev 526)
+@@ -3,7 +3,7 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-09 10:43:30 UTC (rev 525)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-13 08:48:20 UTC (rev 526)
+@@ -2,7 +2,7 @@
+ # choose your macronames carefully. regular expressions should never
+ # match a macroname!!
+ # entries are matched in the order specified
+-LOGDATE [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\/\dA-Za-z]+
++LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+ IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
+
+
+
+From wijnand at berlios.de  Wed Mar 15 12:34:39 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Wed, 15 Mar 2006 12:34:39 +0100
+Subject: [Upwatch-commits] r527 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200603151134.k2FBYd4I025105@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-15 12:34:27 +0100 (Wed, 15 Mar 2006)
+New Revision: 527
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+Log:
+Sync my regexes. dhcpd only
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-13 08:48:20 UTC (rev 526)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dhcpd	2006-03-15 11:34:27 UTC (rev 527)
+@@ -3,3 +3,12 @@
+ green [LOGDATE] dhcpd: DHCPDISCOVER from [MACADDR]
+ green [LOGDATE] dhcpd: Wrote [NUM] leases to leases file\.
+ green [LOGDATE] dhcpd: No hostname for [IPADDR]
++green [LOGDATE] dhcpd: Remove host declaration [WORD] or remove [IPADDR]
++green [LOGDATE] dhcpd: from the dynamic address pool for 
++green [LOGDATE] dhcpd: Dynamic and static leases present for [IPADDR].
++green [LOGDATE] dhcpd: Internet Software Consortium DHCP Server
++green [LOGDATE] dhcpd: Copyright [NUM]-[NUM] Internet Software Consortium.
++green [LOGDATE] dhcpd: All rights reserved.
++green [LOGDATE] dhcpd: For info, please visit http://www.isc.org/products/DHCP
++green [LOGDATE] dhcpd: (Listening|Sending) on LPF/.*?/.*?/[IPADDR]/[NUM]
++green [LOGDATE] dhcpd: Sending on Socket/fallback/fallback-net
+
+
+
+From wijnand at berlios.de  Thu Mar 16 22:19:24 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 22:19:24 +0100
+Subject: [Upwatch-commits] r528 - upwatch/trunk
+Message-ID: <200603162119.k2GLJOQN010350@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 22:19:24 +0100 (Thu, 16 Mar 2006)
+New Revision: 528
+
+Modified:
+   upwatch/trunk/Makefile.am
+Log:
+For client support the st-1.4 subdir is not required.
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-15 11:34:27 UTC (rev 527)
++++ upwatch/trunk/Makefile.am	2006-03-16 21:19:24 UTC (rev 528)
+@@ -68,7 +68,7 @@
+ if ENABLE_SERVER
+ SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} compat util scripts config common
+ else
+-SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
++SUBDIRS = upwatch ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
+ endif
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+
+
+
+From wijnand at berlios.de  Thu Mar 16 22:52:05 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 22:52:05 +0100
+Subject: [Upwatch-commits] r529 - upwatch/trunk/libstatgrab/src/libstatgrab
+Message-ID: <200603162152.k2GLq5Zi016063@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 22:52:05 +0100 (Thu, 16 Mar 2006)
+New Revision: 529
+
+Modified:
+   upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+Log:
+Make libstatgrab work on OpenBSD again
+
+
+Modified: upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c
+===================================================================
+--- upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2006-03-16 21:19:24 UTC (rev 528)
++++ upwatch/trunk/libstatgrab/src/libstatgrab/disk_stats.c	2006-03-16 21:52:05 UTC (rev 529)
+@@ -120,10 +120,14 @@
+ 	struct mntent *mp;
+ 	struct statfs fs;
+ #endif
+-#ifdef ALLBSD
++#if defined(ALLBSD) && !defined(OPENBSD)
+ 	int nummnt;
+ 	struct statvfs *mp;
+ #endif
++#ifdef OPENBSD
++	int nummnt;
++	struct statfs *mp;
++#endif
+ 
+ #ifdef ALLBSD
+ 	nummnt=getmntinfo(&mp , MNT_LOCAL);
+
+
+
+From wijnand at berlios.de  Thu Mar 16 23:04:09 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 23:04:09 +0100
+Subject: [Upwatch-commits] r530 - upwatch/trunk/doc
+Message-ID: <200603162204.k2GM49i3016965@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 23:04:09 +0100 (Thu, 16 Mar 2006)
+New Revision: 530
+
+Modified:
+   upwatch/trunk/doc/upwatch.txt
+Log:
+Fix installation instructions.
+Mention we need autoconf 2.59 and automake 1.9 (why is lynx a buildrequirement???)
+Also tell the user to create the upwatch user and group before make install
+
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+
+
+From wijnand at berlios.de  Thu Mar 16 23:15:22 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 23:15:22 +0100
+Subject: [Upwatch-commits] r531 - upwatch/trunk/doc
+Message-ID: <200603162215.k2GMFMWU017588@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 23:15:21 +0100 (Thu, 16 Mar 2006)
+New Revision: 531
+
+Modified:
+   upwatch/trunk/doc/upwatch.txt
+Log:
+Oops, I forgot to remove sudo from the useradd command.
+This is bad because most users aren't ready for good practices.
+
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+
+
+From wijnand at berlios.de  Thu Mar 16 23:37:17 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 23:37:17 +0100
+Subject: [Upwatch-commits] r532 - upwatch/trunk
+Message-ID: <200603162237.k2GMbHx4019321@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 23:37:17 +0100 (Thu, 16 Mar 2006)
+New Revision: 532
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Linux is the only platform where users like stuff to be installed in /usr
+Real UNIX users don't sinces it messes with their base system.
+It is a big problem I have to set the paths for all platforms, the ./configure --prefix= should handle this and the default should be /usr/local so it's the same as all sane software.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-03-16 22:15:21 UTC (rev 531)
++++ upwatch/trunk/configure.ac	2006-03-16 22:37:17 UTC (rev 532)
+@@ -59,69 +59,69 @@
+     ;;
+   *-*-freebsd*) 
+     freebsd=true
+-    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr//local/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
+     if test "$datadir" = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
+     if test "$sharedstatedir" = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+     if test "$localstatedir" = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
+-    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if test "$infodir" = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
+-    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if test "$infodir" = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     CFLAGS="${CFLAGS} -I/usr/local/include"
+     LDFLAGS="-L/usr/local/lib"
+     ;;
+   *-*-netbsd*) 
+     netbsd=true
+-    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
+     if test "$datadir" = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
+     if test "$sharedstatedir" = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+     if test "$localstatedir" = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
+-    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if test "$infodir" = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
+-    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if test "$infodir" = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     CFLAGS="${CFLAGS} -I/usr/local/include -I/usr/pkg/include"
+     LDFLAGS="-L/usr/local/lib -L/usr/pkg/lib"
+     ;;
+   *-*-openbsd*)
+     openbsd=true
+-    if test "$bindir" = '${exec_prefix}/bin' ;          then bindir='/usr/bin' ; fi
+-    if test "$sbindir" = '${exec_prefix}/sbin' ;        then sbindir='/usr/sbin' ; fi
+-    if test "$libexecdir" = '${exec_prefix}/libexec';   then libexecdir='/usr/libexec' ; fi
++    if test "$bindir" = '${exec_prefix}/bin' ;          then bindir='/usr/local/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ;        then sbindir='/usr/local/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';   then libexecdir='/usr/local/libexec' ; fi
+     if test "$datadir" = '${prefix}/share' ;            then datadir='/usr/local/share' ; fi
+     if test "$sysconfdir" = '${prefix}/etc' ;           then sysconfdir='/etc' ; fi
+     if test "$sharedstatedir" = '${prefix}/com' ;       then sharedstatedir='/usr/local/com' ; fi
+     if test "$localstatedir" = '${prefix}/var' ;        then localstatedir='/var' ; fi
+-    if test "$libdir" = '${exec_prefix}/lib' ;          then libdir='/usr/lib' ; fi
+-    if test "$includedir" = '${prefix}/include' ;       then includedir='/usr/include' ; fi
+-    if test "$oldincludedir" = '/usr/include' ;         then oldincludedir='/usr/include' ; fi
+-    if test "$infodir" = '${prefix}/info' ;             then infodir='/usr/share/info' ; fi
+-    if test "$mandir" = '${prefix}/man' ;               then mandir='/usr/share/man' ; fi
++    if test "$libdir" = '${exec_prefix}/lib' ;          then libdir='/usr/local/lib' ; fi
++    if test "$includedir" = '${prefix}/include' ;       then includedir='/usr/local/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ;         then oldincludedir='/usr/local/include' ; fi
++    if test "$infodir" = '${prefix}/info' ;             then infodir='/usr/local/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;               then mandir='/usr/local/share/man' ; fi
+     CFLAGS="${CFLAGS} -I/usr/local/include"
+     LDFLAGS="-L/usr/local/lib"
+     ;;
+   *-*-solaris*)
+     solaris=true
+-    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
+-    if test "$datadir" = '${prefix}/share' ;		then datadir='/usr/share' ; fi
++    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
++    if test "$datadir" = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+     if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
+     if test "$sharedstatedir" = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+     if test "$localstatedir" = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+     if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
+-    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if test "$infodir" = '${prefix}/info';  		then infodir='/usr/share/info' ; fi
+-    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if test "$infodir" = '${prefix}/info';  		then infodir='/usr/local/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     LIBS="-lgen ${LIBS}"
+     ;;
+   *-*-cygwin*)
+
+
+
+From wijnand at berlios.de  Thu Mar 16 23:45:50 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Thu, 16 Mar 2006 23:45:50 +0100
+Subject: [Upwatch-commits] r533 - upwatch/trunk/doc
+Message-ID: <200603162245.k2GMjoDW020120@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-16 23:45:49 +0100 (Thu, 16 Mar 2006)
+New Revision: 533
+
+Modified:
+   upwatch/trunk/doc/client-install.xml
+Log:
+Ok, it seems I should do my doc changes in the xml files.
+
+
+Modified: upwatch/trunk/doc/client-install.xml
+===================================================================
+--- upwatch/trunk/doc/client-install.xml	2006-03-16 22:37:17 UTC (rev 532)
++++ upwatch/trunk/doc/client-install.xml	2006-03-16 22:45:49 UTC (rev 533)
+@@ -45,6 +45,8 @@
+                 you'll need the following on your system to build upwatch:</para>
+             <itemizedlist>
+                 <listitem><para>lynx</para></listitem>
++                <listitem><para>autoconf 2.59</para></listitem>
++                <listitem><para>automake 1.9</para></listitem>
+                 <listitem><para>autogen 5.3.6 (autogen.sourceforge.net)</para></listitem>
+                 <listitem><para>autogen needs libguile and umb-scheme</para></listitem>
+                 <listitem><para>RPM tools, if you want to build RPM's</para></listitem>
+@@ -63,6 +65,8 @@
+               $ cd upwatch-x.x
+               $ ./configure
+               $ make 
++              $ groupadd upwatch
++              $ useradd -d /etc/upwatch.d -s /sbin/nologin -g upwatch upwatch
+               $ make install
+            </literallayout>
+         <para> Nothing to it... In case of problems, you're probably missing some library or
+
+
+
+From wijnand at berlios.de  Fri Mar 17 00:04:00 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 17 Mar 2006 00:04:00 +0100
+Subject: [Upwatch-commits] r534 - upwatch/trunk
+Message-ID: <200603162304.k2GN40g8021555@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-17 00:04:00 +0100 (Fri, 17 Mar 2006)
+New Revision: 534
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Make the test for libesmtp more reliable
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-03-16 22:45:49 UTC (rev 533)
++++ upwatch/trunk/configure.ac	2006-03-16 23:04:00 UTC (rev 534)
+@@ -542,7 +542,7 @@
+ if test "$enable_server" = "yes"
+ then
+ 	# libesmtp
+-	AC_CHECK_LIB([esmtp], [smtp_create_session], [HAVE_LIBESMTP=1], [HAVE_LIBESMTP=0])
++	AC_CHECK_LIB([esmtp], [smtp_create_session], [HAVE_LIBESMTP=1], [HAVE_LIBESMTP=0], $LIBPTHREAD_LIBS)
+ 	if test $HAVE_LIBESMTP -eq 1
+ 	then
+ 	        LIBESMTP_LIBS=-lesmtp
+
+
+
+From wijnand at berlios.de  Fri Mar 17 00:21:34 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 17 Mar 2006 00:21:34 +0100
+Subject: [Upwatch-commits] r535 - upwatch/trunk
+Message-ID: <200603162321.k2GNLYC6023076@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-17 00:21:34 +0100 (Fri, 17 Mar 2006)
+New Revision: 535
+
+Modified:
+   upwatch/trunk/Makefile.am
+Log:
+Partial fix for ./configure --enable-server
+Don't include the monitor progs as directories that need to be build.
+
+It is still broken however and I don't know yet how to fix this. --enable-all is still needed to build a server....
+$ gmake
+gmake  all-recursive
+gmake[1]: Entering directory `/home/wijnand/upwatch'
+Making all in upwatch
+gmake[2]: Entering directory `/home/wijnand/upwatch/upwatch'
+( cd ../uw_httpget ; gmake probe.res_h )
+gmake[3]: Entering directory `/home/wijnand/upwatch/uw_httpget'
+gmake[3]: *** No rule to make target `probe.res_h'.  Stop.
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-16 23:04:00 UTC (rev 534)
++++ upwatch/trunk/Makefile.am	2006-03-16 23:21:34 UTC (rev 535)
+@@ -60,7 +60,13 @@
+ CONFARGS = --enable-client $(ENABLE_SERVER) $(ENABLE_MONITOR) $(ENABLE_IPTRAF)
+ 
+ # order is important: SERVERPROG should be last
+-PROGNAMES = ${CLIENTPROG} ${MONITORPROG} ${EXTRAPROG} ${SERVERPROG}
++PROGNAMES = ${CLIENTPROG}  ${EXTRAPROG}
++if ENABLE_MONITORS
++PROGNAMES .= ${MONITORPROG}
++endif
++if ENABLE_SERVER
++PROGNAMES .= ${SERVERPROG}
++endif
+ 
+ export PROGNAMES MONITORPROG CLIENTPROG SERVERPROG EXTRAPROG
+ export TOP_SRCDIR = $(top_srcdir)
+
+
+
+From wijnand at berlios.de  Fri Mar 17 00:58:47 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 17 Mar 2006 00:58:47 +0100
+Subject: [Upwatch-commits] r536 - upwatch/trunk
+Message-ID: <200603162358.k2GNwl39010845@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-17 00:58:44 +0100 (Fri, 17 Mar 2006)
+New Revision: 536
+
+Modified:
+   upwatch/trunk/Makefile.am
+Log:
+I only want uw_iptraf built when I requested it.
+--enable-server --enable-monitors is still broken anyway.
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-16 23:21:34 UTC (rev 535)
++++ upwatch/trunk/Makefile.am	2006-03-16 23:58:44 UTC (rev 536)
+@@ -49,9 +49,9 @@
+ if ENABLE_IPTRAF
+ ENABLE_IPTRAF = --enable-iptraf
+ IPTRAFPROG = ${IPTRAFLIST}
++EXTRAPROG = ${IPTRAFPROG}
+ endif
+ 
+-EXTRAPROG = ${IPTRAFPROG}
+ 
+ if XMBMON
+ XMBMON = xmbmon203
+@@ -60,7 +60,7 @@
+ CONFARGS = --enable-client $(ENABLE_SERVER) $(ENABLE_MONITOR) $(ENABLE_IPTRAF)
+ 
+ # order is important: SERVERPROG should be last
+-PROGNAMES = ${CLIENTPROG}  ${EXTRAPROG}
++PROGNAMES = ${CLIENTPROG}
+ if ENABLE_MONITORS
+ PROGNAMES .= ${MONITORPROG}
+ endif
+
+
+
+From wijnand at berlios.de  Sat Mar 18 13:22:37 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Sat, 18 Mar 2006 13:22:37 +0100
+Subject: [Upwatch-commits] r537 - upwatch/trunk
+Message-ID: <200603181222.k2ICMbMq014309@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-18 13:22:35 +0100 (Sat, 18 Mar 2006)
+New Revision: 537
+
+Modified:
+   upwatch/trunk/Makefile.am
+Log:
+I broke the server build in revision 535, go back to 534
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-16 23:58:44 UTC (rev 536)
++++ upwatch/trunk/Makefile.am	2006-03-18 12:22:35 UTC (rev 537)
+@@ -49,9 +49,9 @@
+ if ENABLE_IPTRAF
+ ENABLE_IPTRAF = --enable-iptraf
+ IPTRAFPROG = ${IPTRAFLIST}
+-EXTRAPROG = ${IPTRAFPROG}
+ endif
+ 
++EXTRAPROG = ${IPTRAFPROG}
+ 
+ if XMBMON
+ XMBMON = xmbmon203
+@@ -60,13 +60,7 @@
+ CONFARGS = --enable-client $(ENABLE_SERVER) $(ENABLE_MONITOR) $(ENABLE_IPTRAF)
+ 
+ # order is important: SERVERPROG should be last
+-PROGNAMES = ${CLIENTPROG}
+-if ENABLE_MONITORS
+-PROGNAMES .= ${MONITORPROG}
+-endif
+-if ENABLE_SERVER
+-PROGNAMES .= ${SERVERPROG}
+-endif
++PROGNAMES = ${CLIENTPROG} ${MONITORPROG} ${EXTRAPROG} ${SERVERPROG}
+ 
+ export PROGNAMES MONITORPROG CLIENTPROG SERVERPROG EXTRAPROG
+ export TOP_SRCDIR = $(top_srcdir)
+@@ -161,3 +155,4 @@
+ 
+ #	rm -f $(distdir)/doc/program-guide.*
+ #	rm -f $(distdir)/doc/admin-guide.*
++
+
+
+
+From wijnand at berlios.de  Sat Mar 18 15:09:52 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Sat, 18 Mar 2006 15:09:52 +0100
+Subject: [Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes
+Message-ID: <200603181409.k2IE9q6V029925@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-18 15:09:51 +0100 (Sat, 18 Mar 2006)
+New Revision: 538
+
+Modified:
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_httpget/uw_httpget.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_ping/uw_ping.def
+   upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+Log:
+Some autogen fixes. It seems it is still broken as hell.
+
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_dns/uw_dns.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,24 +92,6 @@
+ This flag may be given multiple times.';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "Upwatch username";
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "UpWatch password";
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_httpget/uw_httpget.def
+===================================================================
+--- upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,24 +92,7 @@
+ This flag may be given multiple times.';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "Upwatch username";
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "UpWatch password";
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_null/uw_null.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -82,4 +82,4 @@
+ #include dbase_options.def
+ #include generic_options.def
+ #include option_realm_ign.def
+-
++#include minimal_options.def
+
+Modified: upwatch/trunk/uw_ping/uw_ping.def
+===================================================================
+--- upwatch/trunk/uw_ping/uw_ping.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_ping/uw_ping.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,36 +92,7 @@
+ it knows which probe to retrieve from the definition table';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = statfile;
+-    value     = K;
+-    arg_type  = string;
+-    descrip   = "file to keep current state of probes";
+-    doc       =
+-'To determine if probe status changed, we keep the previous status
+-in a file. This is the name of that file';
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "Upwatch username";
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = "UpWatch password";
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+===================================================================
+--- upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -60,4 +60,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+
+
+From wijnand at berlios.de  Fri Mar 31 11:53:50 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 31 Mar 2006 11:53:50 +0200
+Subject: [Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+Message-ID: <200603310953.k2V9ron5028938@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-31 11:53:48 +0200 (Fri, 31 Mar 2006)
+New Revision: 539
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc
+Removed:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+Log:
+Add lots of regexes, including a dmesg.
+While there: remove netland specific files, they are not usefull in the berlios repository. 
+We need a tree of our own for this. Then use this tree for generating our own rpm.
+
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-31 09:53:48 UTC (rev 539)
+@@ -6,3 +6,5 @@
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
++
++red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/apmd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] apmd[PID]: Charge: \* \* \* \(-[NUM]% unknown\)
+ green [LOGDATE] apmd[PID]: Exiting
+ green [LOGDATE] apmd[PID]: Version [NUM]\.[NUM]final \(APM BIOS [NUM]\.[NUM], Linux driver [NUM]\.[NUM]\)
++green [LOGDATE] apmd[PID]: apmd .* interfacing with apm driver .* and APM BIOS 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/auditd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1 +1,2 @@
+ green [LOGDATE] auditd[PID]: Audit daemon rotating log files
++green [LOGDATE] auditd[PID]: Init complete, auditd .* listening for events
+
+Deleted: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/fast	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,2 +0,0 @@
+-green [LOGDATE] fast[PID]: ssh connection for [USER] to \(\) finished
+-green [LOGDATE] fast[PID]: ssh connection for [USER] to [IPADDR] \(.*\) finished
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/httpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -7,3 +7,4 @@
+ green [LOGDATE] httpd: \[[SMONTH] [LOGDATE]\] \[warn\] module status_module is already loaded, skipping
+ green [LOGDATE] httpd: \[[SMONTH] [LOGDATE]\] \[warn\] NameVirtualHost [IPADDR]:[NUM] has no VirtualHosts
+ green [LOGDATE] httpd: [USER]
++green [LOGDATE] logger: HTTP down: return value was 0
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 09:53:48 UTC (rev 539)
+@@ -4,7 +4,8 @@
+ green [LOGDATE] kernel: ACPI: BOOT
+ green [LOGDATE] kernel: ACPI: DSDT
+ green [LOGDATE] kernel: ACPI: FADT
+-green [LOGDATE] kernel: ACPI: Interpreter enabled
++green [LOGDATE] kernel: ACPI: Interpreter (enabled|disabled)
++green [LOGDATE] kernel: pnp: PnP ACPI: (disabled|enabled)
+ green [LOGDATE] kernel: ACPI: IRQ[NUM] SCI: Edge set to Level Trigger
+ green [LOGDATE] kernel: ACPI: MADT
+ green [LOGDATE] kernel: ACPI: PCI Interrupt Link \[LNK[A-Z]\] enabled at IRQ [NUM]
+@@ -20,6 +21,8 @@
+ green [LOGDATE] kernel: ACPI: \(supports S[NUM] S[NUM] S[NUM] S[NUM] S[NUM]\)
+ green [LOGDATE] kernel: ACPI table found: (APIC|BOOT|FACP|RSDT|SPCR) v[NUM]
+ green [LOGDATE] kernel: ACPI: Using PIC for interrupt routing
++green [LOGDATE] kernel: ACPI: BIOS age \([NUM]\) fails cutoff \([NUM]\), acpi=force is required to enable ACPI
++green [LOGDATE] kernel: ACPI: Disabling ACPI support
+ green [LOGDATE] kernel: Activating ISA DMA hang workarounds\.
+ green [LOGDATE] kernel: adb: finished probe task\.\.\.
+ green [LOGDATE] kernel: ADB keyboard at [NUM], handler [NUM]
+@@ -69,7 +72,7 @@
+ green [LOGDATE] kernel: \.\.\.changing IO-APIC physical APIC ID to [NUM] \.\.\. ok\.
+ green [LOGDATE] kernel: Checking for popad bug\.\.\. OK\.
+ green [LOGDATE] kernel: Checking 'hlt' instruction\.\.\.
+-green [LOGDATE] kernel: checking if image is initramfs\.\.\.it isn't \(no cpio magic\); looks like an initrd
++green [LOGDATE] kernel: checking if image is initramfs
+ green [LOGDATE] kernel: Checking if this processor honours the WP bit even in supervisor mode\.\.\. Ok\.
+ green [LOGDATE] kernel: Checking [NUM]/[NUM] coupling\.\.\. Ok, fpu using exception [NUM] error reporting\. 
+ green [LOGDATE] kernel: Checking ReiserFS transaction log \(device [NUM]:[NUM]\) \.\.\.
+@@ -459,7 +462,7 @@
+ green [LOGDATE] kernel: PCI: Sharing IRQ [NUM] with [NUM]:[HEX]\.[NUM]
+ green [LOGDATE] kernel: PCI: Using ACPI for IRQ routing
+ green [LOGDATE] kernel: PCI: Using configuration type [NUM]
+-green [LOGDATE] kernel: PCI: Using IRQ router [WORD] \[[NUM]/[NUM]\] at [NUM]:[HEX]\.[NUM]
++green [LOGDATE] kernel: PCI: Using IRQ router [WORD]
+ green [LOGDATE] kernel: PCI: Via IRQ fixup for [NUM]:[NUM]\.[NUM], from [NUM] to [NUM]
+ green [LOGDATE] kernel: \*pde = [NUM]
+ green [LOGDATE] kernel: per-CPU timeslice cutoff: [NUM]\.[NUM] usecs\.
+@@ -562,7 +565,7 @@
+ green [LOGDATE] kernel: SELinux:  Unregistering netfilter hooks
+ green [LOGDATE] kernel: sending pkt_too_big \(len[PID] pmtu[PID]\) to self
+ green [LOGDATE] kernel: Serial driver version
+-green [LOGDATE] kernel: Serial: [NUM]/[NUM] driver \$Revision: 1.5 $ [NUM] ports, IRQ sharing enabled
++green [LOGDATE] kernel: Serial: [NUM]/[NUM] driver \$Revision: [NUM]\.[NUM] $ [NUM] ports, IRQ sharing enabled
+ green [LOGDATE] kernel:   Serial sub-system self-test: passed\.
+ green [LOGDATE] kernel: serio: .* port at [HEX],[HEX] irq [NUM]
+ green [LOGDATE] kernel: Setting [NUM] in the phys_id_present_map
+@@ -645,7 +648,7 @@
+ green [LOGDATE] kernel: using fastest function: p[I\d]*_mmx \([NUM]\.[NUM] MB/sec\)
+ green [LOGDATE] kernel: using i2c address: [NUM] from device-tree
+ green [LOGDATE] kernel: Using local APIC timer interrupts\.
+-green [LOGDATE] kernel: Using pmtmr for high-res timesource
++green [LOGDATE] kernel: Using [WORD] for high-res timesource
+ green [LOGDATE] kernel: Using r[NUM] hash to sort names
+ green [LOGDATE] kernel: __va_range\([HEX], [HEX]\): idx=[NUM] mapped at [HEX]
+ green [LOGDATE] kernel:   Vendor: .* Model: .* Rev: .*
+@@ -667,6 +670,27 @@
+ green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
+ green [LOGDATE] kernel: MD5 Hash NOT expected but found \([IPADDR], [NUM]\)->\([IPADDR], [NUM]\)
+ green [LOGDATE] kernel: printk: [NUM] messages suppressed.
++green [LOGDATE] kernel: Using x86 segment limits to approximate NX protection
++green [LOGDATE] kernel: Security Framework v.* initialized
++green [LOGDATE] kernel: Mount-cache hash table entries: [NUM]
++green [LOGDATE] kernel: PCI quirk: region .* claimed by
++green [LOGDATE] kernel: PCI: Bridge: 
++green [LOGDATE] kernel: IO window:
++green [LOGDATE] kernel: MEM window:
++green [LOGDATE] kernel: PREFETCH window: 
++green [LOGDATE] kernel: ksign: Installing public key data
++green [LOGDATE] kernel: Loading keyring
++green [LOGDATE] kernel: - Added public key
++green [LOGDATE] kernel: - User ID: .* (Kernel Module GPG key)
++green [LOGDATE] kernel: io scheduler [WORD] registered
++green [LOGDATE] kernel: PNP: No PS/2 controller found. Probing ports directly
++green [LOGDATE] kernel: md: bitmap version [NUM]\.[NUM]
++green [LOGDATE] kernel: IP route cache hash table entries: [NUM]
++green [LOGDATE] kernel: TCP established hash table entries: [NUM]
++green [LOGDATE] kernel: TCP bind hash table entries: [NUM]
++green [LOGDATE] kernel: TCP [WORD] registered
++green [LOGDATE] kernel: Using IPI Shortcut mode
++green [LOGDATE] kernel: Write protecting the kernel read-only data: [NUM]k
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
+ 
+@@ -678,3 +702,5 @@
+ red [LOGDATE] kernel: SCSI disk error : host [NUM] channel [NUM] id [NUM] lun [NUM] return code = [NUM]
+ red [LOGDATE] kernel: scsi[HEX]:[HEX]:[HEX]:[HEX]: Attempting to abort cmd
+ red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
++red [LOGDATE] kernel: attempt to access beyond end of device
++red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+
+Deleted: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/netland	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,2 +0,0 @@
+-green [LOGDATE] make-backup.sh[PID]: backup done
+-
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -12,4 +12,5 @@
+ green [LOGDATE] ntpd[PID]: Lost child: child exited
+ green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
+ green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
++green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rpc	2006-03-31 09:53:48 UTC (rev 539)
+@@ -0,0 +1 @@
++green [LOGDATE] rpc.statd[PID]: gethostbyname error for [WORD]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-18 14:09:51 UTC (rev 538)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-03-31 09:53:48 UTC (rev 539)
+@@ -1,3 +1,5 @@
+ green [LOGDATE] snmpd: snmpd shutdown failed
+ green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
++green [LOGDATE] snmpd[PID]: [smux_accept] accepted fd [NUM] from  \[[IPADDR]\]:[NUM]
++green [LOGDATE] snmpd[20178]: accepted smux peer: oid SNMPv2-SMI::enterprises\.[NUM]\.[NUM]\.[NUM]\.[NUM], descr 
+
+
+
+From wijnand at berlios.de  Fri Mar 31 14:04:35 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 31 Mar 2006 14:04:35 +0200
+Subject: [Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+Message-ID: <200603311204.k2VC4ZuA016299@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-31 14:04:23 +0200 (Fri, 31 Mar 2006)
+New Revision: 540
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt
+Log:
+Fix the IPADDR macro so it matches both IPv4 and IPv6 addresses.
+
+Please, don't look at the regular expression, you will get dizzy otherwise.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,7 +6,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ HOSTNAM [-\da-z]+
+ PATH	/?[-_\.[:alnum:]]?(/[-_\.[:alnum:]]+)*/?
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ USER    root
+ USER=   user=[-\.\$_0-9a-z]+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,6 +6,6 @@
+ PATH    (/[-\._[:alnum:]]+){2,}([/]?)
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -4,6 +4,6 @@
+ LOGDATE \d\d\d\d\d\d \d\d:\d\d:\d\d
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -3,6 +3,6 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ LOGDATE \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PID 	\[\d+\]
+ NUM     [-+]?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -2,6 +2,6 @@
+ # they are very much like the ones in the 'macros' file, but
+ # specifically designed to extract rules from existing logfiles
+ LOGDATE [0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PID 	\[[0-9]+\]
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,7 +6,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ HOSTNAM [-\da-z]+
+ MACADDR ([a-f\d][a-f\d])(:[a-f\d][a-f\d]){5,}
+ PATH	/?[-_\.[:alnum:]]?(/[-_\.[:alnum:]]+)*/?
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ MACADDR ([a-f0-9][a-f0-9])(:[a-f0-9][a-f0-9]){5,}
+ TCPFLAG (SYN|ACK|PSH|FIN|RST)(\ (SYN|ACK|PSH|FIN|RST))*
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ WORD	[-\.\dA-Za-z_]+
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})	
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ MACADDR ([a-f0-9][a-f0-9])(:[a-f0-9][a-f0-9]){5,}
+ TCPFLAG (SYN|ACK|PSH|FIN|RST)(\ (SYN|ACK|PSH|FIN|RST))*
+
+
+
+From wijnand at berlios.de  Fri Mar 31 15:09:10 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 31 Mar 2006 15:09:10 +0200
+Subject: [Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+Message-ID: <200603311309.k2VD9AGj019164@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-03-31 15:08:59 +0200 (Fri, 31 Mar 2006)
+New Revision: 541
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+Log:
+Sync regexes.
+One note: I made all gconfd messages green. Since gconfd logs in all languages it knows this is a mission impossible. Besides, I can't image gconfd has something usefull to tell us....
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-03-31 13:08:59 UTC (rev 541)
+@@ -41,9 +41,13 @@
+ green [LOGDATE] postfix/smtp[PID]: [MSGID]: enabling PIX <CRLF>\.<CRLF> workaround for [HOSTNAME]\[[IPADDR]\]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] greeted me with my own hostname [HOSTNAME]
+ green [LOGDATE] postfix/smtp[PID]: warning: host [HOSTNAME]\[[IPADDR]\] replied to HELO/EHLO with my own hostname [HOSTNAME]
++green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Network is unreachable \(port [NUM]\)
++green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME] \[[IPADDR]\]: read timeout \(port [NUM]\)
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+ red [LOGDATE] postfix/smtpd[PID]: lookup table has changed -- exiting
+ red [LOGDATE] postfix/trivial-rewrite[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/smtp[PID]: fatal:
++red [LOGDATE] postfix/sendmail[PID]: fatal: [WORD]\([NUM]\): Message file too big [PATH]:
++red [LOGDATE] postfix/postdrop[PID]: warning: uid=[NUM]: File too large
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gconfd	2006-03-31 13:08:59 UTC (rev 541)
+@@ -7,4 +7,4 @@
+ green [LOGDATE] gconfd \([USER]-[NUM]\): adres gevonden "xml:readonly:[PATH]" naar een alleen-lezen configuratiebron op positie [NUM]
+ green [LOGDATE] gconfd \([USER]-[NUM]\): Resolved address "xml:readwrite:[PATH]" to a writable config source at position [NUM]
+ green [LOGDATE] gconfd \([USER]-[NUM]\): Adres gevonden "xml:readwrite:[PATH]" naar een schrijfbare configuratiebron op positie [NUM]
+-
++green [LOGDATE] gconfd
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,2 +1,3 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
++green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
+ 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-31 13:08:59 UTC (rev 541)
+@@ -321,6 +321,7 @@
+ green [LOGDATE] kernel: IPSEC EVENT: KLIPS device ipsec[NUM] shut down\.
+ green [LOGDATE] kernel: ip_tables: \(C\) [NUM]-[NUM] Netfilter core team
+ green [LOGDATE] kernel: iptables: [WORD] IN=
++green [LOGDATE] kernel: ipta[NUM] 
+ green [LOGDATE] kernel: IPv[NUM] over IPv[NUM] tunneling driver
+ green [LOGDATE] kernel: IPVS: Connection hash table configured \(size=[NUM], memory=[NUM]Kbytes\)
+ green [LOGDATE] kernel: IPX Portions Copyright \(c\) [NUM]
+@@ -406,6 +407,7 @@
+ green [LOGDATE] kernel: NET[NUM]: Linux TCP/IP
+ green [LOGDATE] kernel: NET[NUM]: Unix domain sockets
+ green [LOGDATE] kernel: NET: Registered protocol family [NUM]
++green [LOGDATE] kernel: NET: [NUM] messages suppressed.
+ green [LOGDATE] kernel: nfsd: last server has exited
+ green [LOGDATE] kernel: nfs: server [IPADDR] OK
+ green [LOGDATE] kernel: nfsd: unexporting all filesystems
+@@ -704,3 +706,4 @@
+ red [LOGDATE] kernel: eth[NUM]: transmit timed out, switching to .* media
+ red [LOGDATE] kernel: attempt to access beyond end of device
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
++red [LOGDATE] kernel: VM: killing process
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/nfs-utils	2006-03-31 13:08:59 UTC (rev 541)
+@@ -6,5 +6,5 @@
+ green [LOGDATE] rpc.mountd: authenticated (un)?mount request from [HOSTNAME]:[NUM] for [PATH] \([PATH]\)
+ green [LOGDATE] rpc.mountd: refused mount request from [HOSTNAME] for [PATH] \([PATH]\)
+ green [LOGDATE] rpc.statd[PID]: Caught signal [NUM], un-registering and exiting\.
++green [LOGDATE] rpc.mountd: Caught signal [NUM], un-registering and exiting.
+ 
+-
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,2 +1,3 @@
+ green [LOGDATE] smb: nmbd shutdown failed
+ green [LOGDATE] smb: smbd shutdown failed
++green [LOGDATE] mount.smbfs[PID]: [[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]] client/smbmount.c:send_fs_socket\([NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sophie	2006-03-31 13:08:59 UTC (rev 541)
+@@ -1,6 +1,6 @@
+ green [LOGDATE] sophie: [PATH] placed in the background
+-green [LOGDATE] sophie[PID]: Callbacks\?       : yes 
+-green [LOGDATE] sophie[PID]: Error strings\?   : yes 
++green [LOGDATE] sophie[PID]: Callbacks\?       : [WORD] 
++green [LOGDATE] sophie[PID]: Error strings\?   : [WORD] 
+ green [LOGDATE] sophie[PID]: File '[PATH]' infected with virus '.*' 
+ green [LOGDATE] sophie[PID]: limit_classif    : [NUM] 
+ green [LOGDATE] sophie[PID]: limit_decompr    : [NUM] 
+@@ -16,19 +16,19 @@
+ green [LOGDATE] sophie[PID]: notice           : SIGNAL '[NUM]' caught - cleaning up and exiting\. 
+ green [LOGDATE] sophie[PID]: [PATH] Placed in the background \[PID: [NUM]\] 
+ green [LOGDATE] sophie[PID]: PID file         : [PATH] 
+-green [LOGDATE] sophie[PID]: Running as user  : mail 
++green [LOGDATE] sophie[PID]: Running as user  : [WORD]
+ green [LOGDATE] sophie[PID]: SAVI config      : [PATH] 
+-green [LOGDATE] sophie[PID]: Show virus name\? : yes 
++green [LOGDATE] sophie[PID]: Show virus name\? : [WORD]
+ ignore [LOGDATE] sophie[PID]: Error strings
+-green [LOGDATE] sophie[PID]: socket_check     : yes 
+-green [LOGDATE] sophie[PID]: Socket group     : mail 
++green [LOGDATE] sophie[PID]: socket_check     : [WORD]
++green [LOGDATE] sophie[PID]: Socket group     : [WORD]
+ green [LOGDATE] sophie[PID]: Socket path      : [PATH] 
+ green [LOGDATE] sophie[PID]: Sophie child has timed-out \(no data received in [NUM] seconds\) - process killed 
+ green [LOGDATE] sophie[PID]: Sophie IDE       : Sophos IDE version [NUM]\.[NUM] \(detects [NUM] viruses\) 
+ green [LOGDATE] sophie[PID]: Sophie version   : [NUM]\.[NUM]rc[NUM] 
+ green [LOGDATE] sophie[PID]: Sophos engine    : Sophos engine version [NUM]\.[NUM] 
+ green [LOGDATE] sophie[PID]: Timeout          : [NUM] seconds 
+-green [LOGDATE] sophie[PID]: Timestamps\?      : no 
++green [LOGDATE] sophie[PID]: Timestamps\?      : [WORD]
+ green [LOGDATE] sophie[PID]: Umask            : [NUM] 
+ green [LOGDATE] sophie[PID]: warning          : Scan result => '[PATH]' infected with virus '.*' 
+ green [LOGDATE] sophie[PID]: warning          : Socket '[PATH]' already exists! 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-03-31 12:04:23 UTC (rev 540)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-03-31 13:08:59 UTC (rev 541)
+@@ -66,3 +66,4 @@
+ ignore [LOGDATE] sshd[PID]: syslogin_perform_logout: logout\(\) returned an error
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old modulus
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old prime
++green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: No route to host
+
+
+

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r476%20-%20in%20upwatch/trunk/uw_sysstat%3A%20.%20uw_sysstat.d%20uw_sysstat.d/quagga%20uw_sysstat.d/syslog&In-Reply-To=%3C200502181556.j1IFu9pA009310%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000005.html">
+   <LINK REL="Next"  HREF="000007.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog</H1>
+    <B>Ron Arts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r476%20-%20in%20upwatch/trunk/uw_sysstat%3A%20.%20uw_sysstat.d%20uw_sysstat.d/quagga%20uw_sysstat.d/syslog&In-Reply-To=%3C200502181556.j1IFu9pA009310%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog">raarts at sheep.berlios.de
+       </A><BR>
+    <I>Fri Feb 18 16:56:09 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000005.html">[Upwatch-commits] r475 - upwatch/trunk
+</A></li>
+        <LI>Next message: <A HREF="000007.html">[Upwatch-commits] r477 - in upwatch/trunk: . config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#6">[ date ]</a>
+              <a href="thread.html#6">[ thread ]</a>
+              <a href="subject.html#6">[ subject ]</a>
+              <a href="author.html#6">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2005-02-18 16:56:08 +0100 (Fri, 18 Feb 2005)
+New Revision: 476
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Added supported for monitoring quagga logfiles
+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1 @@
++green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,5 @@
++green \ssucceeded
++green \sstarted
++green \sstarting
++
++red ERROR
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,8 @@
++# macros for regex replacements
++# choose your macronames carefully. regular expressions should never
++# match a macroname!!
++# entries are matched in the order specified
++LOGDATE \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d
++IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++PID 	\[\d+\]
++NUM     [-+]?\d+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,7 @@
++# macros for log2regex 
++# they are very much like the ones in the 'macros' file, but
++# specifically designed to extract rules from existing logfiles
++LOGDATE [0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]
++IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++PID 	\[[0-9]+\]
++NUM	[-+]?(0x)?\d+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,5 @@
++green [LOGDATE] ZEBRA: SMUX connection closed: [NUM]
++green [LOGDATE] ZEBRA: Terminating on signal
++green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
++green [LOGDATE] ZEBRA: Terminating on signal
++green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,14 @@
++green [LOGDATE] watchquagga[PID]: bgpd: slow echo response finally received after [NUM]\.[NUM] seconds
++green [LOGDATE] watchquagga[PID]: bgpd state -&gt; up : echo response received after [NUM]\.[NUM] seconds
++green [LOGDATE] watchquagga[PID]: Terminating on signal
++green [LOGDATE] watchquagga: watchquagga shutdown succeeded
++green [LOGDATE] watchquagga: watchquagga startup succeeded
++green [LOGDATE] watchquagga[PID]: watchquagga [NUM]\.[NUM]\.[NUM] watching \[zebra bgpd\], mode \[monitor\]
++green [LOGDATE] watchquagga[PID]: bgpd state -&gt; up : connect succeeded
++green [LOGDATE] watchquagga[PID]: zebra state -&gt; up : connect succeeded
++green [LOGDATE] watchquagga[PID]: Terminating on signal
++green [LOGDATE] watchquagga: watchquagga shutdown succeeded
++green [LOGDATE] watchquagga[PID]: watchquagga [NUM]\.[NUM]\.[NUM] watching \[zebra bgpd\], mode \[monitor\]
++green [LOGDATE] watchquagga: watchquagga startup succeeded
++green [LOGDATE] watchquagga[PID]: zebra state -&gt; up : connect succeeded
++green [LOGDATE] watchquagga[PID]: bgpd state -&gt; up : connect succeeded
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2005-02-18 15:56:08 UTC (rev 476)
+@@ -29,6 +29,8 @@
+ spec-files = `for i in \`find uw_sysstat.d/mysql -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ spec-files = `echo &quot;%dir&quot; $confdir/uw_sysstat.d/upwatch`;
+ spec-files = `for i in \`find uw_sysstat.d/upwatch -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
++spec-files = `echo &quot;%dir&quot; $confdir/uw_sysstat.d/quagga`;
++spec-files = `for i in \`find uw_sysstat.d/quagga -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ 
+ // describe commandline flags
+ flag = {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000005.html">[Upwatch-commits] r475 - upwatch/trunk
+</A></li>
+	<LI>Next message: <A HREF="000007.html">[Upwatch-commits] r477 - in upwatch/trunk: . config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#6">[ date ]</a>
+              <a href="thread.html#6">[ thread ]</a>
+              <a href="subject.html#6">[ subject ]</a>
+              <a href="author.html#6">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

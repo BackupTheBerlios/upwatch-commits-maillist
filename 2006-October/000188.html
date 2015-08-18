@@ -1,0 +1,583 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r653%20-%20in%20upwatch/trunk%3A%20.%20compat/bb/bbhimport%0A%09util%20uw_accept%20uw_acceptbb%20uw_dns%20uw_httpget%20uw_imap%0A%09uw_iptraf%20uw_mssql%20uw_mysql%20uw_mysqlstats%20uw_null%20uw_ping%0A%09uw_pop3%20uw_postgresql%20uw_process%20uw_purple%20uw_route%20uw_send%0A%09uw_setip%20uw_smtp%20uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_tcpconnect&In-Reply-To=%3C200610180647.k9I6l4ii014332%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000187.html">
+   <LINK REL="Next"  HREF="000189.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r653%20-%20in%20upwatch/trunk%3A%20.%20compat/bb/bbhimport%0A%09util%20uw_accept%20uw_acceptbb%20uw_dns%20uw_httpget%20uw_imap%0A%09uw_iptraf%20uw_mssql%20uw_mysql%20uw_mysqlstats%20uw_null%20uw_ping%0A%09uw_pop3%20uw_postgresql%20uw_process%20uw_purple%20uw_route%20uw_send%0A%09uw_setip%20uw_smtp%20uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_tcpconnect&In-Reply-To=%3C200610180647.k9I6l4ii014332%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect">raarts at mail.berlios.de
+       </A><BR>
+    <I>Wed Oct 18 08:47:04 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000187.html">[Upwatch-commits] r652 - in upwatch/trunk: . common
+</A></li>
+        <LI>Next message: <A HREF="000189.html">[Upwatch-commits] r654 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-10-18 08:47:02 +0200 (Wed, 18 Oct 2006)
+New Revision: 653
+
+Modified:
+   upwatch/trunk/compat/bb/bbhimport/Makefile.am
+   upwatch/trunk/configure.ac
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_accept/Makefile.am
+   upwatch/trunk/uw_acceptbb/Makefile.am
+   upwatch/trunk/uw_dns/Makefile.am
+   upwatch/trunk/uw_httpget/Makefile.am
+   upwatch/trunk/uw_imap/Makefile.am
+   upwatch/trunk/uw_iptraf/Makefile.am
+   upwatch/trunk/uw_mssql/Makefile.am
+   upwatch/trunk/uw_mysql/Makefile.am
+   upwatch/trunk/uw_mysqlstats/Makefile.am
+   upwatch/trunk/uw_null/Makefile.am
+   upwatch/trunk/uw_ping/Makefile.am
+   upwatch/trunk/uw_pop3/Makefile.am
+   upwatch/trunk/uw_postgresql/Makefile.am
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_purple/Makefile.am
+   upwatch/trunk/uw_route/Makefile.am
+   upwatch/trunk/uw_send/Makefile.am
+   upwatch/trunk/uw_setip/Makefile.am
+   upwatch/trunk/uw_smtp/Makefile.am
+   upwatch/trunk/uw_snmpget/Makefile.am
+   upwatch/trunk/uw_syncprobes/Makefile.am
+   upwatch/trunk/uw_sysstat/Makefile.am
+   upwatch/trunk/uw_tcpconnect/Makefile.am
+Log:
+Try to use libopts-config to find the parameters for
+libopts. If not found, fall back to the old method.
+
+
+Modified: upwatch/trunk/compat/bb/bbhimport/Makefile.am
+===================================================================
+--- upwatch/trunk/compat/bb/bbhimport/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/compat/bb/bbhimport/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -6,7 +6,7 @@
+ 
+ bbhimport_SOURCES = run.c bbhimport.h bbhimport.c
+ bbhimport_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-bbhimport_LDADD = bbhimport_$(DB_O) bbhimport_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ @MYSQL_LIBS@
++bbhimport_LDADD = bbhimport_$(DB_O) bbhimport_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@ @MYSQL_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c)
+ INCLUDES = -I$(top_srcdir)/upwatch 
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/configure.ac	2006-10-18 06:47:02 UTC (rev 653)
+@@ -253,54 +253,67 @@
+ # Checks for libraries.
+ 
+ ################# First the autogen autoopts library
+-if test -f /usr/lib/libopts.a
++AC_CHECK_PROG([HAVE_LIBOPTS], [libopts-config], [&quot;yes&quot;], [&quot;no&quot;])
++if test &quot;$HAVE_LIBOPTS&quot; = &quot;yes&quot;
+ then
+-  LIBOPTS=/usr/lib/libopts.a
++  LIBOPTS_CFLAGS=&quot;`libopts-config --cflags`&quot;
++  LIBOPTS_LIBS=&quot;`libopts-config --libs`&quot;
+ fi
+-if test -f /usr/lib64/libopts.a
+-then
+-  LIBOPTS=/usr/lib64/libopts.a
+-fi
+ 
+-if test -f /usr/local/lib/libopts.a
++if test -z &quot;$LIBOPTS_LIBS&quot;
+ then
+-  LIBOPTS=/usr/local/lib/libopts.a
+-fi
+-if test -f /usr/local/lib64/libopts.a
+-then
+-  LIBOPTS=/usr/local/lib64/libopts.a
+-fi
+-if test -f /usr/pkg/lib/libopts.a
+-then
+-  LIBOPTS=/usr/pkg/lib/libopts.a
+-fi
+-AC_SUBST(LIBOPTS)
+-
+-# path to autoopts includes
+-AC_ARG_WITH(autoopts-include,
+-    [  --with-autoopts-include=&lt;path&gt;        prefix of autoopts headers. Default /usr/include/],
+-    [LIBOPTS_INC_PREFIX=$with_autoopts_include],
+-    [LIBOPTS_INC_PREFIX=/usr/include/]
+-)
+-AC_SUBST(LIBOPTS_INC_PREFIX)
+-
+-for incpath in /usr/include $LIBOPTS_LIB_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
+-do
+-  if test -f $incpath/options.h
++  if test -f /usr/lib/libopts.a
+   then
+-    LIBOPTS_CFLAGS=&quot;-I${incpath}&quot;
++    LIBOPTS=/usr/lib/libopts.a
+   fi
+-  if test -f $incpath/autoopts/options.h
++  if test -f /usr/lib64/libopts.a
+   then
+-    LIBOPTS_CFLAGS=&quot;-I${incpath}/autoopts&quot;
++    LIBOPTS=/usr/lib64/libopts.a
+   fi
+-  if test -f $incpath/autogen/options.h
++  
++  if test -f /usr/local/lib/libopts.a
+   then
+-    LIBOPTS_CFLAGS=&quot;-I${incpath}/autogen&quot;
++    LIBOPTS=/usr/local/lib/libopts.a
+   fi
+-done
++  if test -f /usr/local/lib64/libopts.a
++  then
++    LIBOPTS=/usr/local/lib64/libopts.a
++  fi
++  if test -f /usr/pkg/lib/libopts.a
++  then
++    LIBOPTS=/usr/pkg/lib/libopts.a
++  fi
++fi
+ 
++if test -z &quot;$LIBOPTS_CFLAGS&quot;
++then
++  # path to autoopts includes
++  AC_ARG_WITH(autoopts-include,
++      [  --with-autoopts-include=&lt;path&gt;        prefix of autoopts headers. Default /usr/include/],
++      [LIBOPTS_INC_PREFIX=$with_autoopts_include],
++      [LIBOPTS_INC_PREFIX=/usr/include/]
++  )
++  AC_SUBST(LIBOPTS_INC_PREFIX)
++
++  for incpath in /usr/include $LIBOPTS_INC_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
++  do
++    if test -f $incpath/options.h
++    then
++      LIBOPTS_CFLAGS=&quot;-I${incpath}&quot;
++    fi
++    if test -f $incpath/autoopts/options.h
++    then
++      LIBOPTS_CFLAGS=&quot;-I${incpath}/autoopts&quot;
++    fi
++    if test -f $incpath/autogen/options.h
++    then
++      LIBOPTS_CFLAGS=&quot;-I${incpath}/autogen&quot;
++    fi
++  done
++fi
++AC_SUBST(LIBOPTS_LIBS)
+ AC_SUBST(LIBOPTS_CFLAGS)
++
+ ################## MYSQL
+ # path to libmysqlclient stuff:.
+ AC_ARG_WITH(mysql-libs,
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/util/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -45,7 +45,7 @@
+ include $(top_srcdir)/Makefile.am.common
+ 
+ uwq_SOURCES = uwq.c uwq_options.h uwq_options.c uwq_options.def 
+-uwq_LDADD = $(LIBOPTS) @LIBGLIB2_LIBS@
++uwq_LDADD = @LIBOPTS_LIBS@ @LIBGLIB2_LIBS@
+ uwq_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+ BUILT_SOURCES += uwq_options.h uwq.1
+ EXTRA_DIST += uwq_options.def
+@@ -60,7 +60,7 @@
+ 
+ ctime_SOURCES = ctime.c ctime_options.c ctime_options.h ctime_options.def 
+ ctime_CFLAGS = @LIBOPTS_CFLAGS@
+-ctime_LDADD = $(LIBOPTS) 
++ctime_LDADD = @LIBOPTS_LIBS@
+ BUILT_SOURCES += ctime_options.h ctime.1
+ EXTRA_DIST += ctime_options.def
+ CLEAN_FILES += ctime_options.c ctime_options.h
+@@ -74,7 +74,7 @@
+ 
+ slot_SOURCES = slot.c slot_options.c slot_options.h slot_options.def
+ slot_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+-slot_LDADD = $(LIBOPTS) $(LIBUPWATCH) 
++slot_LDADD = @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += slot_options.h
+ EXTRA_DIST += slot_options.def
+ CLEAN_FILES +=  slot_options.c slot_options.h
+@@ -88,7 +88,7 @@
+ 
+ chklog_SOURCES = chklog.c chklog_options.c chklog_options.h chklog_options.def
+ chklog_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@
+-chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ $(LIBOPTS) $(LIBUPWATCH) 
++chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += chklog_options.h
+ EXTRA_DIST += chklog_options.def
+ CLEAN_FILES +=  chklog_options.c chklog_options.h
+
+Modified: upwatch/trunk/uw_accept/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_accept/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_accept/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_accept_SOURCES = run.c uw_accept.h uw_accept.c $(SPECFILES) $(INITFILES)
+ uw_accept_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_accept_LDADD = uw_accept_$(DB_O) uw_accept_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_accept_LDADD = uw_accept_$(DB_O) uw_accept_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) 
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/trunk/uw_acceptbb/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_acceptbb/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_acceptbb/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -10,7 +10,7 @@
+ uw_acceptbb_SOURCES = run.c uw_acceptbb.h uw_acceptbb.c \
+  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_acceptbb_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_acceptbb_LDADD = uw_acceptbb_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_acceptbb_LDADD = uw_acceptbb_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/trunk/uw_dns/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_dns/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_dns/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_dns_SOURCES = run.c uw_dns.h uw_dns.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_dns_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_dns_LDADD = uw_dns_$(DB_O) uw_dns_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_dns_LDADD = uw_dns_$(DB_O) uw_dns_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/trunk/uw_httpget/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_httpget/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_httpget/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_httpget_SOURCES = run.c uw_httpget.h uw_httpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_httpget_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_httpget_LDADD = uw_httpget_$(DB_O) uw_httpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_httpget_LDADD = uw_httpget_$(DB_O) uw_httpget_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/trunk/uw_imap/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_imap/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_imap/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_imap_SOURCES = run.c uw_imap.h uw_imap.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_imap_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_imap_LDADD = uw_imap_$(DB_O) uw_imap_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_imap_LDADD = uw_imap_$(DB_O) uw_imap_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/trunk/uw_iptraf/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_iptraf/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_iptraf/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_iptraf_SOURCES = run.c uw_iptraf.h uw_iptraf.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_iptraf_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBPCAP_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_iptraf_LDADD = uw_iptraf_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBGTHREAD2_LIBS@ @LIBPCAP_LIBS@
++uw_iptraf_LDADD = uw_iptraf_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @LIBGTHREAD2_LIBS@ @LIBPCAP_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_mssql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mssql/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_mssql/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_mssql_SOURCES = run.c uw_mssql.h uw_mssql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mssql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
++uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_mysql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mysql/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_mysql/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_mysql_SOURCES = run.c uw_mysql.h uw_mysql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mysql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mysql_LDADD = uw_mysql_$(DB_O) uw_mysql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
++uw_mysql_LDADD = uw_mysql_$(DB_O) uw_mysql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_mysqlstats/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_mysqlstats/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_mysqlstats_SOURCES = run.c uw_mysqlstats.h uw_mysqlstats.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mysqlstats_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mysqlstats_LDADD = uw_mysqlstats_$(DB_O) uw_mysqlstats_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
++uw_mysqlstats_LDADD = uw_mysqlstats_$(DB_O) uw_mysqlstats_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_null/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_null/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_null/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -12,7 +12,7 @@
+ 
+ uw_null_SOURCES = run.c uw_null.h uw_null.c $(SPECFILES) $(INITFILES) 
+ uw_null_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_null_LDADD = uw_null_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ $(SOLARISLIBS)
++uw_null_LDADD = uw_null_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_ping/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_ping/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_ping/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -8,7 +8,7 @@
+ 
+ uw_ping_SOURCES = run.c uw_ping.h uw_ping.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_ping_CFLAGS = @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_ping_LDADD = uw_ping_$(DB_O) uw_ping_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBXML2_LIBS@ @LIBGLIB2_LIBS@
++uw_ping_LDADD = uw_ping_$(DB_O) uw_ping_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ @LIBXML2_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_pop3/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_pop3/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_pop3/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_pop3_SOURCES = run.c uw_pop3.h uw_pop3.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_pop3_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_pop3_LDADD = uw_pop3_$(DB_O) uw_pop3_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_pop3_LDADD = uw_pop3_$(DB_O) uw_pop3_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_postgresql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_postgresql/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_postgresql/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_postgresql_SOURCES = run.c uw_postgresql.h uw_postgresql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_postgresql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBPQ_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_postgresql_LDADD = uw_postgresql_$(DB_O) uw_postgresql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBPQ_LIBS@
++uw_postgresql_LDADD = uw_postgresql_$(DB_O) uw_postgresql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBPQ_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_process/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -35,7 +35,7 @@
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+ uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+   $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
+-uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ \
++uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ \
+   @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) ../probes.enum
+
+Modified: upwatch/trunk/uw_purple/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_purple/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_purple/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -8,7 +8,7 @@
+ 
+ uw_purple_SOURCES = run.c uw_purple.h uw_purple.c  $(SPECFILES) $(INITFILES)
+ uw_purple_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_purple_LDADD = uw_purple_$(DB_O) uw_purple_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_purple_LDADD = uw_purple_$(DB_O) uw_purple_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_route/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_route/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_route/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -12,7 +12,7 @@
+ 
+ uw_route_SOURCES = run.c uw_route.h uw_route.c $(SPECFILES) $(INITFILES) 
+ uw_route_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_route_LDADD = uw_route_$(DB_O) uw_route_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
++uw_route_LDADD = uw_route_$(DB_O) uw_route_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_send/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_send/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_send/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -8,7 +8,7 @@
+ 
+ uw_send_SOURCES = run.c uw_send.c uw_send.h uw_send.def $(SPECFILES) $(INITFILES)
+ uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@
++uw_send_LDADD = uw_send_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_setip/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_setip/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_setip/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_setip_SOURCES = run.c uw_setip.h uw_setip.c $(SPECFILES) $(INITFILES)
+ uw_setip_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_setip_LDADD = uw_setip_$(DB_O) uw_setip_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_setip_LDADD = uw_setip_$(DB_O) uw_setip_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_smtp/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_smtp/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_smtp/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_smtp_SOURCES = run.c uw_smtp.h uw_smtp.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_smtp_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_smtp_LDADD = uw_smtp_$(DB_O) uw_smtp_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_smtp_LDADD = uw_smtp_$(DB_O) uw_smtp_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_snmpget/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_snmpget/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_snmpget/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -8,7 +8,7 @@
+ 
+ uw_snmpget_SOURCES = run.c uw_snmpget.h uw_snmpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_snmpget_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_snmpget_LDADD = uw_snmpget_$(DB_O) uw_snmpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBSNMP_LIBS@ @LIBCRYPTO_LIBS@ @LIBGLIB2_LIBS@ 
++uw_snmpget_LDADD = uw_snmpget_$(DB_O) uw_snmpget_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ @LIBSNMP_LIBS@ @LIBCRYPTO_LIBS@ @LIBGLIB2_LIBS@ 
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_syncprobes/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_syncprobes/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_syncprobes/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -8,7 +8,7 @@
+ 
+ uw_syncprobes_SOURCES = run.c uw_syncprobes.h uw_syncprobes.c  $(SPECFILES) $(INITFILES)
+ uw_syncprobes_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_syncprobes_LDADD = uw_syncprobes_$(DB_O) uw_syncprobes_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_syncprobes_LDADD = uw_syncprobes_$(DB_O) uw_syncprobes_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -28,7 +28,7 @@
+ 
+ uw_sysstat_SOURCES = run.c uw_sysstat.c uw_sysstat.h $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_sysstat_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@ @LIBGTHREAD2_CFLAGS@
+-uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) $(LIBOPTS) \
++uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) @LIBOPTS_LIBS@ \
+   $(FREEBSDLIBS) $(SOLARISLIBS) $(LIBSTATGRAB) \
+   $(LIBUPWATCH) @LIBXML2_LIBS@ @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@
+ 
+
+Modified: upwatch/trunk/uw_tcpconnect/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/Makefile.am	2006-10-12 10:50:22 UTC (rev 652)
++++ upwatch/trunk/uw_tcpconnect/Makefile.am	2006-10-18 06:47:02 UTC (rev 653)
+@@ -9,7 +9,7 @@
+ 
+ uw_tcpconnect_SOURCES = run.c uw_tcpconnect.h uw_tcpconnect.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_tcpconnect_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_tcpconnect_LDADD = uw_tcpconnect_$(DB_O) uw_tcpconnect_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
++uw_tcpconnect_LDADD = uw_tcpconnect_$(DB_O) uw_tcpconnect_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000187.html">[Upwatch-commits] r652 - in upwatch/trunk: . common
+</A></li>
+	<LI>Next message: <A HREF="000189.html">[Upwatch-commits] r654 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r617 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r617%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200606061747.k56HlYVj022554%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000152.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r617 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r617%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200606061747.k56HlYVj022554%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r617 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Jun  6 19:47:34 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000152.html">[Upwatch-commits] r618 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#151">[ date ]</a>
+              <a href="thread.html#151">[ thread ]</a>
+              <a href="subject.html#151">[ subject ]</a>
+              <a href="author.html#151">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-06 19:47:27 +0200 (Tue, 06 Jun 2006)
+New Revision: 617
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+The admtemp driver tells us about Internal and External temperature via OpenBSD's hardware sensors sysctls.
+Since this driver will be the only reporting one in a given system we can safely map it to Temp1 and Temp2.
+
+Information provided by Jasper Lievisse Adriaanse
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-05-19 15:41:47 UTC (rev 616)
++++ upwatch/trunk/uw_sysstat/run.c	2006-06-06 17:47:27 UTC (rev 617)
+@@ -139,6 +139,11 @@
+               if(strcmp(s.desc,&quot;Temp1&quot;)==0)  hw.temp1 = value; 
+               if(strcmp(s.desc,&quot;Temp2&quot;)==0)  hw.temp2 = value;
+               if(strcmp(s.desc,&quot;Temp3&quot;)==0)  hw.temp3 = value;
++
++	      // The admtmp driver only tells us about Internal and External temperatures
++              if(strcmp(s.desc,&quot;External Temp&quot;)==0 &amp;&amp; strncmp(s.device,&quot;admtemp&quot;, 7) == 0)  hw.temp1 = value; 
++              if(strcmp(s.desc,&quot;Internal Temp&quot;)==0 &amp;&amp; strncmp(s.device,&quot;admtemp&quot;, 7) == 0)  hw.temp2 = value; 
++
+               break;
+       case SENSOR_FANRPM:
+               if ( debug &gt; 4 ) printf(&quot;Sensor %d is a fan speed sensor\n&quot;, s.num);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000152.html">[Upwatch-commits] r618 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#151">[ date ]</a>
+              <a href="thread.html#151">[ thread ]</a>
+              <a href="subject.html#151">[ subject ]</a>
+              <a href="author.html#151">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

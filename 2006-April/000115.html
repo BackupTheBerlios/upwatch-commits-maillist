@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r584 - in upwatch/trunk: common compat/bb/bbhimport uw_setip uw_syncprobes
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r584%20-%20in%20upwatch/trunk%3A%20common%20compat/bb/bbhimport%20uw_setip%20uw_syncprobes&In-Reply-To=%3C200604132249.k3DMnIaG006739%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000114.html">
+   <LINK REL="Next"  HREF="000116.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r584 - in upwatch/trunk: common compat/bb/bbhimport uw_setip uw_syncprobes</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r584%20-%20in%20upwatch/trunk%3A%20common%20compat/bb/bbhimport%20uw_setip%20uw_syncprobes&In-Reply-To=%3C200604132249.k3DMnIaG006739%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r584 - in upwatch/trunk: common compat/bb/bbhimport uw_setip uw_syncprobes">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 14 00:49:18 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000114.html">[Upwatch-commits] r583 - upwatch/trunk/uw_route
+</A></li>
+        <LI>Next message: <A HREF="000116.html">[Upwatch-commits] r585 - upwatch/trunk/cfg
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#115">[ date ]</a>
+              <a href="thread.html#115">[ thread ]</a>
+              <a href="subject.html#115">[ subject ]</a>
+              <a href="author.html#115">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-14 00:49:15 +0200 (Fri, 14 Apr 2006)
+New Revision: 584
+
+Modified:
+   upwatch/trunk/common/main.c
+   upwatch/trunk/compat/bb/bbhimport/run.c
+   upwatch/trunk/uw_setip/run.c
+   upwatch/trunk/uw_syncprobes/run.c
+Log:
+Kill more warnings.
+
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2006-04-13 22:41:18 UTC (rev 583)
++++ upwatch/trunk/common/main.c	2006-04-13 22:49:15 UTC (rev 584)
+@@ -92,7 +92,7 @@
+ 
+   if (OPT_VALUE_STDERR)  _log2stderr  = TRUE;
+   if (OPT_VALUE_SYSLOG)  _log2syslog  = TRUE;
+-  if (HAVE_OPT(LOGFILE)) _logfilename = OPT_ARG(LOGFILE);
++  if (HAVE_OPT(LOGFILE)) _logfilename = (char *) &amp;OPT_ARG(LOGFILE);
+ 
+   LOG(LOG_NOTICE, &quot;start (Version %s-%s, date %s %s)&quot;, VERSION, RELEASE, __DATE__, __TIME__);
+   LOG(LOG_INFO, &quot;using GCC %s&quot;, __VERSION__);
+
+Modified: upwatch/trunk/compat/bb/bbhimport/run.c
+===================================================================
+--- upwatch/trunk/compat/bb/bbhimport/run.c	2006-04-13 22:41:18 UTC (rev 583)
++++ upwatch/trunk/compat/bb/bbhimport/run.c	2006-04-13 22:49:15 UTC (rev 584)
+@@ -30,8 +30,8 @@
+     return 0;
+   }
+ 
+-  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
+-			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
++			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (!mysql) {
+     printf(&quot;Can't open database\n&quot;);
+     return 0;
+
+Modified: upwatch/trunk/uw_setip/run.c
+===================================================================
+--- upwatch/trunk/uw_setip/run.c	2006-04-13 22:41:18 UTC (rev 583)
++++ upwatch/trunk/uw_setip/run.c	2006-04-13 22:49:15 UTC (rev 584)
+@@ -7,7 +7,7 @@
+ #include &lt;netdb.h&gt;
+ #include &lt;signal.h&gt;
+ #include &lt;string.h&gt;
+-#include &lt;malloc.h&gt;
++#include &lt;stdlib.h&gt;
+ #include &lt;ctype.h&gt;
+ 
+ #include &lt;generic.h&gt;
+@@ -39,8 +39,8 @@
+ {
+   MYSQL *db;
+ 
+-  db = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
+-                     OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  db = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
++                     (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (db) {
+     MYSQL_RES *result;
+ 
+@@ -151,8 +151,8 @@
+ {
+   MYSQL *mysql;
+ 
+-  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
+-			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
++			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (mysql) {
+     gchar buffer[256];
+ 
+
+Modified: upwatch/trunk/uw_syncprobes/run.c
+===================================================================
+--- upwatch/trunk/uw_syncprobes/run.c	2006-04-13 22:41:18 UTC (rev 583)
++++ upwatch/trunk/uw_syncprobes/run.c	2006-04-13 22:49:15 UTC (rev 584)
+@@ -32,8 +32,8 @@
+   MYSQL_ROW row;
+   MYSQL *upwatch;
+ 
+-  upwatch = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
+-                        OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
++  upwatch = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
++                        (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
+   if (!upwatch) return 0;
+ 
+   LOG(LOG_INFO, &quot;syncing..&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000114.html">[Upwatch-commits] r583 - upwatch/trunk/uw_route
+</A></li>
+	<LI>Next message: <A HREF="000116.html">[Upwatch-commits] r585 - upwatch/trunk/cfg
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#115">[ date ]</a>
+              <a href="thread.html#115">[ thread ]</a>
+              <a href="subject.html#115">[ subject ]</a>
+              <a href="author.html#115">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

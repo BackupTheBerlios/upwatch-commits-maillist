@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r548 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r548%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20syslog%20upwatch&In-Reply-To=%3C200604051452.k35EquPN013503%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000078.html">
+   <LINK REL="Next"  HREF="000080.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r548 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r548%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20syslog%20upwatch&In-Reply-To=%3C200604051452.k35EquPN013503%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r548 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Apr  5 16:52:56 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000078.html">[Upwatch-commits] r547 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+        <LI>Next message: <A HREF="000080.html">[Upwatch-commits] r549 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-05 16:52:56 +0200 (Wed, 05 Apr 2006)
+New Revision: 548
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sudo
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sudo
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sudo	2006-04-05 12:23:26 UTC (rev 547)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sudo	2006-04-05 14:52:56 UTC (rev 548)
+@@ -1 +1 @@
+-green [LOGDATE] sudo:\s* [USER] : TTY=[WORD][NUM]* ; PWD=[PATH] ; USER=[USER] ; COMMAND=[PATH] 
++green [LOGDATE] sudo:\s+[USER] : TTY=[WORD][NUM] ; PWD=[PATH] ; USER=[USER] ; COMMAND=[PATH]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-05 12:23:26 UTC (rev 547)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-05 14:52:56 UTC (rev 548)
+@@ -46,5 +46,8 @@
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): st_read: Connection reset by peer
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading OK enter password
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): SIGALRM received
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): read: Interrupted system call
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\):\s*$ 
+ red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Too many connections
+ red [LOGDATE] uw_[WORD][PID] notify\.c\([NUM]\): UPWATCH: probe [WORD] is lagging in processing
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000078.html">[Upwatch-commits] r547 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+	<LI>Next message: <A HREF="000080.html">[Upwatch-commits] r549 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

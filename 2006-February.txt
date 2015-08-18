@@ -1,0 +1,90 @@
+From raarts at berlios.de  Sat Feb 18 23:48:14 2006
+From: raarts at berlios.de (raarts at BerliOS)
+Date: Sat, 18 Feb 2006 23:48:14 +0100
+Subject: [Upwatch-commits] r509 - upwatch/trunk/uw_process
+Message-ID: <200602182248.k1IMmE9A012220@sheep.berlios.de>
+
+Author: raarts
+Date: 2006-02-18 23:48:13 +0100 (Sat, 18 Feb 2006)
+New Revision: 509
+
+Modified:
+   upwatch/trunk/uw_process/iptraf.c
+   upwatch/trunk/uw_process/sysstat.c
+Log:
+Extra error report on insert error
+Remove superfluous '0' value from insert query. Totally messed things up.
+
+
+Modified: upwatch/trunk/uw_process/iptraf.c
+===================================================================
+--- upwatch/trunk/uw_process/iptraf.c	2006-01-04 21:45:35 UTC (rev 508)
++++ upwatch/trunk/uw_process/iptraf.c	2006-02-18 22:48:13 UTC (rev 509)
+@@ -52,7 +52,7 @@
+   if (res->color > def->slotday_max_color) {
+     def->slotday_max_color = res->color;
+   }
+-  sprintf(buf, "(DEFAULT, '%u', '%f', '%f', '0', '%u', '%u', '%f', '%f', '')",
++  sprintf(buf, "(DEFAULT, '%u', '%f', '%f', '%u', '%u', '%f', '%f', '')",
+                def->probeid, def->yellow, def->red, res->stattime, res->color,
+                res->incoming, res->outgoing);
+ 
+
+Modified: upwatch/trunk/uw_process/sysstat.c
+===================================================================
+--- upwatch/trunk/uw_process/sysstat.c	2006-01-04 21:45:35 UTC (rev 508)
++++ upwatch/trunk/uw_process/sysstat.c	2006-02-18 22:48:13 UTC (rev 509)
+@@ -44,6 +44,7 @@
+   if (mysql_errno(t->probe->db) == ER_DUP_ENTRY) {
+     t->seen_before = TRUE;
+   } else if (mysql_errno(t->probe->db)) {
++    LOG(LOG_WARNING, "%s:[%u] %s", "insert into pr_sysstat_raw", mysql_errno(t->probe->db), mysql_error(t->probe->db));
+     return 0; // other failure
+   }
+   return 1; // success
+
+
+
+From raarts at berlios.de  Thu Feb 23 22:59:14 2006
+From: raarts at berlios.de (raarts at BerliOS)
+Date: Thu, 23 Feb 2006 22:59:14 +0100
+Subject: [Upwatch-commits] r510 - upwatch/trunk/uw_sysstat
+Message-ID: <200602232159.k1NLxEEw006847@sheep.berlios.de>
+
+Author: raarts
+Date: 2006-02-23 22:59:14 +0100 (Thu, 23 Feb 2006)
+New Revision: 510
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+(feature) Scanning the logs is pretty CPU intensive. We now
+increase niceness to +5 so we won't bother other processes
+too much.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-02-18 22:48:13 UTC (rev 509)
++++ upwatch/trunk/uw_sysstat/run.c	2006-02-23 21:59:14 UTC (rev 510)
+@@ -10,6 +10,8 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
++#include <sys/resource.h>
+ #include <dirent.h>
+ #include <ctype.h>
+ #include <fcntl.h>
+@@ -303,6 +305,8 @@
+   every = EVERY_SECOND;
+   xmlSetGenericErrorFunc(NULL, UpwatchXmlGenericErrorFunc);
+   sleep(2); // ensure we wait until the next minute
++
++  setpriority(PRIO_PROCESS, 0, 5); // we are not very important - be nice to other processes
+   return 1;
+ }
+ 
+
+
+

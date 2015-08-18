@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r689 - in upwatch/trunk: . uw_mssql
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r689%20-%20in%20upwatch/trunk%3A%20.%20uw_mssql&In-Reply-To=%3C200712191645.lBJGjsw9023622%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000225.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r689 - in upwatch/trunk: . uw_mssql</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r689%20-%20in%20upwatch/trunk%3A%20.%20uw_mssql&In-Reply-To=%3C200712191645.lBJGjsw9023622%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r689 - in upwatch/trunk: . uw_mssql">raarts at mail.berlios.de
+       </A><BR>
+    <I>Wed Dec 19 17:45:54 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000225.html">[Upwatch-commits] r690 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#224">[ date ]</a>
+              <a href="thread.html#224">[ thread ]</a>
+              <a href="subject.html#224">[ subject ]</a>
+              <a href="author.html#224">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-12-19 17:45:53 +0100 (Wed, 19 Dec 2007)
+New Revision: 689
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/uw_mssql/Makefile.am
+   upwatch/trunk/uw_mssql/run.c
+Log:
+Try to make this compile for all incompatible freetds versions,
+those guys apparently change the API at will while we are lunching :(
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2007-11-26 11:13:18 UTC (rev 688)
++++ upwatch/trunk/configure.ac	2007-12-19 16:45:53 UTC (rev 689)
+@@ -593,9 +593,24 @@
+ if test $HAVE_LIBTDS -eq 1
+ then
+ 	LIBTDS_LIBS=-ltds
++	case `grep TDS_VERSION_NO ${FREETDS_DIR:-/usr}/include/tdsver.h` in
++	*0.64*)
++		LIBTDS_CFLAGS=&quot;-DFREETDS_0_64&quot;
++	;;
++	*0.63*)
++		LIBTDS_CFLAGS=&quot;-DFREETDS_0_63&quot;
++	;;
++	*0.62*)
++		LIBTDS_CFLAGS=&quot;-DFREETDS_0_62&quot;
++	;;
++	*)
++		LIBTDS_CFLAGS=&quot;-DFREETDS_PRE_0_62&quot;
++	;;
++	esac
+ fi
+ AM_CONDITIONAL(HAVE_LIBTDS, test $HAVE_LIBTDS -eq 1)
+ AC_SUBST(LIBTDS_LIBS)
++AC_SUBST(LIBTDS_CFLAGS)
+ 
+ # PostgreSQL
+ AC_CHECK_LIB([pq], [PQclear], [HAVE_LIBPQ=1], [HAVE_LIBPQ=0])
+
+Modified: upwatch/trunk/uw_mssql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mssql/Makefile.am	2007-11-26 11:13:18 UTC (rev 688)
++++ upwatch/trunk/uw_mssql/Makefile.am	2007-12-19 16:45:53 UTC (rev 689)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_mssql_SOURCES = run.c uw_mssql.h uw_mssql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_mssql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
++uw_mssql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ @LIBTDS_CFLAGS@ $(AM_CFLAGS)
+ uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_mssql/run.c
+===================================================================
+--- upwatch/trunk/uw_mssql/run.c	2007-11-26 11:13:18 UTC (rev 688)
++++ upwatch/trunk/uw_mssql/run.c	2007-12-19 16:45:53 UTC (rev 689)
+@@ -252,13 +252,22 @@
+   TDSSOCKET *tds;
+   TDSLOGIN *login;
+   TDSCONTEXT *context;
+-  TDSCONNECTINFO *connect_info;
++#if (defined(FREETDS_0_63) || defined(FREETDS_0_64))
++  TDSCONNECTION *connect_info= NULL;
++#else
++  TDSCONNECTINFO *connect_info = NULL;
++#endif
+   int rc;
+ 
+   /* grab a login structure */
+   login = tds_alloc_login();
+ 
++#ifdef FREETDS_0_64
++  context = tds_alloc_context(NULL);
++#else
+   context = tds_alloc_context();
++#endif
++
+   if( context-&gt;locale &amp;&amp; !context-&gt;locale-&gt;date_fmt ) {
+     /* set default in case there's no locale file */
+     context-&gt;locale-&gt;date_fmt = strdup(&quot;%b %e %Y %l:%M%p&quot;);
+@@ -288,11 +297,19 @@
+   if (!connect_info || tds_connect(tds, connect_info) == TDS_FAIL) {
+     gettimeofday(&amp;now, NULL);
+     probe-&gt;connect = ((float) timeval_diff(&amp;now, &amp;start)) * 0.000001;
++#if (defined(FREETDS_0_63) || defined(FREETDS_0_64))
++    tds_free_connection(connect_info);
++#else
+     tds_free_connect(connect_info);
++#endif
+     probe-&gt;msg = strdup(&quot;There was a problem connecting to the server&quot;);
+     goto end;
+   }
++#if (defined(FREETDS_0_63) || defined(FREETDS_0_64))
++  tds_free_connection(connect_info);
++#else
+   tds_free_connect(connect_info);
++#endif
+ 
+   gettimeofday(&amp;now, NULL);
+   probe-&gt;connect = ((float) timeval_diff(&amp;now, &amp;start)) * 0.000001;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000225.html">[Upwatch-commits] r690 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#224">[ date ]</a>
+              <a href="thread.html#224">[ thread ]</a>
+              <a href="subject.html#224">[ subject ]</a>
+              <a href="author.html#224">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

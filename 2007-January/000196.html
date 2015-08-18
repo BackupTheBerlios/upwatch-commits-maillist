@@ -1,0 +1,946 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r661 - in upwatch/trunk: . common doc upwatch	uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r661%20-%20in%20upwatch/trunk%3A%20.%20common%20doc%20upwatch%0A%09uw_process&In-Reply-To=%3C200701162254.l0GMsuW1001672%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000195.html">
+   <LINK REL="Next"  HREF="000197.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r661 - in upwatch/trunk: . common doc upwatch	uw_process</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r661%20-%20in%20upwatch/trunk%3A%20.%20common%20doc%20upwatch%0A%09uw_process&In-Reply-To=%3C200701162254.l0GMsuW1001672%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r661 - in upwatch/trunk: . common doc upwatch	uw_process">raarts at mail.berlios.de
+       </A><BR>
+    <I>Tue Jan 16 23:54:56 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000195.html">[Upwatch-commits] r660 - upwatch/trunk
+</A></li>
+        <LI>Next message: <A HREF="000197.html">[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#196">[ date ]</a>
+              <a href="thread.html#196">[ thread ]</a>
+              <a href="subject.html#196">[ subject ]</a>
+              <a href="author.html#196">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-01-16 23:54:53 +0100 (Tue, 16 Jan 2007)
+New Revision: 661
+
+Added:
+   upwatch/trunk/common/upgrade-for-sms.mysql
+Modified:
+   upwatch/trunk/common/Makefile.am
+   upwatch/trunk/common/probe.tpl
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/admin-guide.pdf
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/installation.xml
+   upwatch/trunk/doc/program-guide.pdf
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/upwatch/pr_bb.c
+   upwatch/trunk/upwatch/pr_bb_cpu.c
+   upwatch/trunk/upwatch/pr_hwstat.c
+   upwatch/trunk/upwatch/pr_iptraf.c
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/pr_sysstat.c
+   upwatch/trunk/upwatch/probe.h
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_process/imap.c
+   upwatch/trunk/uw_process/mssql.c
+   upwatch/trunk/uw_process/mysql.c
+   upwatch/trunk/uw_process/notify.c
+   upwatch/trunk/uw_process/ping.c
+   upwatch/trunk/uw_process/pop3.c
+   upwatch/trunk/uw_process/postgresql.c
+   upwatch/trunk/uw_process/process.c
+   upwatch/trunk/uw_process/snmpget.c
+   upwatch/trunk/uw_process/tcpconnect.c
+Log:
+Support for libgnokii. Now we can connect a
+GSM phone to the server for sending SMS messages.
+
+This should probably be modified in the future,
+to use some sms-daemon, because the way it
+implemented now, uw_process is the only app
+allowed access to the phone.
+
+Use the file upgrade-for-sms.mysql to upgrade 
+your database for the new SMS fields.
+
+Don't forget to give the upwatch user access to
+the serial port, and the uucp lock directory.
+
+
+Modified: upwatch/trunk/common/Makefile.am
+===================================================================
+--- upwatch/trunk/common/Makefile.am	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/common/Makefile.am	2007-01-16 22:54:53 UTC (rev 661)
+@@ -2,5 +2,6 @@
+ 
+ EXTRA_DIST = db.c generic_options.def dbase_options.def \
+   main.c man1.tpl spec.tpl init.tpl minimal_options.def \
+-  probe.tpl probe_generic.def common.h license_gpl.def
++  probe.tpl probe_generic.def common.h license_gpl.def \
++  upgrade-for-sms.mysql
+ 
+
+Modified: upwatch/trunk/common/probe.tpl
+===================================================================
+--- upwatch/trunk/common/probe.tpl	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/common/probe.tpl	2007-01-16 22:54:53 UTC (rev 661)
+@@ -21,6 +21,7 @@
+   contact int unsigned NOT NULL default '1',	-- user field: pointer to contact database
+   notify int unsigned NOT NULL default '1',	-- notifier id
+   email varchar(64) NOT NULL default '',	-- address to send warning email to
++  sms varchar(64) NOT NULL default '',		-- phonenumber(s) to send SMS to
+   delay int unsigned NOT NULL default '1',	-- after this many minutes of red light
+   disable enum('yes', 'no') not null default 'no', -- disable this probe
+   hide enum('yes', 'no') not null default 'no', -- hide probe results from viewing
+
+Added: upwatch/trunk/common/upgrade-for-sms.mysql
+===================================================================
+--- upwatch/trunk/common/upgrade-for-sms.mysql	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/common/upgrade-for-sms.mysql	2007-01-16 22:54:53 UTC (rev 661)
+@@ -0,0 +1,20 @@
++alter table pr_bb_cpu_def add column sms varchar(64) not null default '';
++alter table pr_bb_def add column sms varchar(64) not null default '';
++alter table pr_diskfree_def add column sms varchar(64) not null default '';
++alter table pr_dns_def add column sms varchar(64) not null default '';
++alter table pr_errlog_def add column sms varchar(64) not null default '';
++alter table pr_httpget_def add column sms varchar(64) not null default '';
++alter table pr_hwstat_def add column sms varchar(64) not null default '';
++alter table pr_imap_def add column sms varchar(64) not null default '';
++alter table pr_iptraf_def add column sms varchar(64) not null default '';
++alter table pr_mssql_def add column sms varchar(64) not null default '';
++alter table pr_mysql_def add column sms varchar(64) not null default '';
++alter table pr_mysqlstats_def add column sms varchar(64) not null default '';
++alter table pr_ping_def add column sms varchar(64) not null default '';
++alter table pr_pop3_def add column sms varchar(64) not null default '';
++alter table pr_postgresql_def add column sms varchar(64) not null default '';
++alter table pr_smtp_def add column sms varchar(64) not null default '';
++alter table pr_snmpget_def add column sms varchar(64) not null default '';
++alter table pr_sysstat_def add column sms varchar(64) not null default '';
++alter table pr_tcpconnect_def add column sms varchar(64) not null default '';
++
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/configure.ac	2007-01-16 22:54:53 UTC (rev 661)
+@@ -563,8 +563,17 @@
+ 		AC_MSG_ERROR([You really need libesmtp to compile upwatch server])
+ 	fi
+ 	AC_SUBST(LIBESMTP_LIBS)
++
++	# libgnokii
++	AC_CHECK_LIB([gnokii], [gn_cfg_get], [HAVE_LIBGNOKII=1], [HAVE_LIBGNOKII=0])
++	if test $HAVE_LIBGNOKII -eq 1
++	then
++	        LIBGNOKII_LIBS=-lgnokii
++	fi
++	AC_SUBST(LIBGNOKII_LIBS)
+ fi
+ AM_CONDITIONAL(HAVE_LIBESMTP, test &quot;$HAVE_LIBESMTP&quot; = &quot;1&quot;)
++AM_CONDITIONAL(HAVE_LIBGNOKII, test &quot;$HAVE_LIBGNOKII&quot; = &quot;1&quot;)
+ 
+ # readline
+ AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lncurses)
+
+Modified: upwatch/trunk/doc/admin-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/installation.xml
+===================================================================
+--- upwatch/trunk/doc/installation.xml	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/doc/installation.xml	2007-01-16 22:54:53 UTC (rev 661)
+@@ -31,6 +31,7 @@
+                 &lt;listitem&gt;&lt;para&gt;libpcre 3.9.10&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libncurses 5.2&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libesmtp 1.0.1&lt;/para&gt;&lt;/listitem&gt;
++                &lt;listitem&gt;&lt;para&gt;libgnokii 0.6.12&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libreadline 4.3&lt;/para&gt;&lt;/listitem&gt;
+             &lt;/itemizedlist&gt;
+             &lt;para&gt;Delivered with upwatch are libstatgrab (0.7), xmbmon 2.03, and the State Threads Library (1,4).&lt;/para&gt;
+
+Modified: upwatch/trunk/doc/program-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch/pr_bb.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_bb.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_bb.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -53,7 +53,7 @@
+   if (res-&gt;color == STAT_PURPLE &amp;&amp; res-&gt;probeid) {
+     // find the definition based on the probe id
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                      &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                       &quot;where  id = '%u'&quot;, res-&gt;probeid);
+     if (!result) {
+       g_free(def);
+@@ -88,7 +88,7 @@
+ 
+     // first find the definition based on the serverid
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                      &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                       &quot;where  bbname = '%s' and server = '%u'&quot;, res-&gt;bbname, res-&gt;server);
+     if (!result) {
+       g_free(def);
+@@ -107,7 +107,7 @@
+     LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_bb_def %s created for %s, id = %u&quot;, 
+         res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;bbname, res-&gt;hostname, def-&gt;probeid);
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                     &quot;where  bbname = '%s' and server = '%u'&quot;, res-&gt;bbname, res-&gt;server);
+     if (!result) return(NULL);
+   }
+@@ -123,7 +123,8 @@
+   if (row[1])  def-&gt;contact = atoi(row[1]);
+   strcpy(def-&gt;hide, row[2] ? row[2] : &quot;no&quot;);
+   strcpy(def-&gt;email, row[3] ? row[3] : &quot;&quot;);
+-  if (row[4]) def-&gt;delay = atoi(row[4]);
++  strcpy(def-&gt;sms, row[4] ? row[4] : &quot;&quot;);
++  if (row[4]) def-&gt;delay = atoi(row[5]);
+ 
+   mysql_free_result(result);
+ 
+
+Modified: upwatch/trunk/upwatch/pr_bb_cpu.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_bb_cpu.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_bb_cpu.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -100,7 +100,7 @@
+     strcpy(def-&gt;hide, &quot;no&quot;);
+ 
+     // first find the definition based on the serverid
+-    result = my_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, delay &quot;
++    result = my_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, sms, delay &quot;
+                                     &quot;from pr_%s_def where server = '%u'&quot;, 
+                       res-&gt;name, res-&gt;server);
+     if (!result) {
+@@ -117,7 +117,7 @@
+       def-&gt;probeid = mysql_insert_id(t-&gt;probe-&gt;db);
+       LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_%s_def created for %s, id = %u&quot;, 
+           res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;name, res-&gt;hostname, def-&gt;probeid);
+-      result = my_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, delay &quot;
++      result = my_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, sms, delay &quot;
+                                       &quot;from pr_%s_def where id = '%u'&quot;, 
+                         res-&gt;name, def-&gt;probeid);
+     }
+@@ -135,7 +135,8 @@
+     if (row[3]) def-&gt;contact = atof(row[3]);
+     strcpy(def-&gt;hide, row[4] ? row[4] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[5] ? row[5] : &quot;&quot;);
+-    if (row[6]) def-&gt;delay = atoi(row[6]);
++    strcpy(def-&gt;sms, row[6] ? row[6] : &quot;&quot;);
++    if (row[7]) def-&gt;delay = atoi(row[7]);
+ 
+     mysql_free_result(result);
+     result = my_query(t-&gt;probe-&gt;db, 0, 
+
+Modified: upwatch/trunk/upwatch/pr_hwstat.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_hwstat.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_hwstat.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -114,7 +114,7 @@
+     def-&gt;server = res-&gt;server;
+ 
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay, &quot;
++                      &quot;select id, contact, hide, email, sms, delay, &quot;
+                       &quot;       temp1_yellow, temp1_red, temp2_yellow, temp2_red, &quot;
+                       &quot;       temp3_yellow, temp3_red, rot1_red, rot2_red, rot3_red, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+@@ -139,7 +139,7 @@
+                          res-&gt;name, def-&gt;probeid, mysql_error(t-&gt;probe-&gt;db));
+       }
+       result = my_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, contact, hide, email, delay, &quot;
++                        &quot;select id, contact, hide, email, sms, delay, &quot;
+                         &quot;       temp1_yellow, temp1_red, temp2_yellow, temp2_red, &quot;
+                         &quot;       temp3_yellow, temp3_red, rot1_red, rot2_red, rot3_red, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+@@ -157,17 +157,18 @@
+     if (row[1]) def-&gt;contact  = atoi(row[1]);
+     strcpy(def-&gt;hide, row[2] ? row[2] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[3] ? row[3] : &quot;&quot;);
+-    if (row[4]) def-&gt;delay = atoi(row[4]);
+-    if (row[5]) def-&gt;temp1_yellow = atoi(row[5]);
+-    if (row[6]) def-&gt;temp1_red = atoi(row[6]);
+-    if (row[7]) def-&gt;temp2_yellow = atoi(row[7]);
+-    if (row[8]) def-&gt;temp2_red = atoi(row[8]);
+-    if (row[9]) def-&gt;temp3_yellow = atoi(row[9]);
+-    if (row[10]) def-&gt;temp3_red = atoi(row[10]);
+-    if (row[11]) def-&gt;rot1_red = atoi(row[11]);
+-    if (row[12]) def-&gt;rot2_red = atoi(row[12]);
+-    if (row[13]) def-&gt;rot3_red = atoi(row[13]);
+-    if (row[14]) def-&gt;pgroup = atoi(row[14]);
++    strcpy(def-&gt;email, row[4] ? row[4] : &quot;&quot;);
++    if (row[5]) def-&gt;delay = atoi(row[5]);
++    if (row[6]) def-&gt;temp1_yellow = atoi(row[6]);
++    if (row[7]) def-&gt;temp1_red = atoi(row[7]);
++    if (row[8]) def-&gt;temp2_yellow = atoi(row[8]);
++    if (row[9]) def-&gt;temp2_red = atoi(row[9]);
++    if (row[10]) def-&gt;temp3_yellow = atoi(row[10]);
++    if (row[11]) def-&gt;temp3_red = atoi(row[11]);
++    if (row[12]) def-&gt;rot1_red = atoi(row[12]);
++    if (row[13]) def-&gt;rot2_red = atoi(row[13]);
++    if (row[14]) def-&gt;rot3_red = atoi(row[14]);
++    if (row[15]) def-&gt;pgroup = atoi(row[15]);
+ 
+     mysql_free_result(result);
+ 
+
+Modified: upwatch/trunk/upwatch/pr_iptraf.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_iptraf.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_iptraf.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -100,7 +100,7 @@
+     strcpy(def-&gt;hide, &quot;no&quot;);
+ 
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, server, yellow, red, contact, hide, email, delay, pgroup &quot;
++                      &quot;select id, server, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+                       &quot;where  ipaddress = '%s'&quot;, res-&gt;name, res-&gt;ipaddress);
+     if (!result) return(NULL);
+@@ -146,7 +146,7 @@
+                          res-&gt;name, res-&gt;ipaddress);
+       }
+       result = my_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, server, yellow, red, contact, hide, email, delay, pgroup &quot;
++                        &quot;select id, server, yellow, red, contact, hide, email, sms, lay, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+                         &quot;where  ipaddress = '%s'&quot;, res-&gt;name, res-&gt;ipaddress);
+       if (!result) return(NULL);
+@@ -164,8 +164,9 @@
+     def-&gt;contact  = atof(row[4]);
+     strcpy(def-&gt;hide, row[5] ? row[5] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[6] ? row[6] : &quot;&quot;);
+-    if (row[7]) def-&gt;delay = atoi(row[7]);
+-    if (row[8]) def-&gt;pgroup = atoi(row[8]);
++    strcpy(def-&gt;sms, row[7] ? row[7] : &quot;&quot;);
++    if (row[8]) def-&gt;delay = atoi(row[8]);
++    if (row[9]) def-&gt;pgroup = atoi(row[9]);
+ 
+     mysql_free_result(result);
+ 
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_process.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -180,7 +180,7 @@
+   MYSQL_RES *result;
+   MYSQL_ROW row;
+   time_t now = time(NULL);
+-  char *def_fields = &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, pgroup&quot;;
++  char *def_fields = &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, pgroup&quot;;
+ 
+   def = g_hash_table_lookup(t-&gt;probe-&gt;cache, &amp;res-&gt;probeid);
+   if (def &amp;&amp; def-&gt;stamp &lt; now - (120 + uw_rand(240))) { // older then 2 - 6 minutes?
+@@ -263,8 +263,9 @@
+         if (row[5]) def-&gt;contact   = atof(row[5]);
+         strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+         strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-        if (row[8]) def-&gt;delay = atoi(row[8]);
+-        if (row[9]) def-&gt;pgroup = atoi(row[9]);
++        strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++        if (row[9]) def-&gt;delay = atoi(row[9]);
++        if (row[10]) def-&gt;pgroup = atoi(row[10]);
+       }
+     }
+     mysql_free_result(result);
+@@ -312,7 +313,7 @@
+ 
+   // first find the definition based on the serverid
+   result = my_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_%s_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_%s_def &quot;
+                     &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+   if (!result) {
+     g_free(def);
+@@ -330,7 +331,7 @@
+     LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_%s_def created for %s, id = %u&quot;, 
+         res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;name, res-&gt;hostname, def-&gt;probeid);
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_%s_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_%s_def &quot;
+                     &quot;where  server = '%u'&quot;, res-&gt;server, res-&gt;name);
+     if (!result) return(NULL);
+   }
+@@ -346,7 +347,8 @@
+   if (row[1])  def-&gt;contact = atoi(row[1]);
+   strcpy(def-&gt;hide, row[2] ? row[2] : &quot;no&quot;);
+   strcpy(def-&gt;email, row[3] ? row[3] : &quot;&quot;);
+-  if (row[4]) def-&gt;delay = atoi(row[4]);
++  strcpy(def-&gt;sms, row[4] ? row[4] : &quot;&quot;);
++  if (row[5]) def-&gt;delay = atoi(row[5]);
+ 
+   mysql_free_result(result);
+ 
+
+Modified: upwatch/trunk/upwatch/pr_sysstat.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_sysstat.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/pr_sysstat.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -118,7 +118,7 @@
+     def-&gt;server = res-&gt;server;
+     
+     result = my_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, yellow, red, contact, hide, email, delay, pgroup &quot;
++                      &quot;select id, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+                       &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+     if (!result) return(NULL);
+@@ -142,7 +142,7 @@
+                          res-&gt;name, def-&gt;probeid, mysql_error(t-&gt;probe-&gt;db));
+       }
+       result = my_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, yellow, red, contact, hide, email, delay, pgroup &quot;
++                        &quot;select id, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+                         &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+       if (!result) return(NULL);
+@@ -160,8 +160,9 @@
+     if (row[3]) def-&gt;contact  = atoi(row[3]);
+     strcpy(def-&gt;hide, row[4] ? row[4] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[5] ? row[5] : &quot;&quot;);
+-    if (row[6]) def-&gt;delay = atoi(row[6]);
+-    if (row[7]) def-&gt;pgroup = atoi(row[7]);
++    strcpy(def-&gt;sms, row[6] ? row[6] : &quot;&quot;);
++    if (row[7]) def-&gt;delay = atoi(row[7]);
++    if (row[8]) def-&gt;pgroup = atoi(row[8]);
+ 
+     mysql_free_result(result);
+ 
+
+Modified: upwatch/trunk/upwatch/probe.h
+===================================================================
+--- upwatch/trunk/upwatch/probe.h	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/upwatch/probe.h	2007-01-16 22:54:53 UTC (rev 661)
+@@ -36,6 +36,7 @@
+   guint color; \
+   guint newest; \
+   char email[65]; \
++  char sms[65]; \
+   guint delay; \
+ 
+ struct probe_def {
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/Makefile.am	2007-01-16 22:54:53 UTC (rev 661)
+@@ -8,6 +8,10 @@
+ DEF_LIBESMTP = -DHAVE_LIBESMTP
+ endif
+ 
++if HAVE_LIBGNOKII
++DEF_LIBGNOKII = -DHAVE_LIBGNOKII
++endif
++
+ if HAVE_LIBPQ
+ USE_LIBPQ = postgresql.c
+ DEF_LIBPQ = -DHAVE_LIBPQ
+@@ -34,9 +38,9 @@
+ $(USE_LIBPQ) $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c hwstat.c \
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+ uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+-  $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
++  $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) $(DEF_LIBGNOKII)
+ uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @MYSQL_LIBS@ \
+-  @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
++  @LIBESMTP_LIBS@ @LIBGNOKII_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) ../probes.enum
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_process/imap.c
+===================================================================
+--- upwatch/trunk/uw_process/imap.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/imap.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -39,9 +39,10 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;username = strdup(row[9]);
+-    if (row[10]) def-&gt;password = strdup(row[10]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;username = strdup(row[10]);
++    if (row[11]) def-&gt;password = strdup(row[11]);
+   }
+ }
+ 
+@@ -77,7 +78,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;username, password &quot;,
+   imap_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/mssql.c
+===================================================================
+--- upwatch/trunk/uw_process/mssql.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/mssql.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -41,11 +41,12 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;dbname = strdup(row[9]);
+-    if (row[10]) def-&gt;dbuser = strdup(row[10]);
+-    if (row[9]) def-&gt;dbpasswd = strdup(row[9]);
+-    if (row[10]) def-&gt;query = strdup(row[10]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;dbname = strdup(row[10]);
++    if (row[11]) def-&gt;dbuser = strdup(row[11]);
++    if (row[12]) def-&gt;dbpasswd = strdup(row[12]);
++    if (row[13]) def-&gt;query = strdup(row[13]);
+   }
+ }
+ 
+@@ -85,7 +86,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   mssql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/mysql.c
+===================================================================
+--- upwatch/trunk/uw_process/mysql.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/mysql.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -41,11 +41,12 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;dbname = strdup(row[9]);
+-    if (row[10]) def-&gt;dbuser = strdup(row[10]);
+-    if (row[11]) def-&gt;dbpasswd = strdup(row[11]);
+-    if (row[12]) def-&gt;query = strdup(row[12]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;dbname = strdup(row[10]);
++    if (row[11]) def-&gt;dbuser = strdup(row[11]);
++    if (row[12]) def-&gt;dbpasswd = strdup(row[12]);
++    if (row[13]) def-&gt;query = strdup(row[13]);
+   }
+ }
+ 
+@@ -85,7 +86,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   mysql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/notify.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -60,7 +60,12 @@
+   return(notified);
+ }
+ 
++//*******************************************************************
++// Low level Email functions
++//*******************************************************************
++#if HAVE_LIBESMTP
+ #include &lt;libesmtp.h&gt;
++#endif
+ 
+ #define BUFLEN 8192
+ 
+@@ -159,6 +164,136 @@
+ }
+ 
+ //*******************************************************************
++// Low level SMS functions
++//*******************************************************************
++#if HAVE_LIBGNOKII
++#include &lt;gnokii.h&gt;
++
++static char *lockfile = NULL;
++static struct gn_statemachine state;
++static gn_data data;
++
++static void  gnokii_error_logger(const char *fmt, va_list ap)
++{
++  char buf[512];
++  vsnprintf(buf, sizeof(buf), fmt, ap);
++  LOG(LOG_NOTICE, buf);
++}
++
++static void busterminate(void)
++{
++  gn_sm_functions(GN_OP_Terminate, NULL, &amp;state);
++  if (lockfile) gn_device_unlock(lockfile);
++}
++
++static int businit(void)
++{
++  gn_error error;
++  char *aux;
++  static atexit_registered = 0;
++
++  gn_data_clear(&amp;data);
++
++  aux = gn_cfg_get(gn_cfg_info, &quot;global&quot;, &quot;use_locking&quot;);
++  /* Defaults to 'no' */
++  if (aux &amp;&amp; !strcmp(aux, &quot;yes&quot;)) {
++    lockfile = gn_device_lock(state.config.port_device);
++    if (lockfile == NULL) {
++      LOG(LOG_NOTICE, &quot;Lock file error. Cannot send SMS messages\n&quot;);
++      return 0;
++    }
++  }
++
++  /* register cleanup function */
++  if (!atexit_registered) {
++    atexit_registered = 1;
++    atexit(busterminate);
++  }
++  /* signal(SIGINT, bussignal); */
++
++  /* Initialise the code for the GSM interface. */
++  error = gn_gsm_initialise(&amp;state);
++  if (error != GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;Telephone interface init failed: %s\n&quot;, gn_error_print(error));
++    return 0;
++  }
++  return 1;
++}
++#endif
++
++int sms(char *to, char *msg)
++{
++static int firsttime = 1;
++#if HAVE_LIBGNOKII
++  gn_sms sms;
++  gn_error error;
++  int input_len, i, curpos = 0;
++
++  if (firsttime) {
++    gn_elog_handler = gnokii_error_logger;
++
++    /* Read config file */
++    if (gn_cfg_read_default() &lt; 0)
++      return 0;
++
++    if (!gn_cfg_phone_load(&quot;&quot;, &amp;state))
++      return 0;
++
++    if (businit()) {
++      firsttime = 0;
++    }
++  }
++  input_len = GN_SMS_MAX_LENGTH;
++
++  /* The memory is zeroed here */
++  gn_sms_default_submit(&amp;sms);
++
++  memset(&amp;sms.remote.number, 0, sizeof(sms.remote.number));
++  strncpy(sms.remote.number, to, sizeof(sms.remote.number) - 1);
++  if (sms.remote.number[0] == '+') {
++    sms.remote.type = GN_GSM_NUMBER_International;
++  } else {
++    sms.remote.type = GN_GSM_NUMBER_Unknown;
++  }
++
++  if (!sms.smsc.number[0]) {
++    data.message_center = calloc(1, sizeof(gn_sms_message_center));
++    data.message_center-&gt;id = 1;
++    if (gn_sm_functions(GN_OP_GetSMSCenter, &amp;data, &amp;state) == GN_ERR_NONE) {
++      strcpy(sms.smsc.number, data.message_center-&gt;smsc.number);
++      sms.smsc.type = data.message_center-&gt;smsc.type;
++    } else {
++      LOG(LOG_WARNING, &quot;Cannot read the SMSC number from your phone.&quot;);
++    }
++    free(data.message_center);
++  }
++
++  if (!sms.smsc.type) sms.smsc.type = GN_GSM_NUMBER_Unknown;
++
++  if (curpos != -1) {
++    strcpy(sms.user_data[curpos].u.text, msg);
++    sms.user_data[curpos].type = GN_SMS_DATA_Text;
++    if (!gn_char_def_alphabet(sms.user_data[curpos].u.text))
++      sms.dcs.u.general.alphabet = GN_SMS_DCS_UCS2;
++    sms.user_data[++curpos].type = GN_SMS_DATA_None;
++  }
++
++  data.sms = &sms;
++
++  error = gn_sms_send(&amp;data, &amp;state); /* send it */
++
++  if (error == GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;SMS: %s&quot;, msg);
++    return 1;
++  }
++  LOG(LOG_NOTICE, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
++  if (debug &gt; 3) fprintf(stderr, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
++#endif
++  return 0;
++}
++
++
++//*******************************************************************
+ // Notify user if necessary
+ //*******************************************************************
+ static int do_notification(trx *t)
+@@ -171,9 +306,6 @@
+   char body_probe_def[8192];
+   char msg[8192];
+ 
+-  if (t-&gt;def-&gt;email[0] == 0) {
+-    return(notified);
+-  }
+   servername = realm_server_by_id(t-&gt;res-&gt;realm, t-&gt;def-&gt;server);
+ 
+   if (t-&gt;probe-&gt;notify_mail_subject_extra) {
+@@ -214,7 +346,18 @@
+                    OPT_ARG(FROM_NAME)
+   );
+   free(servername);
+-  notified = mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
++  if (t-&gt;def-&gt;email[0]) {
++    notified |= mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
++  }
++  if (t-&gt;def-&gt;sms[0]) {
++    char *p;
++
++    strcpy(body, t-&gt;def-&gt;sms);
++    p = strtok(body, &quot; ,/&quot;);
++    do {
++      notified |= sms(p, subject);
++    } while ((p = strtok(NULL, &quot; ,/&quot;)) != NULL);
++  }
+   if (notified) {
+     strcpy(t-&gt;res-&gt;notified, &quot;yes&quot;);
+   }
+
+Modified: upwatch/trunk/uw_process/ping.c
+===================================================================
+--- upwatch/trunk/uw_process/ping.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/ping.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -25,8 +25,9 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;count = atoi(row[9]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;count = atoi(row[10]);
+   }
+ }
+ 
+@@ -163,7 +164,7 @@
+   NO_XML_RESULT_NODE,
+   ping_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;count &quot;,
+   ping_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/pop3.c
+===================================================================
+--- upwatch/trunk/uw_process/pop3.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/pop3.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -39,9 +39,10 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;username = strdup(row[9]);
+-    if (row[8]) def-&gt;password = strdup(row[8]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;username = strdup(row[10]);
++    if (row[11]) def-&gt;password = strdup(row[11]);
+   }
+ }
+ 
+@@ -77,7 +78,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;username, password &quot;,
+   pop3_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/postgresql.c
+===================================================================
+--- upwatch/trunk/uw_process/postgresql.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/postgresql.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -41,11 +41,12 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;dbname = strdup(row[9]);
+-    if (row[10]) def-&gt;dbuser = strdup(row[10]);
+-    if (row[9]) def-&gt;dbpasswd = strdup(row[9]);
+-    if (row[10]) def-&gt;query = strdup(row[10]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;dbname = strdup(row[10]);
++    if (row[11]) def-&gt;dbuser = strdup(row[11]);
++    if (row[12]) def-&gt;dbpasswd = strdup(row[12]);
++    if (row[13]) def-&gt;query = strdup(row[13]);
+   }
+ }
+ 
+@@ -85,7 +86,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   postgresql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/process.c
+===================================================================
+--- upwatch/trunk/uw_process/process.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/process.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -531,7 +531,7 @@
+     }
+   }
+ 
+-  if (t-&gt;def-&gt;email[0]) { // if we have an address
++  if (t-&gt;def-&gt;email[0] || t-&gt;def-&gt;sms[0]) { // if we have an address
+     // RETRIEVE LAST HIST ENTRY FOR THIS PROBE
+     get_previous_pr_hist(t);
+ 
+
+Modified: upwatch/trunk/uw_process/snmpget.c
+===================================================================
+--- upwatch/trunk/uw_process/snmpget.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/snmpget.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -41,13 +41,14 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;community = strdup(row[9]);  /* community string for SNMPv1/v2c transactions */
+-    if (row[10]) def-&gt;OID = strdup(row[10]);      /* Object ID */
+-    if (row[11]) def-&gt;dispname = strdup(row[11]); /* Display Name */
+-    if (row[12]) def-&gt;dispunit = strdup(row[12]); /* Display Unit */
+-    if (row[13]) def-&gt;multiplier = atof(row[13]); /* Multiplier for result values */
+-    if (row[14]) strcpy(def-&gt;mode, row[14]);      /* plot absolute or relative values */
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;community = strdup(row[10]);/* community string for SNMPv1/v2c transactions */
++    if (row[11]) def-&gt;OID = strdup(row[11]);      /* Object ID */
++    if (row[12]) def-&gt;dispname = strdup(row[12]); /* Display Name */
++    if (row[13]) def-&gt;dispunit = strdup(row[13]); /* Display Unit */
++    if (row[14]) def-&gt;multiplier = atof(row[14]); /* Multiplier for result values */
++    if (row[15]) strcpy(def-&gt;mode, row[15]);      /* plot absolute or relative values */
+   }
+ }
+ 
+@@ -201,7 +202,7 @@
+   NO_XML_RESULT_NODE,
+   snmpget_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;community, OID, dispname, dispunit, multiplier, mode &quot;,
+   snmpget_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/trunk/uw_process/tcpconnect.c
+===================================================================
+--- upwatch/trunk/uw_process/tcpconnect.c	2007-01-15 23:17:34 UTC (rev 660)
++++ upwatch/trunk/uw_process/tcpconnect.c	2007-01-16 22:54:53 UTC (rev 661)
+@@ -25,8 +25,9 @@
+     if (row[5]) def-&gt;contact  = atof(row[5]);
+     strcpy(def-&gt;hide, row[6] ? row[6] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[7] ? row[7] : &quot;&quot;);
+-    if (row[8]) def-&gt;delay = atoi(row[8]);
+-    if (row[9]) def-&gt;port = atoi(row[9]);
++    strcpy(def-&gt;sms, row[8] ? row[8] : &quot;&quot;);
++    if (row[9]) def-&gt;delay = atoi(row[9]);
++    if (row[10]) def-&gt;port = atoi(row[10]);
+   }
+ }
+ 
+@@ -60,7 +61,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;port &quot;,
+   tcpconnect_set_def_fields,
+   NO_GET_DEF,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000195.html">[Upwatch-commits] r660 - upwatch/trunk
+</A></li>
+	<LI>Next message: <A HREF="000197.html">[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#196">[ date ]</a>
+              <a href="thread.html#196">[ thread ]</a>
+              <a href="subject.html#196">[ subject ]</a>
+              <a href="author.html#196">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r522 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r522%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603070901.k2791W9h025290%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000052.html">
+   <LINK REL="Next"  HREF="000054.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r522 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r522%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603070901.k2791W9h025290%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r522 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Mar  7 10:01:32 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000052.html">[Upwatch-commits] r521 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+        <LI>Next message: <A HREF="000054.html">[Upwatch-commits] r523 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-07 10:01:11 +0100 (Tue, 07 Mar 2006)
+New Revision: 522
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+More log regexes.
+
+It's not easy getting green...
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-03-07 09:01:11 UTC (rev 522)
+@@ -1,3 +1,3 @@
+ green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+-green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] (afi [NUM]) reaches [NUM], max [NUM]
++green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+ green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-03-07 09:01:11 UTC (rev 522)
+@@ -664,6 +664,8 @@
+ green [LOGDATE] kernel: Zapata Telephony Interface Unloaded
+ green [LOGDATE] kernel: zapping low mappings\.
+ green [LOGDATE] kernel: zone\([NUM]\): [NUM] pages\.
++ignore [LOGDATE] kernel: MD5 Hash NOT expected but found ([IPADDR], [NUM])-&gt;([IPADDR], [NUM])
++ignore [LOGDATE] kernel: printk: [NUM] messages suppressed.
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-06 13:00:13 UTC (rev 521)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-03-07 09:01:11 UTC (rev 522)
+@@ -28,6 +28,8 @@
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading fileblock
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading PASS response
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [IPADDR]: timeout reading USER string
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading OK enter password
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): [PATH]: empty file
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): reading info from database
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): running [NUM] probes
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000052.html">[Upwatch-commits] r521 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+	<LI>Next message: <A HREF="000054.html">[Upwatch-commits] r523 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

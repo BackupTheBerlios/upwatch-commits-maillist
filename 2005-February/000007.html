@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r477 - in upwatch/trunk: . config
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r477%20-%20in%20upwatch/trunk%3A%20.%20config&In-Reply-To=%3C200502191247.j1JCllRH008963%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000006.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r477 - in upwatch/trunk: . config</H1>
+    <B>Ron Arts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r477%20-%20in%20upwatch/trunk%3A%20.%20config&In-Reply-To=%3C200502191247.j1JCllRH008963%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r477 - in upwatch/trunk: . config">raarts at sheep.berlios.de
+       </A><BR>
+    <I>Sat Feb 19 13:47:47 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000006.html">[Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#7">[ date ]</a>
+              <a href="thread.html#7">[ thread ]</a>
+              <a href="subject.html#7">[ subject ]</a>
+              <a href="author.html#7">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2005-02-19 13:47:46 +0100 (Sat, 19 Feb 2005)
+New Revision: 477
+
+Added:
+   upwatch/trunk/config/upwatch-common.mysql
+Removed:
+   upwatch/trunk/config/upwatch-probe.mysql
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/config/Makefile.am
+Log:
+Renamed upwatch-probe to upwatch-common in preparation
+for importing the database needed for the web functions
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/Makefile.am	2005-02-19 12:47:46 UTC (rev 477)
+@@ -90,10 +90,10 @@
+ 	autogen -b upwatch -Dconfargs=&quot;$(CONFARGS)&quot; upwatch-spec.def
+ 	rm -f force
+ 
+-upwatch-base.mysql: config/upwatch-realm.mysql config/upwatch-probe.mysql uw_*/probe.def_mysql
++upwatch-base.mysql: config/upwatch-realm.mysql config/upwatch-common.mysql uw_*/probe.def_mysql
+ 	cat $+ &gt; upwatch-base.mysql
+ 
+-upwatch-full.mysql: config/upwatch-full.mysql config/upwatch-probe.mysql uw_*/probe.def_mysql uw_*/probe.raw_mysql
++upwatch-full.mysql: config/upwatch-full.mysql config/upwatch-common.mysql uw_*/probe.def_mysql uw_*/probe.raw_mysql
+ 	cat $+ &gt; upwatch-full.mysql
+ 
+ force:
+
+Modified: upwatch/trunk/config/Makefile.am
+===================================================================
+--- upwatch/trunk/config/Makefile.am	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/Makefile.am	2005-02-19 12:47:46 UTC (rev 477)
+@@ -10,7 +10,7 @@
+ 	echo  &gt;&gt; result.dtd
+ 	cat ../uw_*/probe.dtd  &gt;&gt; result.dtd
+ 
+-EXTRA_DIST = upwatch.conf upwatch-probe.mysql upwatch-realm.mysql upwatch-full.mysql result.dtd-base \
++EXTRA_DIST = upwatch.conf upwatch-common.mysql upwatch-realm.mysql upwatch-full.mysql result.dtd-base \
+   logrotate sysconfig cron.daily upwatch.redhat upwatch.suse
+ 
+ install-data-local:
+
+Copied: upwatch/trunk/config/upwatch-common.mysql (from rev 476, upwatch/trunk/config/upwatch-probe.mysql)
+===================================================================
+--- upwatch/trunk/config/upwatch-probe.mysql	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/upwatch-common.mysql	2005-02-19 12:47:46 UTC (rev 477)
+@@ -0,0 +1,26 @@
++
++
++--
++-- Table structure for table 'probe'
++--
++
++CREATE TABLE probe (
++  id int unsigned NOT NULL auto_increment,
++  name varchar(24) NOT NULL default '',
++  description varchar(128) NOT NULL default '',
++  expiry enum('yes','no') NOT NULL default 'yes',
++  addbyhand enum('yes','no') NOT NULL default 'yes',
++  fuse enum('yes','no') NOT NULL default 'no',
++  addbycust enum('yes','no') NOT NULL default 'no',
++  lagwarn enum('yes','no') NOT NULL default 'no',
++  maxlag int unsigned NOT NULL default '300',
++  lastseen int unsigned NOT NULL default '0',
++  class varchar(16) NOT NULL default '',
++  graphgroup varchar(16) NOT NULL default '',
++  graphtypes varchar(255) NOT NULL default 'default',
++  comment text NOT NULL,
++  PRIMARY KEY  (id)
++) TYPE=MyISAM;
++
++INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
++
+
+Deleted: upwatch/trunk/config/upwatch-probe.mysql
+===================================================================
+--- upwatch/trunk/config/upwatch-probe.mysql	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/upwatch-probe.mysql	2005-02-19 12:47:46 UTC (rev 477)
+@@ -1,24 +0,0 @@
+---
+--- Table structure for table 'probe'
+---
+-
+-CREATE TABLE probe (
+-  id int unsigned NOT NULL auto_increment,
+-  name varchar(24) NOT NULL default '',
+-  description varchar(128) NOT NULL default '',
+-  expiry enum('yes','no') NOT NULL default 'yes',
+-  addbyhand enum('yes','no') NOT NULL default 'yes',
+-  fuse enum('yes','no') NOT NULL default 'no',
+-  addbycust enum('yes','no') NOT NULL default 'no',
+-  lagwarn enum('yes','no') NOT NULL default 'no',
+-  maxlag int unsigned NOT NULL default '300',
+-  lastseen int unsigned NOT NULL default '0',
+-  class varchar(16) NOT NULL default '',
+-  graphgroup varchar(16) NOT NULL default '',
+-  graphtypes varchar(255) NOT NULL default 'default',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id)
+-) TYPE=MyISAM;
+-
+-INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000006.html">[Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#7">[ date ]</a>
+              <a href="thread.html#7">[ thread ]</a>
+              <a href="subject.html#7">[ subject ]</a>
+              <a href="author.html#7">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

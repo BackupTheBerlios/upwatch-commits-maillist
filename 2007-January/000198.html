@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r663 - in upwatch/trunk: . common upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r663%20-%20in%20upwatch/trunk%3A%20.%20common%20upwatch&In-Reply-To=%3C200701271938.l0RJcwhW020327%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000197.html">
+   <LINK REL="Next"  HREF="000199.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r663 - in upwatch/trunk: . common upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r663%20-%20in%20upwatch/trunk%3A%20.%20common%20upwatch&In-Reply-To=%3C200701271938.l0RJcwhW020327%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r663 - in upwatch/trunk: . common upwatch">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sat Jan 27 20:38:58 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000197.html">[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat
+</A></li>
+        <LI>Next message: <A HREF="000199.html">[Upwatch-commits] r664 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-27 20:38:58 +0100 (Sat, 27 Jan 2007)
+New Revision: 663
+
+Modified:
+   upwatch/trunk/common/main.c
+   upwatch/trunk/configure.ac
+   upwatch/trunk/upwatch/generic.h
+Log:
+options.h is really autoopts/options.h nowadays. Only real old autogen versions put it in include/.
+Simplify the search and do the right thing when including to keep life simple.
+
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2007-01-27 00:23:17 UTC (rev 662)
++++ upwatch/trunk/common/main.c	2007-01-27 19:38:58 UTC (rev 663)
+@@ -4,7 +4,7 @@
+ #include &lt;string.h&gt;
+ #include &lt;signal.h&gt;
+ #include &lt;limits.h&gt;
+-#include &lt;options.h&gt;
++#include &lt;autoopts/options.h&gt;
+ #include &lt;time.h&gt;
+ #include &lt;sys/time.h&gt;
+ #include &lt;sys/types.h&gt;
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2007-01-27 00:23:17 UTC (rev 662)
++++ upwatch/trunk/configure.ac	2007-01-27 19:38:58 UTC (rev 663)
+@@ -283,16 +283,12 @@
+ 
+   for incpath in /usr/include $LIBOPTS_INC_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
+   do
+-    if test -f $incpath/options.h
++    if test -f $incpath/libopts/options.h
+     then
+       LIBOPTS_CFLAGS=&quot;-I${incpath}&quot;
+     fi
+-    if test -f $incpath/autoopts/options.h
++    if test -f $incpath/autogen/libopts/options.h
+     then
+-      LIBOPTS_CFLAGS=&quot;-I${incpath}/autoopts&quot;
+-    fi
+-    if test -f $incpath/autogen/options.h
+-    then
+       LIBOPTS_CFLAGS=&quot;-I${incpath}/autogen&quot;
+     fi
+   done
+
+Modified: upwatch/trunk/upwatch/generic.h
+===================================================================
+--- upwatch/trunk/upwatch/generic.h	2007-01-27 00:23:17 UTC (rev 662)
++++ upwatch/trunk/upwatch/generic.h	2007-01-27 19:38:58 UTC (rev 663)
+@@ -22,7 +22,7 @@
+ #define sleep st_sleep
+ #endif
+ 
+-#include &lt;options.h&gt;
++#include &lt;autoopts/options.h&gt;
+ 
+ #define max(x,y) ((x) &gt; (y) ? (x) : (y))
+ #define min(x,y) ((x) &lt; (y) ? (x) : (y))
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000197.html">[Upwatch-commits] r662 - upwatch/trunk/uw_sysstat
+</A></li>
+	<LI>Next message: <A HREF="000199.html">[Upwatch-commits] r664 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#198">[ date ]</a>
+              <a href="thread.html#198">[ thread ]</a>
+              <a href="subject.html#198">[ subject ]</a>
+              <a href="author.html#198">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,781 @@
+From raarts at sheep.berlios.de  Thu Jan 27 16:40:17 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Thu, 27 Jan 2005 16:40:17 +0100
+Subject: [Upwatch-commits] TEST EMAIL
+Message-ID: <41F90B61.mailHL5118QO7@sheep.berlios.de>
+
+just testing...
+
+
+From raarts at sheep.berlios.de  Thu Jan 27 16:52:11 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Thu, 27 Jan 2005 16:52:11 +0100
+Subject: [Upwatch-commits] r471 - in upwatch/trunk: . compat/bb/bbhimport compat/sometests/setproctitle doc uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_notify uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_smtp uw_snmpget uw_syncprobes uw_tcpconnect
+Message-ID: <200501271552.j0RFqBZR025274@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-01-27 16:52:11 +0100 (Thu, 27 Jan 2005)
+New Revision: 471
+
+Modified:
+   upwatch/trunk/INSTALL
+   upwatch/trunk/compat/bb/bbhimport/bbhimport.def
+   upwatch/trunk/compat/sometests/setproctitle/cmd_options.def
+   upwatch/trunk/compat/sometests/setproctitle/setproctitle.def
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/admin-guide.xml
+   upwatch/trunk/doc/client-about.xml
+   upwatch/trunk/doc/client-install.xml
+   upwatch/trunk/doc/installation.xml
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/program-guide.xml
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/doc/upwatch.xml
+   upwatch/trunk/upwatch-spec.tpl
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_httpget/probe.def
+   upwatch/trunk/uw_imap/uw_imap.def
+   upwatch/trunk/uw_iptraf/probe.def
+   upwatch/trunk/uw_mssql/probe.def
+   upwatch/trunk/uw_mysql/uw_mysql.def
+   upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+   upwatch/trunk/uw_notify/uw_notify.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_ping/uw_ping.def
+   upwatch/trunk/uw_pop3/probe.def
+   upwatch/trunk/uw_postgresql/probe.def
+   upwatch/trunk/uw_process/uw_process.def
+   upwatch/trunk/uw_process/uw_tnot.def
+   upwatch/trunk/uw_purple/uw_purple.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_smtp/uw_smtp.def
+   upwatch/trunk/uw_snmpget/probe.def
+   upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+   upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+Log:
+Replace proprietary license with GPL.
+Improved checking for some libraries (mysql, snmp, esmtp, openssl)
+Other doc changes to reflect GPL-ing.
+
+
+Modified: upwatch/trunk/INSTALL
+===================================================================
+--- upwatch/trunk/INSTALL	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/INSTALL	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,85 +1 @@
+-This is version 0.1 of UpWatch, a device monitoring and statistics
+-framework. UpWatch boasts extendability, extreme speed and scalability,
+-useful statistics and graphs, and a web interface.
+-
+-Currently it uses PHP, MySQL, and the daemons are written in C.
+-
+- 
+-Basic Installation
+-==================
+-
+-First the requirements. If you install from source, you need the 
+-following packages including any development files like headers 
+-and libraries:
+-
+-- gcc, make, autoconf etcetera.
+-- autogen + autoopts
+-- gzip 
+-- glib2
+-- gnet
+-- mysql
+-- curl
+-- libpcap
+-- libnet
+-
+-If you install the RPM you need to install the following rpm's:
+-
+-- gnet
+-- glib2
+-- mysql
+-- curl
+-- libpcap
+-- libnet
+-
+-1a. Supposing you install the RPM's: that's easy.
+-
+-	rpm -Uvh upwatch-*.rpm
+-
+-    This also creates the upwatch user and installs
+-    the php scripts in its home directory.
+-    Now skip to step 2.
+-
+-1b. Installing from source needs the standard sequence:
+-
+-	./configure
+-	make 
+-	make install
+-
+-    Next create the upwatch user:
+-
+-	/usr/sbin/adduser upwatch
+-
+-    or something along those lines. And copy the php 
+-    tree to some place you want to have it.
+-
+-2.  Now you must create the database. For this we provide a mysql 
+-    script. Create the database:
+-
+-	mysqladmin create upwatch
+- 	mysql < config/upwatch.mysql
+-
+-    You may want to tweak the mysql creation script to change some
+-    tables from MySQL into InnoDB. This will give you transactions.
+-    Usually this is not necessary.
+-
+-
+-Configuration
+-=============
+-
+-Configuration is done through config scripts /etc/upwatch.conf
+-and per-probe configs in /etc/upwatch.d. Read the manpages 
+-for more info. Every long option can also be entered in the
+-config files.
+-
+-In case of problems, look in /var/log/upwatch.log.
+-
+-
+-Testing
+-=======
+-
+-The easiest test is to create a ping probe. Point your browser
+-to the php entry page. Create a host, on that host create a 
+-ping probe. The host will be ping'ed by uw_ping within a 
+-couple of minutes. 
+-
+-
++See doc/upwatch.txt
+
+Modified: upwatch/trunk/compat/bb/bbhimport/bbhimport.def
+===================================================================
+--- upwatch/trunk/compat/bb/bbhimport/bbhimport.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/compat/bb/bbhimport/bbhimport.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -23,5 +23,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/compat/sometests/setproctitle/cmd_options.def
+===================================================================
+--- upwatch/trunk/compat/sometests/setproctitle/cmd_options.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/compat/sometests/setproctitle/cmd_options.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -23,5 +23,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/compat/sometests/setproctitle/setproctitle.def
+===================================================================
+--- upwatch/trunk/compat/sometests/setproctitle/setproctitle.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/compat/sometests/setproctitle/setproctitle.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -23,5 +23,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/configure.ac	2005-01-27 15:52:11 UTC (rev 471)
+@@ -233,10 +233,14 @@
+ 
+ for libpath in /usr/lib/mysql $MYSQL_LIB_PREFIX /usr/local/lib/mysql /usr/lib /cygdrive/c/mysql/lib/opt
+ do
+-  if test -f $libpath/libmysqlclient.so -o -f $libpath/mysqlclient.lib
+-  then
+-    MYSQL_LIBS="-L${libpath} -lmysqlclient"
+-  fi
++  for file in $libpath/libmysqlclient.so* $libpath/mysqlclient.lib
++  do
++    if test -f $file
++    then
++      MYSQL_LIBS="-L${libpath} -lmysqlclient"
++      break
++    fi
++  done
+ done
+ 
+ # path to mysql includes
+@@ -440,15 +444,6 @@
+ AM_CONDITIONAL(HAVE_LIBCRYPTO, test $HAVE_LIBCRYPTO -eq 1)
+ AC_SUBST(LIBCRYPTO_LIBS)
+ 
+-# libesmtp
+-AC_CHECK_LIB([esmtp], [smtp_create_session], [HAVE_LIBESMTP=1], [HAVE_LIBESMTP=0])
+-if test $HAVE_LIBESMTP -eq 1
+-then
+-        LIBESMTP_LIBS=-lesmtp
+-fi
+-AM_CONDITIONAL(HAVE_LIBESMTP, test $HAVE_LIBESMTP -eq 1)
+-AC_SUBST(LIBESMTP_LIBS)
+-
+ # snmp
+ AC_CHECK_LIB([snmp], [snmp_errno], [HAVE_LIBSNMP=1], [HAVE_LIBSNMP=0], -lcrypto)
+ if test $HAVE_LIBSNMP -eq 1
+@@ -464,6 +459,20 @@
+ AM_CONDITIONAL(HAVE_LIBSNMP, test $HAVE_LIBSNMP -eq 1)
+ AC_SUBST(LIBSNMP_LIBS)
+ 
++if test "$enable_server" = "yes"
++then
++	# libesmtp
++	AC_CHECK_LIB([esmtp], [smtp_create_session], [HAVE_LIBESMTP=1], [HAVE_LIBESMTP=0])
++	if test $HAVE_LIBESMTP -eq 1
++	then
++	        LIBESMTP_LIBS=-lesmtp
++	else
++		AC_MSG_ERROR([You really need libesmtp to compile upwatch server])
++	fi
++	AM_CONDITIONAL(HAVE_LIBESMTP, test $HAVE_LIBESMTP -eq 1)
++	AC_SUBST(LIBESMTP_LIBS)
++fi
++
+ # readline
+ AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lncurses)
+ if test $HAVE_LIBREADLINE -eq 1
+@@ -551,7 +560,7 @@
+ then
+   if test $HAVE_LIBSNMP -eq 0
+   then
+-    echo "* snmp libs not found, no SNMP support"
++    echo "* snmp libs (or openssl libs) not found, no SNMP support"
+   fi
+ 
+   if test $HAVE_LIBTDS -eq 0
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.xml
+===================================================================
+--- upwatch/trunk/doc/admin-guide.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/admin-guide.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -15,8 +15,8 @@
+             <surname>Arts</surname>
+         </author>
+         <copyright>
+-            <year>2002-2004</year>
+-            <holder>UpWatch BV, The Netherlands</holder>
++            <year>2002-2005</year>
++            <holder>NeoNova BV, The Netherlands</holder>
+         </copyright>
+     </bookinfo>
+     <preface>
+
+Modified: upwatch/trunk/doc/client-about.xml
+===================================================================
+--- upwatch/trunk/doc/client-about.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/client-about.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -17,8 +17,8 @@
+     geek-like look, we felt we couldn't give the URL to our customers. Third problem
+     was integration with our backoffice.</para>
+     <para>At the same time yours truly was thinking about setting up a commercial
+-    service for monitoring servers remotely. All this culminated into UpWatch. So lets get 
+-    straight to the ..</para>
++    service for monitoring servers remotely. All this culminated into UpWatch, which was 
++    further developed by NeoNova BV. So let's get straight to the ..</para>
+     </sect1>
+     <sect1 id="Upwatch_features">
+     <title>Features</title>
+
+Modified: upwatch/trunk/doc/client-install.xml
+===================================================================
+--- upwatch/trunk/doc/client-install.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/client-install.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -4,7 +4,7 @@
+     <title>Installation</title>
+     <sect1 id="Getting_upwatch">
+         <title>Getting upwatch</title>
+-        <para> The UpWatch clients can be download from www.upwatch.com. They are available in the
++        <para> The UpWatch clients can be download from www.upwatch.org. They are available in the
+           following formats:</para>
+           <itemizedlist>
+           <listitem><para>as a tar.gz file, including sources for every supported platform</para></listitem>
+
+Modified: upwatch/trunk/doc/installation.xml
+===================================================================
+--- upwatch/trunk/doc/installation.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/installation.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -4,11 +4,7 @@
+     <title>Installation</title>
+     <sect1 id="Getting_upwatch">
+         <title>Getting upwatch</title>
+-        <para> Currently, the UpWatch server and monitoring software are not released, and 
+-        are not allowed to be distributed. The only way to get it, is through written 
+-        permission of UpWatch BV.</para>
+-        <para> If you aquired that, you will either receive access to CVS, or will receive a
+-            tar.gz file, or .RPM's.</para>
++        <para>The Upwatch software is released under the GPL on 26 Jan 2005.  </para>
+ 	 <para>Building and installing upwatch is not for the faint of heart. It uses lots of external
+           libraries which may or may not be available on your platform. I myself use Redhat 8/9
+           for development, and test compilation on RH7, Fedora Core 1/2, SuSE8.2, Solaris, 
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.xml
+===================================================================
+--- upwatch/trunk/doc/program-guide.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/program-guide.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -29,8 +29,8 @@
+             <surname>Arts</surname>
+         </author>
+         <copyright>
+-            <year>2002-2004</year>
+-            <holder>UpWatch BV, The Netherlands</holder>
++            <year>2002-2005</year>
++            <holder>NeoNova BV, The Netherlands</holder>
+         </copyright>
+     </bookinfo>
+     <preface>
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.xml
+===================================================================
+--- upwatch/trunk/doc/upwatch.xml	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/doc/upwatch.xml	2005-01-27 15:52:11 UTC (rev 471)
+@@ -15,8 +15,8 @@
+             <surname>Arts</surname>
+         </author>
+         <copyright>
+-            <year>2002-2004</year>
+-            <holder>UpWatch BV, The Netherlands</holder>
++            <year>2002-2005</year>
++            <holder>NeoNova BV, The Netherlands</holder>
+         </copyright>
+     </bookinfo>
+     <preface>
+
+Modified: upwatch/trunk/upwatch-spec.tpl
+===================================================================
+--- upwatch/trunk/upwatch-spec.tpl	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/upwatch-spec.tpl	2005-01-27 15:52:11 UTC (rev 471)
+@@ -193,7 +193,7 @@
+ %package monitor
+ Summary: UpWatch - programs for a monitoring station
+ Group: Application/Monitoring
+-Copyright: Proprietary - Redistribution Prohibited
++Copyright: GPL
+ Requires: upwatch
+ [+ FOR monitorprog +]# [+monitorprog+] requirements:
+ [+ include (string-append (get "monitorprog") "/" (get "monitorprog") ".spec-requires") ;+]
+@@ -253,7 +253,7 @@
+ %package server
+ Summary: UpWatch - server programs
+ Group: Application/Monitoring
+-Copyright: Proprietary - Redistribution Prohibited
++Copyright: GPL
+ Requires: upwatch 
+ [+ FOR serverprog +]# [+serverprog+] requirements:
+ [+ include (string-append (get "serverprog") "/" (get "serverprog") ".spec-requires") ;+]
+@@ -320,7 +320,7 @@
+ %package [+ extraprog +]
+ Summary: UpWatch - monitor IP traffic
+ Group: Application/Monitoring
+-Copyright: Proprietary - Redistribution Prohibited
++Copyright: GPL
+ Requires: upwatch libxml2 >= 2.4.19 libpcap glib2 >= 2.0.4
+ 
+ %description [+ extraprog +]
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_accept/uw_accept.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -76,5 +76,5 @@
+ 
+ #include dbase_options.def
+ #include ../common/generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -76,5 +76,5 @@
+ };
+ 
+ #include ../common/generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_dns/uw_dns.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -112,5 +112,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_httpget/probe.def
+===================================================================
+--- upwatch/trunk/uw_httpget/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_httpget/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions mysql;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "httpget";
+
+Modified: upwatch/trunk/uw_imap/uw_imap.def
+===================================================================
+--- upwatch/trunk/uw_imap/uw_imap.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_imap/uw_imap.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -93,5 +93,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_iptraf/probe.def
+===================================================================
+--- upwatch/trunk/uw_iptraf/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_iptraf/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions mysql;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "iptraf";
+
+Modified: upwatch/trunk/uw_mssql/probe.def
+===================================================================
+--- upwatch/trunk/uw_mssql/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_mssql/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions mssql;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "mssql";
+
+Modified: upwatch/trunk/uw_mysql/uw_mysql.def
+===================================================================
+--- upwatch/trunk/uw_mysql/uw_mysql.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_mysql/uw_mysql.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -93,4 +93,4 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+
+Modified: upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -92,5 +92,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_notify/uw_notify.def
+===================================================================
+--- upwatch/trunk/uw_notify/uw_notify.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_notify/uw_notify.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -176,5 +176,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_null/uw_null.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -80,5 +80,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_ping/uw_ping.def
+===================================================================
+--- upwatch/trunk/uw_ping/uw_ping.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_ping/uw_ping.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -123,5 +123,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_pop3/probe.def
+===================================================================
+--- upwatch/trunk/uw_pop3/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_pop3/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions pop3;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "pop3";
+
+Modified: upwatch/trunk/uw_postgresql/probe.def
+===================================================================
+--- upwatch/trunk/uw_postgresql/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_postgresql/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions postgresql;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "postgresql";
+
+Modified: upwatch/trunk/uw_process/uw_process.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_process.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_process/uw_process.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -215,5 +215,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_process/uw_tnot.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_tnot.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_process/uw_tnot.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -246,5 +246,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_purple/uw_purple.def
+===================================================================
+--- upwatch/trunk/uw_purple/uw_purple.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_purple/uw_purple.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -59,5 +59,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_route/uw_route.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -100,5 +100,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_smtp/uw_smtp.def
+===================================================================
+--- upwatch/trunk/uw_smtp/uw_smtp.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_smtp/uw_smtp.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -93,5 +93,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_snmpget/probe.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/probe.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_snmpget/probe.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -1,6 +1,6 @@
+ AutoGen Definitions mysql;
+ #include probe_generic.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+ probe = {
+   name = "snmpget";
+
+Modified: upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+===================================================================
+--- upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -59,5 +59,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2005-01-25 10:53:29 UTC (rev 470)
++++ upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2005-01-27 15:52:11 UTC (rev 471)
+@@ -93,5 +93,5 @@
+ 
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_proprietary.def
++#include license_gpl.def
+ 
+
+
+
+From raarts at sheep.berlios.de  Sun Jan 30 18:48:59 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Sun, 30 Jan 2005 18:48:59 +0100
+Subject: [Upwatch-commits] r472 - in upwatch/trunk: . doc
+Message-ID: <200501301748.j0UHmxj6021028@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-01-30 18:48:52 +0100 (Sun, 30 Jan 2005)
+New Revision: 472
+
+Modified:
+   upwatch/trunk/RELEASE
+   upwatch/trunk/VERSION
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/admin-guide.html
+   upwatch/trunk/doc/admin-guide.pdf
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/program-guide.html
+   upwatch/trunk/doc/program-guide.pdf
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/upwatch.html
+   upwatch/trunk/doc/upwatch.pdf
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/doc/upwatch.xsl
+Log:
+Bumped VERSION to 0.98 RELEASE to 0
+Made doc to copmile again.
+
+
+Modified: upwatch/trunk/RELEASE
+===================================================================
+--- upwatch/trunk/RELEASE	2005-01-27 15:52:11 UTC (rev 471)
++++ upwatch/trunk/RELEASE	2005-01-30 17:48:52 UTC (rev 472)
+@@ -1 +1 @@
+-29
++0
+
+Modified: upwatch/trunk/VERSION
+===================================================================
+--- upwatch/trunk/VERSION	2005-01-27 15:52:11 UTC (rev 471)
++++ upwatch/trunk/VERSION	2005-01-30 17:48:52 UTC (rev 472)
+@@ -1 +1 @@
+-0.97
++0.98
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-01-27 15:52:11 UTC (rev 471)
++++ upwatch/trunk/configure.ac	2005-01-30 17:48:52 UTC (rev 472)
+@@ -1,5 +1,5 @@
+ # Process this file with autoconf to produce a configure script.
+-AC_INIT(upwatch, 0.95, bugs at upwatch.com)
++AC_INIT(upwatch, 0.98, bugs at upwatch.com)
+ AC_CONFIG_SRCDIR(upwatch/spool.c)
+ VERSION=`cat VERSION`
+ RELEASE=`cat RELEASE`
+
+Modified: upwatch/trunk/doc/admin-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.xsl
+===================================================================
+--- upwatch/trunk/doc/upwatch.xsl	2005-01-27 15:52:11 UTC (rev 471)
++++ upwatch/trunk/doc/upwatch.xsl	2005-01-30 17:48:52 UTC (rev 472)
+@@ -5,7 +5,7 @@
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 version="1.0">
+ 
+-<xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/html/docbook.xsl"/>
++<xsl:import href="/usr/share/apps/ksgmltools2/docbook/xsl/html/docbook.xsl"/>
+ 
+ <xsl:import href="style.xsl"/>
+ 
+
+
+

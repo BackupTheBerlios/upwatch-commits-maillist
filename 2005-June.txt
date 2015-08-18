@@ -1,0 +1,318 @@
+From wijnand at sheep.berlios.de  Tue Jun 21 21:09:44 2005
+From: wijnand at sheep.berlios.de (Wijnand Wiersma at BerliOS)
+Date: Tue, 21 Jun 2005 21:09:44 +0200
+Subject: [Upwatch-commits] r480 - in upwatch/trunk: . st-1.4 util uw_sysstat
+Message-ID: <200506211909.j5LJ9ifp031468@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-06-21 21:09:41 +0200 (Tue, 21 Jun 2005)
+New Revision: 480
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/st-1.4/Makefile.am
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_sysstat/Makefile.am
+Log:
+First cut at NetBSD client support.
+I don't know if it actually builds on the 2.0.X series. This port was done on a NetBSD 3 beta (xen) and libstatgrab failed to build.
+It does work however if you install libstatgrab via pkgsrc and update Makefile.am.libs 
+
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-03-25 20:56:55 UTC (rev 479)
++++ upwatch/trunk/configure.ac	2005-06-21 19:09:41 UTC (rev 480)
+@@ -74,6 +74,23 @@
+     CFLAGS="${CFLAGS} -I/usr/local/include"
+     LDFLAGS="-L/usr/local/lib"
+     ;;
++  *-*-netbsd*) 
++    netbsd=true
++    if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if test "$datadir" = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if test "$sysconfdir" = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if test "$sharedstatedir" = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if test "$localstatedir" = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if test "$libdir" = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
++    if test "$includedir" = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
++    if test "$infodir" = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    CFLAGS="${CFLAGS} -I/usr/local/include -I/usr/pkg/include"
++    LDFLAGS="-L/usr/local/lib -L/usr/pkg/lib"
++    ;;
+   *-*-solaris*)
+     solaris=true
+     if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+@@ -112,6 +129,7 @@
+ 
+ AM_CONDITIONAL(LINUX, test x$linux = xtrue)
+ AM_CONDITIONAL(FREEBSD, test x$freebsd = xtrue)
++AM_CONDITIONAL(NETBSD, test x$netbsd = xtrue)
+ AM_CONDITIONAL(SOLARIS, test x$solaris = xtrue)
+ AM_CONDITIONAL(CYGWIN, test x$cygwin = xtrue)
+ 
+@@ -228,6 +246,10 @@
+ then
+   LIBOPTS=/usr/local/lib64/libopts.a
+ fi
++if test -f /usr/pkg/lib/libopts.a
++then
++  LIBOPTS=/usr/pkg/lib/libopts.a
++fi
+ AC_SUBST(LIBOPTS)
+ 
+ ################## MYSQL
+
+Modified: upwatch/trunk/st-1.4/Makefile.am
+===================================================================
+--- upwatch/trunk/st-1.4/Makefile.am	2005-03-25 20:56:55 UTC (rev 479)
++++ upwatch/trunk/st-1.4/Makefile.am	2005-06-21 19:09:41 UTC (rev 480)
+@@ -6,6 +6,9 @@
+ if FREEBSD
+ MYCFLAGS = -DFREEBSD
+ endif
++if NETBSD
++MYCFLAGS = -DNETBSD
++endif
+ if SOLARIS
+ MYCFLAGS = -DSOLARIS
+ endif
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2005-03-25 20:56:55 UTC (rev 479)
++++ upwatch/trunk/util/Makefile.am	2005-06-21 19:09:41 UTC (rev 480)
+@@ -14,6 +14,10 @@
+ FREEBSDLIBS = -lkvm -ldevstat
+ endif
+ 
++if NETBSD
++NETLIBS = -lkvm -ldevstat
++endif
++
+ if SOLARIS
+ SOLARISLIBS = -lkstat -ldevinfo -lsocket -lnsl
+ endif
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2005-03-25 20:56:55 UTC (rev 479)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2005-06-21 19:09:41 UTC (rev 480)
+@@ -10,6 +10,10 @@
+ FREEBSDLIBS = -lkvm -ldevstat
+ endif
+ 
++if NETBSD
++NETLIBS = -lkvm -ldevstat
++endif
++
+ if XMBMON
+ XMBMON_LIB = ../xmbmon203/xmbmon.a
+ XMBMON_CFLAGS = -DUSE_XMBMON -I../xmbmon203
+
+
+
+From wijnand at sheep.berlios.de  Tue Jun 21 21:39:55 2005
+From: wijnand at sheep.berlios.de (Wijnand Wiersma at BerliOS)
+Date: Tue, 21 Jun 2005 21:39:55 +0200
+Subject: [Upwatch-commits] r481 - upwatch/trunk
+Message-ID: <200506211939.j5LJdtQg000624@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-06-21 21:39:54 +0200 (Tue, 21 Jun 2005)
+New Revision: 481
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Allow configure to find mysql when it has been installed via pkgsrc.
+
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-06-21 19:09:41 UTC (rev 480)
++++ upwatch/trunk/configure.ac	2005-06-21 19:39:54 UTC (rev 481)
+@@ -261,7 +261,7 @@
+ )
+ AC_SUBST(MYSQL_LIB_PREFIX)
+ 
+-for libpath in /usr/lib/mysql $MYSQL_LIB_PREFIX /usr/local/lib/mysql /usr/lib /cygdrive/c/mysql/lib/opt
++for libpath in /usr/lib/mysql $MYSQL_LIB_PREFIX /usr/local/lib/mysql /usr/lib /cygdrive/c/mysql/lib/opt /usr/pkg/lib/mysql
+ do
+   for file in $libpath/libmysqlclient.so* $libpath/mysqlclient.lib
+   do
+@@ -281,7 +281,7 @@
+ )
+ AC_SUBST(MYSQL_INC_PREFIX)
+ 
+-for incpath in /usr/include/mysql $MYSQL_LIB_PREFIX /usr/local/include/mysql /cygdrive/c/mysql/include
++for incpath in /usr/include/mysql $MYSQL_LIB_PREFIX /usr/local/include/mysql /cygdrive/c/mysql/include /usr/pkg/include/mysql
+ do
+   if test -f $incpath/mysql.h
+   then
+
+
+
+From wijnand at sheep.berlios.de  Tue Jun 21 23:00:12 2005
+From: wijnand at sheep.berlios.de (Wijnand Wiersma at BerliOS)
+Date: Tue, 21 Jun 2005 23:00:12 +0200
+Subject: [Upwatch-commits] r482 - in upwatch/trunk: uw_dns uw_ping uw_process
+Message-ID: <200506212100.j5LL0CnR005887@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-06-21 23:00:04 +0200 (Tue, 21 Jun 2005)
+New Revision: 482
+
+Modified:
+   upwatch/trunk/uw_dns/run.c
+   upwatch/trunk/uw_ping/run.c
+   upwatch/trunk/uw_process/run.c
+Log:
+Some extra files need to be included to compile on (Net)BSD. This does not break Linux.
+It should work on Solaris, since I have those header files on my workstation.
+
+
+Modified: upwatch/trunk/uw_dns/run.c
+===================================================================
+--- upwatch/trunk/uw_dns/run.c	2005-06-21 19:39:54 UTC (rev 481)
++++ upwatch/trunk/uw_dns/run.c	2005-06-21 21:00:04 UTC (rev 482)
+@@ -4,6 +4,8 @@
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
++#include <netinet/in_systm.h>
++#include <netinet/ip.h>
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ 
+
+Modified: upwatch/trunk/uw_ping/run.c
+===================================================================
+--- upwatch/trunk/uw_ping/run.c	2005-06-21 19:39:54 UTC (rev 481)
++++ upwatch/trunk/uw_ping/run.c	2005-06-21 21:00:04 UTC (rev 482)
+@@ -4,6 +4,8 @@
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
++#include <netinet/in_systm.h>
++#include <netinet/ip.h>
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ 
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2005-06-21 19:39:54 UTC (rev 481)
++++ upwatch/trunk/uw_process/run.c	2005-06-21 21:00:04 UTC (rev 482)
+@@ -3,6 +3,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/wait.h>
++#include <sys/signal.h>
+ #include <unistd.h>
+ #include "uw_process_glob.h"
+ 
+
+
+
+From wijnand at sheep.berlios.de  Wed Jun 22 00:10:27 2005
+From: wijnand at sheep.berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 22 Jun 2005 00:10:27 +0200
+Subject: [Upwatch-commits] r483 - upwatch/trunk/upwatch
+Message-ID: <200506212210.j5LMARoR011062@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-06-22 00:10:25 +0200 (Wed, 22 Jun 2005)
+New Revision: 483
+
+Modified:
+   upwatch/trunk/upwatch/Makefile.am
+Log:
+Make sure the right make binary is used by using $(MAKE)
+This avoids unpleasant surprises on systems where make is BSD make
+
+
+Modified: upwatch/trunk/upwatch/Makefile.am
+===================================================================
+--- upwatch/trunk/upwatch/Makefile.am	2005-06-21 21:00:04 UTC (rev 482)
++++ upwatch/trunk/upwatch/Makefile.am	2005-06-21 22:10:25 UTC (rev 483)
+@@ -25,7 +25,7 @@
+  ../uw_sysstat/probe.res_h ../uw_smtp/probe.res_h ../uw_tcpconnect/probe.res_h ../uw_mysqlstats/probe.res_h
+ 
+ %/probe.res_h:
+-	( cd $(@:%/probe.res_h=%) ; make probe.res_h )
++	( cd $(@:%/probe.res_h=%) ; $(MAKE) probe.res_h )
+ endif
+ 
+ libupwatch_a_SOURCES = $(sources)
+
+
+
+From wijnand at sheep.berlios.de  Thu Jun 23 19:49:07 2005
+From: wijnand at sheep.berlios.de (Wijnand Wiersma at BerliOS)
+Date: Thu, 23 Jun 2005 19:49:07 +0200
+Subject: [Upwatch-commits] r484 - upwatch/trunk/upwatch
+Message-ID: <200506231749.j5NHn7jw000382@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-06-23 19:49:04 +0200 (Thu, 23 Jun 2005)
+New Revision: 484
+
+Modified:
+   upwatch/trunk/upwatch/Makefile.am
+Log:
+./uw_acceptbb/probe.res_h was mentioned twice
+
+
+
+Modified: upwatch/trunk/upwatch/Makefile.am
+===================================================================
+--- upwatch/trunk/upwatch/Makefile.am	2005-06-21 22:10:25 UTC (rev 483)
++++ upwatch/trunk/upwatch/Makefile.am	2005-06-23 17:49:04 UTC (rev 484)
+@@ -19,7 +19,7 @@
+ if ENABLE_SERVER
+ pr_process.c: probe.h
+ 
+-probe.h: ../uw_acceptbb/probe.res_h  ../uw_acceptbb/probe.res_h ../uw_httpget/probe.res_h \
++probe.h: ../uw_acceptbb/probe.res_h  ../uw_httpget/probe.res_h \
+  ../uw_imap/probe.res_h ../uw_iptraf/probe.res_h ../uw_mssql/probe.res_h ../uw_mysql/probe.res_h \
+  ../uw_ping/probe.res_h ../uw_pop3/probe.res_h ../uw_postgresql/probe.res_h ../uw_snmpget/probe.res_h \
+  ../uw_sysstat/probe.res_h ../uw_smtp/probe.res_h ../uw_tcpconnect/probe.res_h ../uw_mysqlstats/probe.res_h
+
+
+
+From wijnand at nedbsd.nl  Thu Jun 23 21:24:09 2005
+From: wijnand at nedbsd.nl (Wijnand Wiersma)
+Date: Thu, 23 Jun 2005 21:24:09 +0200
+Subject: [Upwatch-commits] r480 - in upwatch/trunk: . st-1.4 util
+	uw_sysstat
+In-Reply-To: <200506211909.j5LJ9ifp031468@sheep.berlios.de>
+References: <200506211909.j5LJ9ifp031468@sheep.berlios.de>
+Message-ID: <1119554648.3912.11.camel@kamahl>
+
+On Tue, 2005-06-21 at 21:09, Wijnand Wiersma at BerliOS wrote:
+> Author: wijnand
+> Date: 2005-06-21 21:09:41 +0200 (Tue, 21 Jun 2005)
+> New Revision: 480
+> 
+> Modified:
+>    upwatch/trunk/configure.ac
+>    upwatch/trunk/st-1.4/Makefile.am
+>    upwatch/trunk/util/Makefile.am
+>    upwatch/trunk/uw_sysstat/Makefile.am
+> Log:
+> First cut at NetBSD client support.
+> I don't know if it actually builds on the 2.0.X series. This port was done on a NetBSD 3 beta (xen) and libstatgrab failed to build.
+> It does work however if you install libstatgrab via pkgsrc and update Makefile.am.libs 
+
+I can confirm now it actually builds on NetBSD 2.0.2 without custom libstatgrab tweaking.
+
+
+
+

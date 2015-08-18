@@ -1,0 +1,225 @@
+From raarts at mail.berlios.de  Mon Jul  2 10:10:46 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Mon, 2 Jul 2007 10:10:46 +0200
+Subject: [Upwatch-commits] r682 - in upwatch/trunk: config uw_send uw_sysstat
+Message-ID: <200707020810.l628AkNB011487@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-07-02 10:10:45 +0200 (Mon, 02 Jul 2007)
+New Revision: 682
+
+Modified:
+   upwatch/trunk/config/upwatch.conf
+   upwatch/trunk/uw_send/uw_send.def
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+uw_sysstat and uw_send would not start if they encountered
+database options. Fixed.
+
+
+Modified: upwatch/trunk/config/upwatch.conf
+===================================================================
+--- upwatch/trunk/config/upwatch.conf	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/config/upwatch.conf	2007-07-02 08:10:45 UTC (rev 682)
+@@ -25,10 +25,10 @@
+ spooldir /var/spool/upwatch
+ 
+ # connect to database
+-dbtype mysql
+-dbhost 1.1.1.1
+-dbport 3306
+-dbname dummy
+-dbuser username
+-dbpasswd password
++#dbtype mysql
++#dbhost 1.1.1.1
++#dbport 3306
++#dbname dummy
++#dbuser username
++#dbpasswd password
+ 
+
+Modified: upwatch/trunk/uw_send/uw_send.def
+===================================================================
+--- upwatch/trunk/uw_send/uw_send.def	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/uw_send/uw_send.def	2007-07-02 08:10:45 UTC (rev 682)
+@@ -147,3 +147,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
++
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2007-06-01 12:24:54 UTC (rev 681)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2007-07-02 08:10:45 UTC (rev 682)
+@@ -247,3 +247,5 @@
+ 
+ #include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
++
+
+
+
+From raarts at mail.berlios.de  Tue Jul 10 21:45:38 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Tue, 10 Jul 2007 21:45:38 +0200
+Subject: [Upwatch-commits] r683 - in upwatch/trunk: common doc
+Message-ID: <200707101945.l6AJjcFv019263@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-07-10 21:45:37 +0200 (Tue, 10 Jul 2007)
+New Revision: 683
+
+Modified:
+   upwatch/trunk/common/main.c
+   upwatch/trunk/doc/Makefile.am
+   upwatch/trunk/doc/program-guide.txt
+Log:
+Ignore xmllint exit value.
+The newer autogen versions chekc if options are allowed or not.
+Our use is based on the fact that unknown options are skipped.
+So we had a problem. This fix restores the old autogen behaviour.
+
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2007-07-02 08:10:45 UTC (rev 682)
++++ upwatch/trunk/common/main.c	2007-07-10 19:45:37 UTC (rev 683)
+@@ -83,6 +83,10 @@
+   }
+   //fprintf(stderr, "%s\n", progname);
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   umask(002); // all created files must be group-writable
+   arg_ct = optionProcess( &progOptions, argc, newArgv );
+   argc -= arg_ct;
+
+Modified: upwatch/trunk/doc/Makefile.am
+===================================================================
+--- upwatch/trunk/doc/Makefile.am	2007-07-02 08:10:45 UTC (rev 682)
++++ upwatch/trunk/doc/Makefile.am	2007-07-10 19:45:37 UTC (rev 683)
+@@ -30,7 +30,7 @@
+ endif
+ 
+ upwatch.html: ${UPWATCH_SOURCE}
+-	xmllint --valid --noout upwatch.xml
++	-xmllint --valid --noout upwatch.xml
+ 	-${XSLTPROC} --nonet -o upwatch.html upwatch.xsl upwatch.xml
+ 	touch upwatch.html
+ 
+@@ -46,7 +46,7 @@
+ 	touch upwatch.pdf
+ 
+ admin-guide.html: ${ADMIN_SOURCE}
+-	xmllint --valid --noout admin-guide.xml
++	-xmllint --valid --noout admin-guide.xml
+ 	-${XSLTPROC} --nonet -o admin-guide.html upwatch.xsl admin-guide.xml
+ 	touch admin-guide.html
+ 
+@@ -59,7 +59,7 @@
+ 	touch admin-guide.pdf
+ 
+ program-guide.html: ${PROGRAM_SOURCE}
+-	xmllint --valid --noout program-guide.xml
++	-xmllint --valid --noout program-guide.xml
+ 	-${XSLTPROC} --nonet -o program-guide.html upwatch.xsl program-guide.xml
+ 	touch program-guide.html
+ 
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+
+
+From raarts at mail.berlios.de  Tue Jul 10 22:02:58 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Tue, 10 Jul 2007 22:02:58 +0200
+Subject: [Upwatch-commits] r684 - upwatch/trunk/util
+Message-ID: <200707102002.l6AK2wl7020436@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-07-10 22:02:57 +0200 (Tue, 10 Jul 2007)
+New Revision: 684
+
+Modified:
+   upwatch/trunk/util/chklog.c
+   upwatch/trunk/util/ctime.c
+   upwatch/trunk/util/slot.c
+   upwatch/trunk/util/uwq.c
+Log:
+I thought I had all instances of this, but had to add more.
+
+
+Modified: upwatch/trunk/util/chklog.c
+===================================================================
+--- upwatch/trunk/util/chklog.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/chklog.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -22,6 +22,10 @@
+     progname = argv[0];
+   }
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/ctime.c
+===================================================================
+--- upwatch/trunk/util/ctime.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/ctime.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -12,6 +12,10 @@
+   int c, idx=0;
+   char number[40];
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/slot.c
+===================================================================
+--- upwatch/trunk/util/slot.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/slot.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -12,6 +12,10 @@
+   gulong lowest, highest;
+   char start[40], end[40];
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/uwq.c
+===================================================================
+--- upwatch/trunk/util/uwq.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/uwq.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -24,6 +24,10 @@
+     progname = argv[0];
+   }
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+
+

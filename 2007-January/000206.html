@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r671 - upwatch/libdbi/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r671%20-%20upwatch/libdbi/uw_process&In-Reply-To=%3C200701281344.l0SDi7oM006815%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000205.html">
+   <LINK REL="Next"  HREF="000207.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r671 - upwatch/libdbi/uw_process</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r671%20-%20upwatch/libdbi/uw_process&In-Reply-To=%3C200701281344.l0SDi7oM006815%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r671 - upwatch/libdbi/uw_process">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sun Jan 28 14:44:07 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000205.html">[Upwatch-commits] r670 - upwatch/libdbi/common
+</A></li>
+        <LI>Next message: <A HREF="000207.html">[Upwatch-commits] r672 - upwatch/libdbi/uw_syncprobes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-28 14:44:05 +0100 (Sun, 28 Jan 2007)
+New Revision: 671
+
+Modified:
+   upwatch/libdbi/uw_process/bb_cpu.c
+   upwatch/libdbi/uw_process/generic_ct.c
+   upwatch/libdbi/uw_process/httpget.c
+   upwatch/libdbi/uw_process/hwstat.c
+   upwatch/libdbi/uw_process/mysqlstats.c
+   upwatch/libdbi/uw_process/ping.c
+   upwatch/libdbi/uw_process/process.c
+   upwatch/libdbi/uw_process/snmpget.c
+   upwatch/libdbi/uw_process/sysstat.c
+Log:
+dbi_conn_quote_string alread adds '' around the string so don't put them in the format string but do set them when there was no string to quote.
+
+fixes lots of SQL errors, but uw_process (the only one I am currently testing) is still not working.
+
+
+Modified: upwatch/libdbi/uw_process/bb_cpu.c
+===================================================================
+--- upwatch/libdbi/uw_process/bb_cpu.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/bb_cpu.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -45,13 +45,13 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_bb_cpu_raw &quot;
+                     &quot;set    probe = '%u', stattime = '%u', color = '%u', loadavg = '%f', &quot;
+-                    &quot;       user = '%u',  idle = '%u', free = '%u', used = '%u', message = '%s'&quot;,
++                    &quot;       user = '%u',  idle = '%u', free = '%u', used = '%u', message = %s&quot;,
+                     def-&gt;probeid, res-&gt;stattime, res-&gt;color, res-&gt;loadavg,
+                     res-&gt;user, res-&gt;idle, res-&gt;free, res-&gt;used, escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/generic_ct.c
+===================================================================
+--- upwatch/libdbi/uw_process/generic_ct.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/generic_ct.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -33,14 +33,14 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_%s_raw &quot;
+                     &quot;set    probe = '%u', yellow = '%f', red = '%f', stattime = '%u', color = '%u', &quot;
+                     &quot;       connect = '%f', total = '%f', &quot;
+-                    &quot;       message = '%s' &quot;,
++                    &quot;       message = %s &quot;,
+                     res-&gt;name, def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;connect, res-&gt;total, escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/httpget.c
+===================================================================
+--- upwatch/libdbi/uw_process/httpget.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/httpget.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -26,14 +26,14 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_httpget_raw &quot;
+                     &quot;set    probe = '%u', yellow = '%f', red = '%f', stattime = '%u', color = '%u', &quot;
+                     &quot;       lookup = '%f', connect = '%f', pretransfer = '%f', total = '%f', &quot;
+-                    &quot;       message = '%s' &quot;,
++                    &quot;       message = %s &quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;lookup, res-&gt;connect, res-&gt;pretransfer, res-&gt;total, escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/hwstat.c
+===================================================================
+--- upwatch/libdbi/uw_process/hwstat.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/hwstat.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -26,7 +26,7 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+@@ -36,7 +36,7 @@
+                     &quot;       rot1 = '%d', rot2 = '%d', rot3 = '%d', &quot;
+                     &quot;       vc0 = '%f', vc1 = '%f', v33 = '%f', &quot; 
+                     &quot;       v50p = '%f', v12p = '%f', v12n = '%f', v50n = '%f', &quot;
+-                    &quot;       message = '%s'&quot;,
++                    &quot;       message = %s&quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;temp1, res-&gt;temp2, res-&gt;temp3, 
+                     res-&gt;rot1, res-&gt;rot2, res-&gt;rot3, 
+
+Modified: upwatch/libdbi/uw_process/mysqlstats.c
+===================================================================
+--- upwatch/libdbi/uw_process/mysqlstats.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/mysqlstats.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -26,14 +26,14 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_mysqlstats_raw &quot;
+                     &quot;set    probe = '%u', yellow = '%f', red = '%f', stattime = '%u', color = '%u', &quot;
+                     &quot;       selectq = '%u', insertq = '%u', updateq = '%u', deleteq = '%u', &quot;
+-                    &quot;       message = '%s' &quot;,
++                    &quot;       message = %s &quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;selectq, res-&gt;insertq, res-&gt;updateq, res-&gt;deleteq,escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/ping.c
+===================================================================
+--- upwatch/libdbi/uw_process/ping.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/ping.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -60,13 +60,13 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+ 
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_ping_raw &quot;
+                     &quot;set    probe = '%u', yellow = '%f', red = '%f', stattime = '%u', color = '%u', &quot;
+-                    &quot;       average = '%f', lowest = '%f', highest = '%f', message = '%s'&quot;,
++                    &quot;       average = '%f', lowest = '%f', highest = '%f', message = %s&quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;average, res-&gt;lowest, res-&gt;highest, escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/process.c
+===================================================================
+--- upwatch/libdbi/uw_process/process.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/process.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -144,9 +144,9 @@
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+ 
+     if (t-&gt;res-&gt;color != prv-&gt;color) {
+-      sprintf(&amp;qry[strlen(qry)], &quot;, message = '%s'&quot;, escmsg);
++      sprintf(&amp;qry[strlen(qry)], &quot;, message = %s&quot;, escmsg);
+     } else if (t-&gt;probe-&gt;fuse) {
+-      sprintf(&amp;qry[strlen(qry)], &quot;, message = concat(message,'%s')&quot;, escmsg);
++      sprintf(&amp;qry[strlen(qry)], &quot;, message = concat(message,%s)&quot;, escmsg);
+     }
+     free(escmsg);
+   }
+@@ -172,13 +172,13 @@
+     escmsg = strdup(t-&gt;res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+ 
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_status &quot;
+                     &quot;set    class =  '%u', probe = '%u', stattime = '%u', expires = '%u', &quot;
+-                    &quot;       color = '%u', server = '%u', message = '%s', &quot;
++                    &quot;       color = '%u', server = '%u', message = %s, &quot;
+                     &quot;       contact = '%u', hide = '%s'&quot;,
+                     t-&gt;probe-&gt;class, t-&gt;def-&gt;probeid, t-&gt;res-&gt;stattime, t-&gt;res-&gt;expires, 
+                     t-&gt;def-&gt;color, t-&gt;def-&gt;server, escmsg, t-&gt;def-&gt;contact, t-&gt;def-&gt;hide);
+@@ -198,13 +198,13 @@
+     escmsg = strdup(t-&gt;res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+ 
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_hist &quot;
+                     &quot;set    server = '%u', class = '%u', probe = '%u', stattime = '%u', &quot;
+-                    &quot;       prv_color = '%d', color = '%d', message = '%s', contact = '%u', &quot;
++                    &quot;       prv_color = '%d', color = '%d', message = %s, contact = '%u', &quot;
+                     &quot;       hide = '%s', pgroup = '%u'&quot;,
+                     t-&gt;def-&gt;server, t-&gt;probe-&gt;class, t-&gt;def-&gt;probeid, t-&gt;res-&gt;stattime,
+                     /* (t-&gt;res-&gt;received &gt; t-&gt;res-&gt;expires) ? STAT_PURPLE : */ prv-&gt;color, 
+
+Modified: upwatch/libdbi/uw_process/snmpget.c
+===================================================================
+--- upwatch/libdbi/uw_process/snmpget.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/snmpget.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -85,14 +85,14 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+                     &quot;insert into pr_snmpget_raw &quot;
+                     &quot;set    probe = '%u', yellow = '%f', red = '%f', stattime = '%u', color = '%u', &quot;
+                     &quot;       value = '%f', &quot;
+-                    &quot;       message = '%s' &quot;,
++                    &quot;       message = %s &quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;value, escmsg);
+   g_free(escmsg);
+
+Modified: upwatch/libdbi/uw_process/sysstat.c
+===================================================================
+--- upwatch/libdbi/uw_process/sysstat.c	2007-01-28 00:54:29 UTC (rev 670)
++++ upwatch/libdbi/uw_process/sysstat.c	2007-01-28 13:44:05 UTC (rev 671)
+@@ -26,7 +26,7 @@
+     escmsg = strdup(res-&gt;message);
+     dbi_conn_quote_string(t-&gt;probe-&gt;db, &amp;escmsg);
+   } else {
+-    escmsg = strdup(&quot;&quot;);
++    escmsg = strdup(&quot;''&quot;);
+   }
+     
+   result = db_query(t-&gt;probe-&gt;db, 0,
+@@ -35,7 +35,7 @@
+                     &quot;       loadavg = '%f', user = '%u', system = '%u', idle = '%u', &quot;
+                     &quot;       swapin = '%u', swapout = '%u', blockin = '%u', blockout = '%u', &quot;
+                     &quot;       swapped = '%u', free = '%u', buffered = '%u', cached = '%u', &quot;
+-                    &quot;       used = '%u', systemp = '%d', message = '%s'&quot;,
++                    &quot;       used = '%u', systemp = '%d', message = %s&quot;,
+                     def-&gt;probeid, def-&gt;yellow, def-&gt;red, res-&gt;stattime, res-&gt;color, 
+                     res-&gt;loadavg,   res-&gt;user, res-&gt;system, res-&gt;idle,
+                     res-&gt;swapin, res-&gt;swapout, res-&gt;blockin, res-&gt;blockout,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000205.html">[Upwatch-commits] r670 - upwatch/libdbi/common
+</A></li>
+	<LI>Next message: <A HREF="000207.html">[Upwatch-commits] r672 - upwatch/libdbi/uw_syncprobes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

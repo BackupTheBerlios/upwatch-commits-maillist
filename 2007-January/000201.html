@@ -1,0 +1,2450 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r665 - in upwatch/libdbi: . cfg common	compat/bb/bbhimport doc upwatch util uw_accept uw_acceptbb	uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql	uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql	uw_process uw_purple uw_route uw_send uw_setip uw_smtp	uw_snmpget uw_syncprobes uw_sysstat uw_sysstat/uw_sysstat.d/maillog	uw_sysstat/uw_sysstat.d/syslog uw_tcpconnect
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r665%20-%20in%20upwatch/libdbi%3A%20.%20cfg%20common%0A%09compat/bb/bbhimport%20doc%20upwatch%20util%20uw_accept%20uw_acceptbb%0A%09uw_dns%20uw_httpget%20uw_imap%20uw_iptraf%20uw_mssql%20uw_mysql%0A%09uw_mysqlstats%20uw_null%20uw_ping%20uw_pop3%20uw_postgresql%0A%09uw_process%20uw_purple%20uw_route%20uw_send%20uw_setip%20uw_smtp%0A%09uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_sysstat/uw_sysstat.d/maillog%0A%09uw_sysstat/uw_sysstat.d/syslog%20uw_tcpconnect&In-Reply-To=%3C200701272021.l0RKLsC8022870%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000199.html">
+   <LINK REL="Next"  HREF="000200.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r665 - in upwatch/libdbi: . cfg common	compat/bb/bbhimport doc upwatch util uw_accept uw_acceptbb	uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql	uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql	uw_process uw_purple uw_route uw_send uw_setip uw_smtp	uw_snmpget uw_syncprobes uw_sysstat uw_sysstat/uw_sysstat.d/maillog	uw_sysstat/uw_sysstat.d/syslog uw_tcpconnect</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r665%20-%20in%20upwatch/libdbi%3A%20.%20cfg%20common%0A%09compat/bb/bbhimport%20doc%20upwatch%20util%20uw_accept%20uw_acceptbb%0A%09uw_dns%20uw_httpget%20uw_imap%20uw_iptraf%20uw_mssql%20uw_mysql%0A%09uw_mysqlstats%20uw_null%20uw_ping%20uw_pop3%20uw_postgresql%0A%09uw_process%20uw_purple%20uw_route%20uw_send%20uw_setip%20uw_smtp%0A%09uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_sysstat/uw_sysstat.d/maillog%0A%09uw_sysstat/uw_sysstat.d/syslog%20uw_tcpconnect&In-Reply-To=%3C200701272021.l0RKLsC8022870%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r665 - in upwatch/libdbi: . cfg common	compat/bb/bbhimport doc upwatch util uw_accept uw_acceptbb	uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql	uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql	uw_process uw_purple uw_route uw_send uw_setip uw_smtp	uw_snmpget uw_syncprobes uw_sysstat uw_sysstat/uw_sysstat.d/maillog	uw_sysstat/uw_sysstat.d/syslog uw_tcpconnect">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sat Jan 27 21:21:54 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000199.html">[Upwatch-commits] r664 - upwatch/trunk
+</A></li>
+        <LI>Next message: <A HREF="000200.html">[Upwatch-commits] r666 - upwatch/libdbi/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#201">[ date ]</a>
+              <a href="thread.html#201">[ thread ]</a>
+              <a href="subject.html#201">[ subject ]</a>
+              <a href="author.html#201">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-27 21:21:41 +0100 (Sat, 27 Jan 2007)
+New Revision: 665
+
+Added:
+   upwatch/libdbi/common/upgrade-for-sms.mysql
+   upwatch/libdbi/uw_process/local.c
+   upwatch/libdbi/uw_sysstat/uw_local_scripts/
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/grandstream
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/snom
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/yum
+Modified:
+   upwatch/libdbi/Makefile.am
+   upwatch/libdbi/Makefile.am.common
+   upwatch/libdbi/cfg/bootstrap
+   upwatch/libdbi/common/Makefile.am
+   upwatch/libdbi/common/init.tpl
+   upwatch/libdbi/common/probe.tpl
+   upwatch/libdbi/compat/bb/bbhimport/Makefile.am
+   upwatch/libdbi/configure.ac
+   upwatch/libdbi/doc/admin-guide.pdf
+   upwatch/libdbi/doc/installation.xml
+   upwatch/libdbi/doc/program-guide.pdf
+   upwatch/libdbi/upwatch-spec.tpl
+   upwatch/libdbi/upwatch/pr_bb.c
+   upwatch/libdbi/upwatch/pr_bb_cpu.c
+   upwatch/libdbi/upwatch/pr_hwstat.c
+   upwatch/libdbi/upwatch/pr_iptraf.c
+   upwatch/libdbi/upwatch/pr_process.c
+   upwatch/libdbi/upwatch/pr_sysstat.c
+   upwatch/libdbi/upwatch/probe.h
+   upwatch/libdbi/util/Makefile.am
+   upwatch/libdbi/util/chklog.c
+   upwatch/libdbi/util/uwregexp.c
+   upwatch/libdbi/uw_accept/Makefile.am
+   upwatch/libdbi/uw_accept/uw_accept.def
+   upwatch/libdbi/uw_acceptbb/Makefile.am
+   upwatch/libdbi/uw_dns/Makefile.am
+   upwatch/libdbi/uw_httpget/Makefile.am
+   upwatch/libdbi/uw_httpget/uw_httpget.conf
+   upwatch/libdbi/uw_imap/Makefile.am
+   upwatch/libdbi/uw_iptraf/Makefile.am
+   upwatch/libdbi/uw_mssql/Makefile.am
+   upwatch/libdbi/uw_mysql/Makefile.am
+   upwatch/libdbi/uw_mysqlstats/Makefile.am
+   upwatch/libdbi/uw_null/Makefile.am
+   upwatch/libdbi/uw_null/uw_null.def
+   upwatch/libdbi/uw_ping/Makefile.am
+   upwatch/libdbi/uw_ping/uw_ping.conf
+   upwatch/libdbi/uw_pop3/Makefile.am
+   upwatch/libdbi/uw_postgresql/Makefile.am
+   upwatch/libdbi/uw_postgresql/run.c
+   upwatch/libdbi/uw_process/Makefile.am
+   upwatch/libdbi/uw_process/imap.c
+   upwatch/libdbi/uw_process/modules.inc
+   upwatch/libdbi/uw_process/mssql.c
+   upwatch/libdbi/uw_process/mysql.c
+   upwatch/libdbi/uw_process/notify.c
+   upwatch/libdbi/uw_process/ping.c
+   upwatch/libdbi/uw_process/pop3.c
+   upwatch/libdbi/uw_process/postgresql.c
+   upwatch/libdbi/uw_process/process.c
+   upwatch/libdbi/uw_process/snmpget.c
+   upwatch/libdbi/uw_process/tcpconnect.c
+   upwatch/libdbi/uw_process/uw_process.def
+   upwatch/libdbi/uw_purple/Makefile.am
+   upwatch/libdbi/uw_purple/uw_purple.def
+   upwatch/libdbi/uw_route/Makefile.am
+   upwatch/libdbi/uw_route/uw_route.def
+   upwatch/libdbi/uw_send/Makefile.am
+   upwatch/libdbi/uw_setip/Makefile.am
+   upwatch/libdbi/uw_smtp/Makefile.am
+   upwatch/libdbi/uw_snmpget/Makefile.am
+   upwatch/libdbi/uw_syncprobes/Makefile.am
+   upwatch/libdbi/uw_sysstat/Makefile.am
+   upwatch/libdbi/uw_sysstat/probe.def
+   upwatch/libdbi/uw_sysstat/run.c
+   upwatch/libdbi/uw_sysstat/uw_sysstat.conf
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/amavisd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/dccifd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/hylafax
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sshd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/tftpd
+   upwatch/libdbi/uw_sysstat/uw_sysstat.def
+   upwatch/libdbi/uw_tcpconnect/Makefile.am
+Log:
+Merge all the work in trunk back to the libdbi branche which really needs to get working now :-)
+
+
+Modified: upwatch/libdbi/Makefile.am
+===================================================================
+--- upwatch/libdbi/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -74,7 +74,7 @@
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+ 
+-dist_doc_DATA = AUTHORS COPYING ChangeLog NEWS README upwatch-base.mysql upwatch-full.mysql
++dist_doc_DATA = AUTHORS COPYING NEWS README upwatch-base.mysql upwatch-full.mysql
+ 
+ if ENABLE_SERVER
+ SERVER_DIST = probes.enum 
+@@ -101,12 +101,6 @@
+ force:
+ 	touch force
+ 
+-#ChangeLog: force
+-#       cfg/cvs2cl.pl -U AUTHORS -b -T --hide-filenames
+-#       rm -f force
+-ChangeLog:
+-	svn log &gt; ChangeLog
+-
+ RELEASE: force
+ 	svnversion . &gt; RELEASE
+ 	rm -f force
+
+Modified: upwatch/libdbi/Makefile.am.common
+===================================================================
+--- upwatch/libdbi/Makefile.am.common	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/Makefile.am.common	2007-01-27 20:21:41 UTC (rev 665)
+@@ -24,7 +24,7 @@
+ endif
+ 
+ SPECFILES = $(program:%=%.spec-requires) $(program:%=%.spec-buildrequires) $(program:%=%.spec-files)
+-INITFILES = $(program:%=%.redhat) $(program:%=%.suse) $(program:%=%.solaris)
++INITFILES = $(program:%=%.redhat) $(program:%=%.suse) $(program:%=%.solaris) $(program:%=%.debian)
+ PROBFILES  = probe.def_h probe.res_h probe.enum probe.def_mysql probe.raw_mysql probe.xml probe.dtd probe.dtd-inc
+ AGDEFINES = -Dconfdir=$(confdir) -Dsysconfdir=$(sysconfdir) -Dsbindir=$(sbindir) \
+  -Dlogdir=$(logdir) -Dspooldir=$(spooldir) $(ag_xmbmon)
+@@ -46,11 +46,12 @@
+ %.1: %.def
+ 	autogen -b $(&lt;:%.def=%) $(AGDEFINES) $(GENINCL) -T $(MAN1TPL) $&lt;
+ 
+-%.redhat %.suse %.solaris: %.def
++%.redhat %.suse %.solaris %.debian: %.def
+ 	autogen -b $(&lt;:%.def=%) $(AGDEFINES) $(GENINCL) -T $(INITTPL) $&lt;
+ 	chmod +x $(&lt;:%.def=%).redhat
+ 	chmod +x $(&lt;:%.def=%).suse
+ 	chmod +x $(&lt;:%.def=%).solaris
++	chmod +x $(&lt;:%.def=%).debian
+ 
+ %.spec-requires %.spec-buildrequires %.spec-files: %.def
+ 	autogen -b $(&lt;:%.def=%) $(AGDEFINES) $(GENINCL) -T $(SPECTPL) $&lt;
+
+Modified: upwatch/libdbi/cfg/bootstrap
+===================================================================
+--- upwatch/libdbi/cfg/bootstrap	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/cfg/bootstrap	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,5 +1,8 @@
+ #! /bin/sh
+ 
++# Get the ChangeLog now
++svn log &gt; ChangeLog
++
+ # test if libtoolize is called glibtoolize (MacOSX)
+ BOGUS=`glibtoolize -n 2&gt;/dev/null`
+ TEST=$?
+
+Modified: upwatch/libdbi/common/Makefile.am
+===================================================================
+--- upwatch/libdbi/common/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/common/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -2,5 +2,6 @@
+ 
+ EXTRA_DIST = db.c generic_options.def dbase_options.def \
+   main.c man1.tpl spec.tpl init.tpl minimal_options.def \
+-  probe.tpl probe_generic.def common.h license_gpl.def
++  probe.tpl probe_generic.def common.h license_gpl.def \
++  upgrade-for-sms.mysql
+ 
+
+Modified: upwatch/libdbi/common/init.tpl
+===================================================================
+--- upwatch/libdbi/common/init.tpl	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/common/init.tpl	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,4 +1,4 @@
+-[+ AutoGen5 template redhat suse solaris +]
++[+ AutoGen5 template redhat suse solaris debian +]
+ [+ CASE (suffix) +][+
+    == redhat
+ +]#! /bin/sh
+@@ -188,7 +188,155 @@
+         exit 1
+         ;;
+ esac
+-exit 0[+
+-ESAC +]
++exit 0
++[+ == debian
+ 
+++]#!/bin/sh
++### BEGIN INIT INFO
++# Provides:          [+prog-name+]
++# Required-Start:    $local_fs $remote_fs
++# Required-Stop:     $local_fs $remote_fs
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
++# Short-Description: Upwatch client daemon
++# Description: 	[+(string-substitute (get &quot;detail&quot;) '(&quot;\n&quot;) '(&quot;\n#\t\t&quot;) )+]
++### END INIT INFO
+ 
++# Author: Wijnand Wiersma &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/upwatch-commits">wijnand at nedbsd.eu</A>&gt;
++
++# Do NOT &quot;set -e&quot;
++
++# PATH should only include /usr/* if it runs after the mountnfs.sh script
++PATH=/usr/sbin:/usr/bin:/sbin:/bin
++DESC=&quot;[+(string-substitute (get &quot;detail&quot;) '(&quot;\n&quot;) '(&quot;\n#\t\t&quot;) )+]&quot;
++NAME=[+prog-name+]
++DAEMON=/usr/sbin/$NAME
++DAEMON_ARGS=&quot;&quot;
++PIDFILE=/var/run/$NAME.pid
++SCRIPTNAME=/etc/init.d/$NAME
++
++# Exit if the package is not installed
++[ -x &quot;$DAEMON&quot; ] || exit 0
++
++# Read configuration variable file if it is present
++[ -r /etc/default/$NAME ] &amp;&amp; . /etc/default/$NAME
++
++# Load the VERBOSE setting and other rcS variables
++[ -f /etc/default/rcS ] &amp;&amp; . /etc/default/rcS
++
++# Define LSB log_* functions.
++# Depend on lsb-base (&gt;= 3.0-6) to ensure that this file is present.
++. /lib/lsb/init-functions
++
++#
++# Function that starts the daemon/service
++#
++do_start()
++{
++	# Return
++	#   0 if daemon has been started
++	#   1 if daemon was already running
++	#   2 if daemon could not be started
++	start-stop-daemon --start --quiet --pidfile $PIDFILE -c upwatch --exec $DAEMON --test &gt; /dev/null \
++		|| return 1
++	start-stop-daemon --start --quiet --pidfile $PIDFILE -c upwatch --exec $DAEMON -- \
++		$DAEMON_ARGS \
++		|| return 2
++}
++
++#
++# Function that stops the daemon/service
++#
++do_stop()
++{
++	# Return
++	#   0 if daemon has been stopped
++	#   1 if daemon was already stopped
++	#   2 if daemon could not be stopped
++	#   other if a failure occurred
++	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
++	RETVAL=&quot;$?&quot;
++	[ &quot;$RETVAL&quot; = 2 ] &amp;&amp; return 2
++	# Wait for children to finish too if this is a daemon that forks
++	# and if the daemon is only ever run from this initscript.
++	# If the above conditions are not satisfied then add some other code
++	# that waits for the process to drop all resources that could be
++	# needed by services started subsequently.  A last resort is to
++	# sleep for some time.
++	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
++	[ &quot;$?&quot; = 2 ] &amp;&amp; return 2
++	# Many daemons don't delete their pidfiles when they exit.
++	rm -f $PIDFILE
++	return &quot;$RETVAL&quot;
++}
++
++#
++# Function that sends a SIGHUP to the daemon/service
++#
++do_reload() {
++	#
++	# If the daemon can reload its configuration without
++	# restarting (for example, when it is sent a SIGHUP),
++	# then implement that here.
++	#
++	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
++	return 0
++}
++
++case &quot;$1&quot; in
++  start)
++	[ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_daemon_msg &quot;Starting $DESC&quot; &quot;$NAME&quot;
++	do_start
++	case &quot;$?&quot; in
++		0|1) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 0 ;;
++		2) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 1 ;;
++	esac
++	;;
++  stop)
++	[ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_daemon_msg &quot;Stopping $DESC&quot; &quot;$NAME&quot;
++	do_stop
++	case &quot;$?&quot; in
++		0|1) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 0 ;;
++		2) [ &quot;$VERBOSE&quot; != no ] &amp;&amp; log_end_msg 1 ;;
++	esac
++	;;
++  #reload|force-reload)
++	#
++	# If do_reload() is not implemented then leave this commented out
++	# and leave 'force-reload' as an alias for 'restart'.
++	#
++	#log_daemon_msg &quot;Reloading $DESC&quot; &quot;$NAME&quot;
++	#do_reload
++	#log_end_msg $?
++	#;;
++  restart|force-reload)
++	#
++	# If the &quot;reload&quot; option is implemented then remove the
++	# 'force-reload' alias
++	#
++	log_daemon_msg &quot;Restarting $DESC&quot; &quot;$NAME&quot;
++	do_stop
++	case &quot;$?&quot; in
++	  0|1)
++		do_start
++		case &quot;$?&quot; in
++			0) log_end_msg 0 ;;
++			1) log_end_msg 1 ;; # Old process is still running
++			*) log_end_msg 1 ;; # Failed to start
++		esac
++		;;
++	  *)
++	  	# Failed to stop
++		log_end_msg 1
++		;;
++	esac
++	;;
++  *)
++	#echo &quot;Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}&quot; &gt;&amp;2
++	echo &quot;Usage: $SCRIPTNAME {start|stop|restart|force-reload}&quot; &gt;&amp;2
++	exit 3
++	;;
++esac
++
++:
++[+ESAC +]
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/common/probe.tpl	2007-01-27 20:21:41 UTC (rev 665)
+@@ -21,6 +21,7 @@
+   contact int unsigned NOT NULL default '1',	-- user field: pointer to contact database
+   notify int unsigned NOT NULL default '1',	-- notifier id
+   email varchar(64) NOT NULL default '',	-- address to send warning email to
++  sms varchar(64) NOT NULL default '',		-- phonenumber(s) to send SMS to
+   delay int unsigned NOT NULL default '1',	-- after this many minutes of red light
+   disable enum('yes', 'no') not null default 'no', -- disable this probe
+   hide enum('yes', 'no') not null default 'no', -- hide probe results from viewing
+@@ -194,7 +195,7 @@
+   PRIMARY KEY (id),
+   UNIQUE KEY probstat (probe,stattime),
+   UNIQUE KEY statprob (stattime,probe)
+-) TYPE=MyISAM [+
++) TYPE=MyISAM DELAYED_KEY_WRITE=1 [+
+ IF max_rows +] MAX_ROWS=[+max_rows+] [+
+ ENDIF+][+
+ IF avg_row_length +] AVG_ROW_LENGTH=[+avg_row_length+][+
+
+Copied: upwatch/libdbi/common/upgrade-for-sms.mysql (from rev 662, upwatch/trunk/common/upgrade-for-sms.mysql)
+
+Modified: upwatch/libdbi/compat/bb/bbhimport/Makefile.am
+===================================================================
+--- upwatch/libdbi/compat/bb/bbhimport/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/compat/bb/bbhimport/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -6,7 +6,7 @@
+ 
+ bbhimport_SOURCES = run.c bbhimport.h bbhimport.c
+ bbhimport_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-bbhimport_LDADD = bbhimport_$(DB_O) bbhimport_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ @LIBDBI_LIBS@
++bbhimport_LDADD = bbhimport_$(DB_O) bbhimport_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@ @LIBDBI_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c)
+ INCLUDES = -I$(top_srcdir)/upwatch 
+
+Modified: upwatch/libdbi/configure.ac
+===================================================================
+--- upwatch/libdbi/configure.ac	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/configure.ac	2007-01-27 20:21:41 UTC (rev 665)
+@@ -255,51 +255,54 @@
+ # Checks for libraries.
+ 
+ ################# First the autogen autoopts library
+-if test -f /usr/lib/libopts.a
++AC_CHECK_PROG([HAVE_LIBOPTS], [libopts-config], [&quot;yes&quot;], [&quot;no&quot;])
++if test &quot;$HAVE_LIBOPTS&quot; = &quot;yes&quot;
+ then
+-  LIBOPTS=/usr/lib/libopts.a
++  LIBOPTS_CFLAGS=&quot;`libopts-config --cflags`&quot;
++  LIBOPTS_LIBS=&quot;`libopts-config --libs`&quot;
+ fi
+-if test -f /usr/lib64/libopts.a
++
++if test -z &quot;$LIBOPTS_LIBS&quot;
+ then
+-  LIBOPTS=/usr/lib64/libopts.a
++  for libpath in /usr/lib /usr/local/lib /usr/lib/lib64 /usr/local/lib64 /usr/pkg/lib
++  do
++    if test -f $libpath/libopts.a
++    then
++      LIBOPTS_LIBS=&quot;-L$libpath -lopts&quot;
++    fi
++  done
+ fi
+ 
+-if test -f /usr/local/lib/libopts.a
++if test -z &quot;$LIBOPTS_CFLAGS&quot;
+ then
+-  LIBOPTS=/usr/local/lib/libopts.a
++  # path to autoopts includes
++  AC_ARG_WITH(autoopts-include,
++      [  --with-autoopts-include=&lt;path&gt;        prefix of autoopts headers. Default /usr/include/],
++      [LIBOPTS_INC_PREFIX=$with_autoopts_include],
++      [LIBOPTS_INC_PREFIX=/usr/include/]
++  )
++  AC_SUBST(LIBOPTS_INC_PREFIX)
++
++  for incpath in /usr/include $LIBOPTS_INC_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
++  do
++    if test -f $incpath/autoopts/options.h
++    then
++      LIBOPTS_CFLAGS=&quot;-I${incpath}&quot;
++    fi
++    if test -f $incpath/autogen/autoopts/options.h
++    then
++      LIBOPTS_CFLAGS=&quot;-I${incpath}/autogen&quot;
++    fi
++  done
+ fi
+-if test -f /usr/local/lib64/libopts.a
++if test -z &quot;$LIBOPTS_LIBS&quot; -o -z &quot;$LIBOPTS_CFLAGS&quot;
+ then
+-  LIBOPTS=/usr/local/lib64/libopts.a
++  AC_MSG_ERROR([You really need autogen or libopts to compile upwatch])
+ fi
+-if test -f /usr/pkg/lib/libopts.a
+-then
+-  LIBOPTS=/usr/pkg/lib/libopts.a
+-fi
+-AC_SUBST(LIBOPTS)
++AC_SUBST(LIBOPTS_LIBS)
++AC_SUBST(LIBOPTS_CFLAGS)
+ 
+-# path to autoopts includes
+-AC_ARG_WITH(autoopts-include,
+-    [  --with-autoopts-include=&lt;path&gt;        prefix of autoopts headers. Default /usr/include/],
+-    [LIBOPTS_INC_PREFIX=$with_autoopts_include],
+-    [LIBOPTS_INC_PREFIX=/usr/include/]
+-)
+-AC_SUBST(LIBOPTS_INC_PREFIX)
+ 
+-for incpath in /usr/include $LIBOPTS_LIB_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
+-do
+-  if test -f $incpath/options.h
+-  then
+-    LIBOPTS_CFLAGS=&quot;-I${incpath}&quot;
+-  fi
+-  if test -f $incpath/autoopts/options.h
+-  then
+-    LIBOPTS_CFLAGS=&quot;-I${incpath}/autoopts&quot;
+-  fi
+-done
+-
+-AC_SUBST(LIBOPTS_CFLAGS)
+-
+ ################## MYSQL
+ # path to libmysqlclient stuff:.
+ AC_ARG_WITH(mysql-libs,
+@@ -585,8 +588,17 @@
+ 		AC_MSG_ERROR([You really need libesmtp to compile upwatch server])
+ 	fi
+ 	AC_SUBST(LIBESMTP_LIBS)
++
++	# libgnokii
++	AC_CHECK_LIB([gnokii], [gn_cfg_get], [HAVE_LIBGNOKII=1], [HAVE_LIBGNOKII=0])
++	if test $HAVE_LIBGNOKII -eq 1
++	then
++	        LIBGNOKII_LIBS=-lgnokii
++	fi
++	AC_SUBST(LIBGNOKII_LIBS)
+ fi
+ AM_CONDITIONAL(HAVE_LIBESMTP, test &quot;$HAVE_LIBESMTP&quot; = &quot;1&quot;)
++AM_CONDITIONAL(HAVE_LIBGNOKII, test &quot;$HAVE_LIBGNOKII&quot; = &quot;1&quot;)
+ 
+ # readline
+ AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lncurses)
+
+Modified: upwatch/libdbi/doc/admin-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/libdbi/doc/installation.xml
+===================================================================
+--- upwatch/libdbi/doc/installation.xml	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/doc/installation.xml	2007-01-27 20:21:41 UTC (rev 665)
+@@ -31,6 +31,7 @@
+                 &lt;listitem&gt;&lt;para&gt;libpcre 3.9.10&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libncurses 5.2&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libesmtp 1.0.1&lt;/para&gt;&lt;/listitem&gt;
++                &lt;listitem&gt;&lt;para&gt;libgnokii 0.6.12&lt;/para&gt;&lt;/listitem&gt;
+                 &lt;listitem&gt;&lt;para&gt;libreadline 4.3&lt;/para&gt;&lt;/listitem&gt;
+             &lt;/itemizedlist&gt;
+             &lt;para&gt;Delivered with upwatch are libstatgrab (0.7), xmbmon 2.03, and the State Threads Library (1,4).&lt;/para&gt;
+
+Modified: upwatch/libdbi/doc/program-guide.pdf
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/libdbi/upwatch/pr_bb.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_bb.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_bb.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -52,7 +52,7 @@
+   if (res-&gt;color == STAT_PURPLE &amp;&amp; res-&gt;probeid) {
+     // find the definition based on the probe id
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                      &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                       &quot;where  id = '%u'&quot;, res-&gt;probeid);
+     if (!result) {
+       g_free(def);
+@@ -86,7 +86,7 @@
+ 
+     // first find the definition based on the serverid
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                      &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                       &quot;where  bbname = '%s' and server = '%u'&quot;, res-&gt;bbname, res-&gt;server);
+     if (!result) {
+       g_free(def);
+@@ -105,7 +105,7 @@
+     LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_bb_def %s created for %s, id = %u&quot;, 
+         res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;bbname, res-&gt;hostname, def-&gt;probeid);
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_bb_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_bb_def &quot;
+                     &quot;where  bbname = '%s' and server = '%u'&quot;, res-&gt;bbname, res-&gt;server);
+     if (!result) return(NULL);
+   }
+@@ -121,6 +121,7 @@
+   def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+   strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+   strcpy(def-&gt;email, dbi_result_get_string(result, &quot;email&quot;));
++  strcpy(def-&gt;sms, dbi_result_get_string(result, &quot;sms&quot;));
+   def-&gt;delay = dbi_result_get_uint(result, &quot;delay&quot;);
+ 
+   dbi_result_free(result);
+
+Modified: upwatch/libdbi/upwatch/pr_bb_cpu.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_bb_cpu.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_bb_cpu.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -98,7 +98,7 @@
+     strcpy(def-&gt;hide, &quot;no&quot;);
+ 
+     // first find the definition based on the serverid
+-    result = db_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, delay &quot;
++    result = db_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, sms, delay &quot;
+                                     &quot;from pr_%s_def where server = '%u'&quot;, 
+                       res-&gt;name, res-&gt;server);
+     if (!result) {
+@@ -115,7 +115,7 @@
+       def-&gt;probeid = dbi_conn_sequence_last(t-&gt;probe-&gt;db, NULL);
+       LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_%s_def created for %s, id = %u&quot;, 
+           res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;name, res-&gt;hostname, def-&gt;probeid);
+-      result = db_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, delay &quot;
++      result = db_query(t-&gt;probe-&gt;db, 0, &quot;select id, yellow, red, contact, hide, email, sms, delay &quot;
+                                       &quot;from pr_%s_def where id = '%u'&quot;, 
+                         res-&gt;name, def-&gt;probeid);
+     }
+@@ -134,6 +134,7 @@
+     def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+     strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+     strcpy(def-&gt;email, dbi_result_get_string(result, &quot;email&quot;));
++    strcpy(def-&gt;sms, dbi_result_get_string(result, &quot;sms&quot;));
+     def-&gt;delay = dbi_result_get_uint(result, &quot;delay&quot;);
+     dbi_result_free(result);
+ 
+
+Modified: upwatch/libdbi/upwatch/pr_hwstat.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_hwstat.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_hwstat.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -112,7 +112,7 @@
+     def-&gt;server = res-&gt;server;
+ 
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, contact, hide, email, delay, &quot;
++                      &quot;select id, contact, hide, email, sms, delay, &quot;
+                       &quot;       temp1_yellow, temp1_red, temp2_yellow, temp2_red, &quot;
+                       &quot;       temp3_yellow, temp3_red, rot1_red, rot2_red, rot3_red, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+@@ -139,7 +139,7 @@
+                          res-&gt;name, def-&gt;probeid, errmsg);
+       }
+       result = db_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, contact, hide, email, delay, &quot;
++                        &quot;select id, contact, hide, email, sms, delay, &quot;
+                         &quot;       temp1_yellow, temp1_red, temp2_yellow, temp2_red, &quot;
+                         &quot;       temp3_yellow, temp3_red, rot1_red, rot2_red, rot3_red, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+@@ -158,6 +158,7 @@
+     def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+     strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+     strcpy(def-&gt;email, dbi_result_get_string(result, &quot;email&quot;));
++    strcpy(def-&gt;sms, dbi_result_get_string(result, &quot;sms&quot;));
+     def-&gt;delay = dbi_result_get_uint(result, &quot;delay&quot;);
+     def-&gt;temp1_yellow = dbi_result_get_uint(result, &quot;temp1_yellow&quot;);
+     def-&gt;temp1_red = dbi_result_get_uint(result, &quot;temp1_red&quot;);
+
+Modified: upwatch/libdbi/upwatch/pr_iptraf.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_iptraf.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_iptraf.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -99,7 +99,7 @@
+     strcpy(def-&gt;hide, &quot;no&quot;);
+ 
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, server, yellow, red, contact, hide, email, delay, pgroup &quot;
++                      &quot;select id, server, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+                       &quot;where  ipaddress = '%s'&quot;, res-&gt;name, res-&gt;ipaddress);
+     if (!result) return(NULL);
+@@ -148,7 +148,7 @@
+                          res-&gt;name, res-&gt;ipaddress);
+       }
+       result = db_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, server, yellow, red, contact, hide, email, delay, pgroup &quot;
++                        &quot;select id, server, yellow, red, contact, hide, email, sms, lay, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+                         &quot;where  ipaddress = '%s'&quot;, res-&gt;name, res-&gt;ipaddress);
+       if (!result) return(NULL);
+@@ -167,6 +167,7 @@
+     def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+     strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+     strcpy(def-&gt;email, dbi_result_get_string(result, &quot;email&quot;));
++    strcpy(def-&gt;sms, dbi_result_get_string(result, &quot;sms&quot;));
+     def-&gt;delay = dbi_result_get_uint(result, &quot;delay&quot;);
+     def-&gt;pgroup = dbi_result_get_uint(result, &quot;pgroup&quot;);
+     dbi_result_free(result);
+
+Modified: upwatch/libdbi/upwatch/pr_process.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_process.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_process.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -179,7 +179,7 @@
+   struct probe_def *def;
+   dbi_result result;
+   time_t now = time(NULL);
+-  char *def_fields = &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, pgroup&quot;;
++  char *def_fields = &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, pgroup&quot;;
+ 
+   def = g_hash_table_lookup(t-&gt;probe-&gt;cache, &amp;res-&gt;probeid);
+   if (def &amp;&amp; def-&gt;stamp &lt; now - (120 + uw_rand(240))) { // older then 2 - 6 minutes?
+@@ -263,6 +263,7 @@
+       def-&gt;contact     = dbi_result_get_uint(result, &quot;contact&quot;);
+       strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+       strcpy(def-&gt;email, dbi_result_get_string_copy(result, &quot;email&quot;));
++      strcpy(def-&gt;sms, dbi_result_get_string_copy(result, &quot;sms&quot;));
+       def-&gt;delay       = dbi_result_get_uint(result, &quot;delay&quot;);
+       def-&gt;pgroup      = dbi_result_get_uint(result, &quot;pgroup&quot;);
+     }
+@@ -308,7 +309,7 @@
+ 
+   // first find the definition based on the serverid
+   result = db_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_%s_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_%s_def &quot;
+                     &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+   if (!result) {
+     g_free(def);
+@@ -326,7 +327,7 @@
+     LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_%s_def created for %s, id = %u&quot;, 
+         res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;name, res-&gt;hostname, def-&gt;probeid);
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                    &quot;select id, contact, hide, email, delay from pr_%s_def &quot;
++                    &quot;select id, contact, hide, email, sms, delay from pr_%s_def &quot;
+                     &quot;where  server = '%u'&quot;, res-&gt;server, res-&gt;name);
+     if (!result) return(NULL);
+   }
+@@ -342,6 +343,7 @@
+   def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+   strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+   strcpy(def-&gt;email, dbi_result_get_string_copy(result, &quot;email&quot;));
++  strcpy(def-&gt;sms, dbi_result_get_string_copy(result, &quot;sms&quot;));
+   def-&gt;delay       = dbi_result_get_uint(result, &quot;delay&quot;);
+ 
+   dbi_result_free(result);
+
+Modified: upwatch/libdbi/upwatch/pr_sysstat.c
+===================================================================
+--- upwatch/libdbi/upwatch/pr_sysstat.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/pr_sysstat.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -116,7 +116,7 @@
+     def-&gt;server = res-&gt;server;
+     
+     result = db_query(t-&gt;probe-&gt;db, 0,
+-                      &quot;select id, yellow, red, contact, hide, email, delay, pgroup &quot;
++                      &quot;select id, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                       &quot;from   pr_%s_def &quot;
+                       &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+     if (!result) return(NULL);
+@@ -142,7 +142,7 @@
+                          res-&gt;name, def-&gt;probeid, errmsg);
+       }
+       result = db_query(t-&gt;probe-&gt;db, 0,
+-                        &quot;select id, yellow, red, contact, hide, email, delay, pgroup &quot;
++                        &quot;select id, yellow, red, contact, hide, email, sms, delay, pgroup &quot;
+                         &quot;from   pr_%s_def &quot;
+                         &quot;where  server = '%u'&quot;, res-&gt;name, res-&gt;server);
+       if (!result) return(NULL);
+@@ -162,6 +162,7 @@
+     def-&gt;contact = dbi_result_get_uint(result, &quot;contact&quot;);
+     strcpy(def-&gt;hide, dbi_result_get_string(result, &quot;hide&quot;));
+     strcpy(def-&gt;email, dbi_result_get_string(result, &quot;email&quot;));
++    strcpy(def-&gt;sms, dbi_result_get_string(result, &quot;sms&quot;));
+     def-&gt;delay = dbi_result_get_uint(result, &quot;delay&quot;);
+     def-&gt;pgroup = dbi_result_get_uint(result, &quot;pgroup&quot;);
+     dbi_result_free(result);
+
+Modified: upwatch/libdbi/upwatch/probe.h
+===================================================================
+--- upwatch/libdbi/upwatch/probe.h	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch/probe.h	2007-01-27 20:21:41 UTC (rev 665)
+@@ -36,6 +36,7 @@
+   guint color; \
+   guint newest; \
+   char email[65]; \
++  char sms[65]; \
+   guint delay; \
+ 
+ struct probe_def {
+@@ -169,6 +170,15 @@
+ #include &quot;../common/common.h&quot;
+ };
+ 
++/****************************** probe local ************************/
++struct local_result {
++  STANDARD_PROBE_RESULT;
++};
++struct local_def {
++  STANDARD_PROBE_DEF;
++#include &quot;../common/common.h&quot;
++};
++
+ /****************************** probe errlog ************************/
+ struct errlog_result {
+   STANDARD_PROBE_RESULT;
+
+Modified: upwatch/libdbi/upwatch-spec.tpl
+===================================================================
+--- upwatch/libdbi/upwatch-spec.tpl	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/upwatch-spec.tpl	2007-01-27 20:21:41 UTC (rev 665)
+@@ -10,6 +10,7 @@
+ Group: Application/Monitoring
+ BuildRoot: %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+ BuildRequires: gzip glib2-devel autogen libxslt lynx readline-devel
++BuildRequires: mysql-devel libxml2-devel postgresql-devel 
+ Requires: libxml2 &gt;= 2.4.19 glib2
+ [+ FOR clientprog +]# [+clientprog+] requirements:
+ [+ include (string-append (get &quot;clientprog&quot;) &quot;/&quot; (get &quot;clientprog&quot;) &quot;.spec-requires&quot;) ;+]
+
+Modified: upwatch/libdbi/util/Makefile.am
+===================================================================
+--- upwatch/libdbi/util/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/util/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -45,7 +45,7 @@
+ include $(top_srcdir)/Makefile.am.common
+ 
+ uwq_SOURCES = uwq.c uwq_options.h uwq_options.c uwq_options.def 
+-uwq_LDADD = $(LIBOPTS) @LIBGLIB2_LIBS@
++uwq_LDADD = @LIBOPTS_LIBS@ @LIBGLIB2_LIBS@
+ uwq_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+ BUILT_SOURCES += uwq_options.h uwq.1
+ EXTRA_DIST += uwq_options.def
+@@ -60,7 +60,7 @@
+ 
+ ctime_SOURCES = ctime.c ctime_options.c ctime_options.h ctime_options.def 
+ ctime_CFLAGS = @LIBOPTS_CFLAGS@
+-ctime_LDADD = $(LIBOPTS) 
++ctime_LDADD = @LIBOPTS_LIBS@
+ BUILT_SOURCES += ctime_options.h ctime.1
+ EXTRA_DIST += ctime_options.def
+ CLEAN_FILES += ctime_options.c ctime_options.h
+@@ -74,7 +74,7 @@
+ 
+ slot_SOURCES = slot.c slot_options.c slot_options.h slot_options.def
+ slot_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+-slot_LDADD = $(LIBOPTS) $(LIBUPWATCH) 
++slot_LDADD = @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += slot_options.h
+ EXTRA_DIST += slot_options.def
+ CLEAN_FILES +=  slot_options.c slot_options.h
+@@ -88,7 +88,7 @@
+ 
+ chklog_SOURCES = chklog.c chklog_options.c chklog_options.h chklog_options.def
+ chklog_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@
+-chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ $(LIBOPTS) $(LIBUPWATCH) 
++chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += chklog_options.h
+ EXTRA_DIST += chklog_options.def
+ CLEAN_FILES +=  chklog_options.c chklog_options.h
+
+Modified: upwatch/libdbi/util/chklog.c
+===================================================================
+--- upwatch/libdbi/util/chklog.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/util/chklog.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -33,7 +33,7 @@
+ 
+   setvbuf(stdout, (char *)NULL, _IOLBF, 0); // make stdout linebuffered
+ 
+-  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) &amp;OPT_ARG(TYPE));
++  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) OPT_ARG(TYPE));
+ 
+   if (strcmp(*argv, &quot;-&quot;) == 0) {
+     in = stdin;
+
+Modified: upwatch/libdbi/util/uwregexp.c
+===================================================================
+--- upwatch/libdbi/util/uwregexp.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/util/uwregexp.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -38,7 +38,7 @@
+       break;
+     }
+ 
+-    logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) &amp;style);
++    logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) style);
+     logregex_expand_macros(style, regexp, buf);
+ 
+     printf(&quot;Resulting regex: %s\n&quot;, buf);
+
+Modified: upwatch/libdbi/uw_accept/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_accept/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_accept/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_accept_SOURCES = run.c uw_accept.h uw_accept.c $(SPECFILES) $(INITFILES)
+ uw_accept_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_accept_LDADD = uw_accept_$(DB_O) uw_accept_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_accept_LDADD = uw_accept_$(DB_O) uw_accept_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBST) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) 
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/libdbi/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/libdbi/uw_accept/uw_accept.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_accept/uw_accept.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -77,4 +77,5 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
++#include option_realm_ign.def
+ 
+
+Modified: upwatch/libdbi/uw_acceptbb/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_acceptbb/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_acceptbb/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -10,7 +10,7 @@
+ uw_acceptbb_SOURCES = run.c uw_acceptbb.h uw_acceptbb.c \
+  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_acceptbb_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_acceptbb_LDADD = uw_acceptbb_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_acceptbb_LDADD = uw_acceptbb_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/libdbi/uw_dns/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_dns/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_dns/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_dns_SOURCES = run.c uw_dns.h uw_dns.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_dns_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_dns_LDADD = uw_dns_$(DB_O) uw_dns_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_dns_LDADD = uw_dns_$(DB_O) uw_dns_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/libdbi/uw_httpget/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_httpget/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_httpget/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_httpget_SOURCES = run.c uw_httpget.h uw_httpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_httpget_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_httpget_LDADD = uw_httpget_$(DB_O) uw_httpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_httpget_LDADD = uw_httpget_$(DB_O) uw_httpget_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/libdbi/uw_httpget/uw_httpget.conf
+===================================================================
+--- upwatch/libdbi/uw_httpget/uw_httpget.conf	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_httpget/uw_httpget.conf	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,5 +1,3 @@
+ # log to logfile
+ #logfile /var/log/upwatch/uw_httpget.log
+-
+-
+-
++output uw_send
+
+Modified: upwatch/libdbi/uw_imap/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_imap/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_imap/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_imap_SOURCES = run.c uw_imap.h uw_imap.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_imap_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_imap_LDADD = uw_imap_$(DB_O) uw_imap_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_imap_LDADD = uw_imap_$(DB_O) uw_imap_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+
+Modified: upwatch/libdbi/uw_iptraf/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_iptraf/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_iptraf/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_iptraf_SOURCES = run.c uw_iptraf.h uw_iptraf.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_iptraf_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBPCAP_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_iptraf_LDADD = uw_iptraf_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBGTHREAD2_LIBS@ @LIBPCAP_LIBS@
++uw_iptraf_LDADD = uw_iptraf_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @LIBGTHREAD2_LIBS@ @LIBPCAP_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_mssql/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_mssql/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_mssql/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -11,7 +11,7 @@
+ 
+ uw_mssql_SOURCES = run.c uw_mssql.h uw_mssql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mssql_CFLAGS = @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
++uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_mysql/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_mysql/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_mysql/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -11,7 +11,7 @@
+ 
+ uw_mysql_SOURCES = run.c uw_mysql.h uw_mysql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mysql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mysql_LDADD = uw_mysql_$(DB_O) uw_mysql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@
++uw_mysql_LDADD = uw_mysql_$(DB_O) uw_mysql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_mysqlstats/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_mysqlstats/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_mysqlstats/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -11,7 +11,7 @@
+ 
+ uw_mysqlstats_SOURCES = run.c uw_mysqlstats.h uw_mysqlstats.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_mysqlstats_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_mysqlstats_LDADD = uw_mysqlstats_$(DB_O) uw_mysqlstats_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBDBI_LIBS@ @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
++uw_mysqlstats_LDADD = uw_mysqlstats_$(DB_O) uw_mysqlstats_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @LIBDBI_LIBS@ @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_null/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_null/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_null/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -12,7 +12,7 @@
+ 
+ uw_null_SOURCES = run.c uw_null.h uw_null.c $(SPECFILES) $(INITFILES) 
+ uw_null_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_null_LDADD = uw_null_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ $(SOLARISLIBS)
++uw_null_LDADD = uw_null_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_null/uw_null.def
+===================================================================
+--- upwatch/libdbi/uw_null/uw_null.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_null/uw_null.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -81,4 +81,4 @@
+ #include license_gpl.def
+ #include generic_options.def
+ #include option_realm_ign.def
+-#include minimal_options.def
++#include dbase_options_ign.def
+
+Modified: upwatch/libdbi/uw_ping/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_ping/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_ping/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,7 +8,7 @@
+ 
+ uw_ping_SOURCES = run.c uw_ping.h uw_ping.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_ping_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_ping_LDADD = uw_ping_$(DB_O) uw_ping_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBXML2_LIBS@ @LIBGLIB2_LIBS@
++uw_ping_LDADD = uw_ping_$(DB_O) uw_ping_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBXML2_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_ping/uw_ping.conf
+===================================================================
+--- upwatch/libdbi/uw_ping/uw_ping.conf	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_ping/uw_ping.conf	2007-01-27 20:21:41 UTC (rev 665)
+@@ -2,4 +2,4 @@
+ #logfile /var/log/upwatch/uw_ping.log
+ 
+ # maildir name where to drop results
+-output uw_test
++output uw_send
+
+Modified: upwatch/libdbi/uw_pop3/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_pop3/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_pop3/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_pop3_SOURCES = run.c uw_pop3.h uw_pop3.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_pop3_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_pop3_LDADD = uw_pop3_$(DB_O) uw_pop3_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_pop3_LDADD = uw_pop3_$(DB_O) uw_pop3_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_postgresql/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_postgresql/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_postgresql/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_postgresql_SOURCES = run.c uw_postgresql.h uw_postgresql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_postgresql_CFLAGS = @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBPQ_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_postgresql_LDADD = uw_postgresql_$(DB_O) uw_postgresql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@ @LIBPQ_LIBS@
++uw_postgresql_LDADD = uw_postgresql_$(DB_O) uw_postgresql_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCHT) @LIBDBI_LIBS@ @LIBGTHREAD2_LIBS@ @LIBPQ_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_postgresql/run.c
+===================================================================
+--- upwatch/libdbi/uw_postgresql/run.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_postgresql/run.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -256,6 +256,11 @@
+   PGresult *res;
+   struct timeval start, now;
+ 
++  if (!probe-&gt;query || strlen(probe-&gt;query) &lt; 5) {
++    probe-&gt;msg = strdup(&quot;Please specify a valid query.&quot;);
++    return;
++  }
++    
+   dbhost = probe-&gt;ipaddress;
+   dbname = probe-&gt;dbname;
+   dbuser = probe-&gt;dbuser;
+
+Modified: upwatch/libdbi/uw_process/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_process/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,6 +8,10 @@
+ DEF_LIBESMTP = -DHAVE_LIBESMTP
+ endif
+ 
++if HAVE_LIBGNOKII
++DEF_LIBGNOKII = -DHAVE_LIBGNOKII
++endif
++
+ if HAVE_LIBPQ
+ USE_LIBPQ = postgresql.c
+ DEF_LIBPQ = -DHAVE_LIBPQ
+@@ -30,13 +34,13 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_process_SOURCES = run.c process.c notify.c generic_ct.c uw_process.c insertcache.c \
+- ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c tcpconnect.c \
++ ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c local.c tcpconnect.c \
+ $(USE_LIBPQ) $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c hwstat.c \
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+ uw_process_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+-  $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
+-uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ \
+-  @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
++  $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) $(DEF_LIBGNOKII)
++uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ \
++  @LIBESMTP_LIBS@ @LIBGNOKII_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS) $(LIBGTHREAD2_LIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) ../probes.enum
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_process/imap.c
+===================================================================
+--- upwatch/libdbi/uw_process/imap.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/imap.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -46,9 +46,14 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;username = dbi_result_get_string_copy_idx(result, 9);
+-    def-&gt;password = dbi_result_get_string_copy_idx(result, 10);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;username = dbi_result_get_string_copy_idx(result, 10);
++    def-&gt;password = dbi_result_get_string_copy_idx(result, 11);
+   }
+ }
+ 
+@@ -84,7 +89,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;username, password &quot;,
+   imap_set_def_fields,
+   NO_GET_DEF,
+
+Copied: upwatch/libdbi/uw_process/local.c (from rev 662, upwatch/trunk/uw_process/local.c)
+
+Modified: upwatch/libdbi/uw_process/modules.inc
+===================================================================
+--- upwatch/libdbi/uw_process/modules.inc	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/modules.inc	2007-01-27 20:21:41 UTC (rev 665)
+@@ -16,6 +16,7 @@
+ extern module errlog_module;
+ extern module diskfree_module;
+ extern module hwstat_module;
++extern module local_module;
+ 
+ module *modules[] = {
+   &amp;httpget_module,
+@@ -31,6 +32,7 @@
+   &amp;errlog_module,
+   &amp;diskfree_module,
+   &amp;hwstat_module,
++  &amp;local_module,
+   &amp;bb_cpu_module,
+   &amp;bb_module,
+ #if HAVE_LIBPQ
+
+Modified: upwatch/libdbi/uw_process/mssql.c
+===================================================================
+--- upwatch/libdbi/uw_process/mssql.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/mssql.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -48,11 +48,16 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 9);
+-    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 10);
+-    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 11);
+-    def-&gt;query = dbi_result_get_string_copy_idx(result, 12);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 10);
++    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 11);
++    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 12);
++    def-&gt;query = dbi_result_get_string_copy_idx(result, 13);
+   }
+ }
+ 
+@@ -92,7 +97,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   mssql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/mysql.c
+===================================================================
+--- upwatch/libdbi/uw_process/mysql.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/mysql.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -48,11 +48,16 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 9);
+-    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 10);
+-    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 11);
+-    def-&gt;query = dbi_result_get_string_copy_idx(result, 12);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 10);
++    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 11);
++    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 12);
++    def-&gt;query = dbi_result_get_string_copy_idx(result, 13);
+   }
+ }
+ 
+@@ -92,7 +97,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   mysql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/notify.c
+===================================================================
+--- upwatch/libdbi/uw_process/notify.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/notify.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -58,7 +58,12 @@
+   return(notified);
+ }
+ 
++//*******************************************************************
++// Low level Email functions
++//*******************************************************************
++#if HAVE_LIBESMTP
+ #include &lt;libesmtp.h&gt;
++#endif
+ 
+ #define BUFLEN 8192
+ 
+@@ -157,6 +162,136 @@
+ }
+ 
+ //*******************************************************************
++// Low level SMS functions
++//*******************************************************************
++#if HAVE_LIBGNOKII
++#include &lt;gnokii.h&gt;
++
++static char *lockfile = NULL;
++static struct gn_statemachine state;
++static gn_data data;
++
++static void  gnokii_error_logger(const char *fmt, va_list ap)
++{
++  char buf[512];
++  vsnprintf(buf, sizeof(buf), fmt, ap);
++  LOG(LOG_NOTICE, buf);
++}
++
++static void busterminate(void)
++{
++  gn_sm_functions(GN_OP_Terminate, NULL, &amp;state);
++  if (lockfile) gn_device_unlock(lockfile);
++}
++
++static int businit(void)
++{
++  gn_error error;
++  char *aux;
++  static atexit_registered = 0;
++
++  gn_data_clear(&amp;data);
++
++  aux = gn_cfg_get(gn_cfg_info, &quot;global&quot;, &quot;use_locking&quot;);
++  /* Defaults to 'no' */
++  if (aux &amp;&amp; !strcmp(aux, &quot;yes&quot;)) {
++    lockfile = gn_device_lock(state.config.port_device);
++    if (lockfile == NULL) {
++      LOG(LOG_NOTICE, &quot;Lock file error. Cannot send SMS messages\n&quot;);
++      return 0;
++    }
++  }
++
++  /* register cleanup function */
++  if (!atexit_registered) {
++    atexit_registered = 1;
++    atexit(busterminate);
++  }
++  /* signal(SIGINT, bussignal); */
++
++  /* Initialise the code for the GSM interface. */
++  error = gn_gsm_initialise(&amp;state);
++  if (error != GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;Telephone interface init failed: %s\n&quot;, gn_error_print(error));
++    return 0;
++  }
++  return 1;
++}
++#endif
++
++int sms(char *to, char *msg)
++{
++static int firsttime = 1;
++#if HAVE_LIBGNOKII
++  gn_sms sms;
++  gn_error error;
++  int input_len, i, curpos = 0;
++
++  if (firsttime) {
++    gn_elog_handler = gnokii_error_logger;
++
++    /* Read config file */
++    if (gn_cfg_read_default() &lt; 0)
++      return 0;
++
++    if (!gn_cfg_phone_load(&quot;&quot;, &amp;state))
++      return 0;
++
++    if (businit()) {
++      firsttime = 0;
++    }
++  }
++  input_len = GN_SMS_MAX_LENGTH;
++
++  /* The memory is zeroed here */
++  gn_sms_default_submit(&amp;sms);
++
++  memset(&amp;sms.remote.number, 0, sizeof(sms.remote.number));
++  strncpy(sms.remote.number, to, sizeof(sms.remote.number) - 1);
++  if (sms.remote.number[0] == '+') {
++    sms.remote.type = GN_GSM_NUMBER_International;
++  } else {
++    sms.remote.type = GN_GSM_NUMBER_Unknown;
++  }
++
++  if (!sms.smsc.number[0]) {
++    data.message_center = calloc(1, sizeof(gn_sms_message_center));
++    data.message_center-&gt;id = 1;
++    if (gn_sm_functions(GN_OP_GetSMSCenter, &amp;data, &amp;state) == GN_ERR_NONE) {
++      strcpy(sms.smsc.number, data.message_center-&gt;smsc.number);
++      sms.smsc.type = data.message_center-&gt;smsc.type;
++    } else {
++      LOG(LOG_WARNING, &quot;Cannot read the SMSC number from your phone.&quot;);
++    }
++    free(data.message_center);
++  }
++
++  if (!sms.smsc.type) sms.smsc.type = GN_GSM_NUMBER_Unknown;
++
++  if (curpos != -1) {
++    strcpy(sms.user_data[curpos].u.text, msg);
++    sms.user_data[curpos].type = GN_SMS_DATA_Text;
++    if (!gn_char_def_alphabet(sms.user_data[curpos].u.text))
++      sms.dcs.u.general.alphabet = GN_SMS_DCS_UCS2;
++    sms.user_data[++curpos].type = GN_SMS_DATA_None;
++  }
++
++  data.sms = &sms;
++
++  error = gn_sms_send(&amp;data, &amp;state); /* send it */
++
++  if (error == GN_ERR_NONE) {
++    LOG(LOG_NOTICE, &quot;SMS: %s&quot;, msg);
++    return 1;
++  }
++  LOG(LOG_NOTICE, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
++  if (debug &gt; 3) fprintf(stderr, &quot;SMS to %s FAILED: %s&quot;, to, gn_error_print(error));
++#endif
++  return 0;
++}
++
++
++//*******************************************************************
+ // Notify user if necessary
+ //*******************************************************************
+ static int do_notification(trx *t)
+@@ -169,9 +304,6 @@
+   char body_probe_def[8192];
+   char msg[8192];
+ 
+-  if (t-&gt;def-&gt;email[0] == 0) {
+-    return(notified);
+-  }
+   servername = realm_server_by_id(t-&gt;res-&gt;realm, t-&gt;def-&gt;server);
+ 
+   if (t-&gt;probe-&gt;notify_mail_subject_extra) {
+@@ -179,7 +311,7 @@
+   } else {
+     subject_extra[0] = 0;
+   }
+-  sprintf(subject, &quot;%s: %s %s (was %s) %s&quot;, servername,
++  snprintf(subject, sizeof(subject), &quot;%s: %s %s (was %s) %s&quot;, servername,
+                    t-&gt;probe-&gt;module_name, color2string(t-&gt;res-&gt;color),
+                    color2string(t-&gt;res-&gt;prevhistcolor), subject_extra);
+ 
+@@ -193,7 +325,7 @@
+   } else {
+     msg[0] = 0;
+   }
+-  sprintf(body, &quot;Dear customer,\n\n&quot;
++  snprintf(body, sizeof(body), &quot;Dear customer,\n\n&quot;
+                 &quot;Moments ago, at %s&quot;
+                 &quot;the status of probe %s\n&quot;
+                 &quot;at server %s\n&quot;
+@@ -212,7 +344,18 @@
+                    OPT_ARG(FROM_NAME)
+   );
+   free(servername);
+-  notified = mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
++  if (t-&gt;def-&gt;email[0]) {
++    notified |= mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
++  }
++  if (t-&gt;def-&gt;sms[0]) {
++    char *p;
++
++    strcpy(body, t-&gt;def-&gt;sms);
++    p = strtok(body, &quot; ,/&quot;);
++    do {
++      notified |= sms(p, subject);
++    } while ((p = strtok(NULL, &quot; ,/&quot;)) != NULL);
++  }
+   if (notified) {
+     strcpy(t-&gt;res-&gt;notified, &quot;yes&quot;);
+   }
+
+Modified: upwatch/libdbi/uw_process/ping.c
+===================================================================
+--- upwatch/libdbi/uw_process/ping.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/ping.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -32,8 +32,13 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;count = dbi_result_get_uint_idx(result, 9);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;count = dbi_result_get_uint_idx(result, 10);
+   }
+ }
+ 
+@@ -173,7 +178,7 @@
+   NO_XML_RESULT_NODE,
+   ping_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;count &quot;,
+   ping_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/pop3.c
+===================================================================
+--- upwatch/libdbi/uw_process/pop3.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/pop3.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -46,9 +46,14 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;password = dbi_result_get_string_copy_idx(result, 8);
+-    def-&gt;username = dbi_result_get_string_copy_idx(result, 9);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;password = dbi_result_get_string_copy_idx(result, 10);
++    def-&gt;username = dbi_result_get_string_copy_idx(result, 11);
+   }
+ }
+ 
+@@ -84,7 +89,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;username, password &quot;,
+   pop3_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/postgresql.c
+===================================================================
+--- upwatch/libdbi/uw_process/postgresql.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/postgresql.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -48,11 +48,16 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 9);
+-    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 10);
+-    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 11);
+-    def-&gt;query = dbi_result_get_string_copy_idx(result, 12);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;dbname = dbi_result_get_string_copy_idx(result, 10);
++    def-&gt;dbuser = dbi_result_get_string_copy_idx(result, 11);
++    def-&gt;dbpasswd = dbi_result_get_string_copy_idx(result, 12);
++    def-&gt;query = dbi_result_get_string_copy_idx(result, 13);
+   }
+ }
+ 
+@@ -92,7 +97,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;dbname, dbuser, dbpasswd, query &quot;,
+   postgresql_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/process.c
+===================================================================
+--- upwatch/libdbi/uw_process/process.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/process.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -150,6 +150,9 @@
+     }
+     free(escmsg);
+   }
++  else {
++    sprintf(&amp;qry[strlen(qry)],&quot;, message = ''&quot;);
++  }
+ 
+   sprintf(&amp;qry[strlen(qry)], &quot; where probe = '%u' and class = '%u'&quot;, t-&gt;def-&gt;probeid, t-&gt;probe-&gt;class);
+   result = db_rawquery(t-&gt;probe-&gt;db, 0, qry);
+@@ -521,7 +524,7 @@
+     }
+   }
+ 
+-  if (t-&gt;def-&gt;email[0]) { // if we have an address
++  if (t-&gt;def-&gt;email[0] || t-&gt;def-&gt;sms[0]) { // if we have an address
+     // RETRIEVE LAST HIST ENTRY FOR THIS PROBE
+     get_previous_pr_hist(t);
+ 
+
+Modified: upwatch/libdbi/uw_process/snmpget.c
+===================================================================
+--- upwatch/libdbi/uw_process/snmpget.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/snmpget.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -48,15 +48,20 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;community = dbi_result_get_string_copy_idx(result, 9); /* community string for SNMPv1/v2c transactions */
+-    def-&gt;OID = dbi_result_get_string_copy_idx(result, 10);      /* Object ID */
+-    def-&gt;dispname = dbi_result_get_string_copy_idx(result, 11); /* Display Name */
+-    def-&gt;dispunit = dbi_result_get_string_copy_idx(result, 12); /* Display Unit */
+-    def-&gt;multiplier = dbi_result_get_float_idx(result, 13);     /* Multiplier for result values */
+-    if (dbi_result_get_string_idx(result, 14)) {
+-      strcpy(def-&gt;mode, dbi_result_get_string_idx(result, 14)); /* plot absolute or relative values */
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
+     } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;community = dbi_result_get_string_copy_idx(result, 10); /* community string for SNMPv1/v2c transactions */
++    def-&gt;OID = dbi_result_get_string_copy_idx(result, 11);      /* Object ID */
++    def-&gt;dispname = dbi_result_get_string_copy_idx(result, 12); /* Display Name */
++    def-&gt;dispunit = dbi_result_get_string_copy_idx(result, 13); /* Display Unit */
++    def-&gt;multiplier = dbi_result_get_float_idx(result, 14);     /* Multiplier for result values */
++    if (dbi_result_get_string_idx(result, 15)) {
++      strcpy(def-&gt;mode, dbi_result_get_string_idx(result, 15)); /* plot absolute or relative values */
++    } else {
+       strcpy(def-&gt;mode, &quot;&quot;);
+     }
+   }
+@@ -213,7 +218,7 @@
+   NO_XML_RESULT_NODE,
+   snmpget_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;community, OID, dispname, dispunit, multiplier, mode &quot;,
+   snmpget_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/tcpconnect.c
+===================================================================
+--- upwatch/libdbi/uw_process/tcpconnect.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/tcpconnect.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -32,8 +32,13 @@
+     } else {
+       strcpy(def-&gt;email, &quot;&quot;);
+     }
+-    def-&gt;delay = dbi_result_get_uint_idx(result, 8);
+-    def-&gt;port = dbi_result_get_uint_idx(result, 9);
++    if (dbi_result_get_string_idx(result, 8)) {
++      strcpy(def-&gt;sms, dbi_result_get_string_idx(result, 8));
++    } else {
++      strcpy(def-&gt;sms, &quot;&quot;);
++    }
++    def-&gt;delay = dbi_result_get_uint_idx(result, 9);
++    def-&gt;port = dbi_result_get_uint_idx(result, 10);
+   }
+ }
+ 
+@@ -67,7 +72,7 @@
+   NO_XML_RESULT_NODE,
+   ct_get_from_xml,
+   NO_ACCEPT_RESULT,
+-  &quot;ipaddress, description, server, yellow, red, contact, hide, email, delay, &quot;
++  &quot;ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, &quot;
+   &quot;port &quot;,
+   tcpconnect_set_def_fields,
+   NO_GET_DEF,
+
+Modified: upwatch/libdbi/uw_process/uw_process.def
+===================================================================
+--- upwatch/libdbi/uw_process/uw_process.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_process/uw_process.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -224,4 +224,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/libdbi/uw_purple/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_purple/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_purple/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,7 +8,7 @@
+ 
+ uw_purple_SOURCES = run.c uw_purple.h uw_purple.c  $(SPECFILES) $(INITFILES)
+ uw_purple_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_purple_LDADD = uw_purple_$(DB_O) uw_purple_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_purple_LDADD = uw_purple_$(DB_O) uw_purple_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_purple/uw_purple.def
+===================================================================
+--- upwatch/libdbi/uw_purple/uw_purple.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_purple/uw_purple.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -60,4 +60,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/libdbi/uw_route/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_route/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_route/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -12,7 +12,7 @@
+ 
+ uw_route_SOURCES = run.c uw_route.h uw_route.c $(SPECFILES) $(INITFILES) 
+ uw_route_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_route_LDADD = uw_route_$(DB_O) uw_route_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
++uw_route_LDADD = uw_route_$(DB_O) uw_route_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_route/uw_route.def
+===================================================================
+--- upwatch/libdbi/uw_route/uw_route.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_route/uw_route.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -101,4 +101,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/libdbi/uw_send/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_send/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_send/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,7 +8,7 @@
+ 
+ uw_send_SOURCES = run.c uw_send.c uw_send.h uw_send.def $(SPECFILES) $(INITFILES)
+ uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@
++uw_send_LDADD = uw_send_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_setip/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_setip/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_setip/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_setip_SOURCES = run.c uw_setip.h uw_setip.c $(SPECFILES) $(INITFILES)
+ uw_setip_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_setip_LDADD = uw_setip_$(DB_O) uw_setip_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_setip_LDADD = uw_setip_$(DB_O) uw_setip_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBST) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_smtp/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_smtp/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_smtp/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_smtp_SOURCES = run.c uw_smtp.h uw_smtp.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_smtp_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+-uw_smtp_LDADD = uw_smtp_$(DB_O) uw_smtp_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_smtp_LDADD = uw_smtp_$(DB_O) uw_smtp_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_snmpget/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_snmpget/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_snmpget/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,7 +8,7 @@
+ 
+ uw_snmpget_SOURCES = run.c uw_snmpget.h uw_snmpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_snmpget_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_snmpget_LDADD = uw_snmpget_$(DB_O) uw_snmpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBSNMP_LIBS@ @LIBCRYPTO_LIBS@ @LIBGLIB2_LIBS@ 
++uw_snmpget_LDADD = uw_snmpget_$(DB_O) uw_snmpget_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBSNMP_LIBS@ @LIBCRYPTO_LIBS@ @LIBGLIB2_LIBS@ 
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_syncprobes/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_syncprobes/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_syncprobes/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,7 +8,7 @@
+ 
+ uw_syncprobes_SOURCES = run.c uw_syncprobes.h uw_syncprobes.c  $(SPECFILES) $(INITFILES)
+ uw_syncprobes_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_syncprobes_LDADD = uw_syncprobes_$(DB_O) uw_syncprobes_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_syncprobes_LDADD = uw_syncprobes_$(DB_O) uw_syncprobes_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/libdbi/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_sysstat/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -28,13 +28,13 @@
+ 
+ uw_sysstat_SOURCES = run.c uw_sysstat.c uw_sysstat.h $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_sysstat_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@ @LIBGTHREAD2_CFLAGS@
+-uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) $(LIBOPTS) \
++uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) @LIBOPTS_LIBS@ \
+   $(FREEBSDLIBS) $(SOLARISLIBS) $(LIBSTATGRAB) \
+   $(LIBUPWATCH) @LIBXML2_LIBS@ @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch 
+-EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d
++EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d uw_local_scripts
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
+@@ -44,9 +44,19 @@
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ; \
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	  chown -R upwatch:upwatch ${DESTDIR}${confdir}/uw_sysstat.d ; \
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${confdir}/uw_local_scripts ;\
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	else \
+ 	  mkdir -p ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
++          mkdir -p ${DESTDIR}${confdir}/uw_local_scripts ;\
++          mkdir -p ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	fi
+ 
+
+Modified: upwatch/libdbi/uw_sysstat/probe.def
+===================================================================
+--- upwatch/libdbi/uw_sysstat/probe.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/probe.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -5,7 +5,7 @@
+   name = &quot;sysstat&quot;;
+   id = 5;
+   descrip = &quot;System information like load average, CPU/MEM usage etc&quot;;
+-  addbyhand = &quot;yes&quot;;
++  addbyhand = &quot;no&quot;;
+   class = &quot;&quot;;
+   graphgroup = &quot;sysstat&quot;;
+   graphtypes = &quot;cpu loadavg memory blockio swap systemp&quot;;
+@@ -523,3 +523,63 @@
+     descrip = &quot;date/time this result was received by the upwatch server&quot;;
+   };
+ };
++
++probe = {
++  name = &quot;local&quot;;
++  id = 19;
++  descrip = &quot;Local checks&quot;;
++  addbyhand = &quot;no&quot;;
++  class = &quot;&quot;;
++  graphgroup = &quot;&quot;;
++  graphtypes = &quot;default&quot;;
++  comment = &quot;&quot;;
++
++  attribute = {
++    name = &quot;server&quot;;
++    required = true;
++    descrip = &quot;id of this server in the database&quot;;
++  };
++
++  attribute = {
++    name = &quot;ipaddress&quot;;
++    default = &quot;127.0.0.1&quot;;
++    descrip = &quot;target ip address&quot;;
++  };
++
++  attribute = {
++    name = &quot;realm&quot;;
++    required = true;
++    descrip = &quot;database realm for these values&quot;;
++  };
++
++  attribute = {
++    name = &quot;date&quot;;
++    required = true;
++    descrip = &quot;date/time for this result&quot;;
++  };
++
++  attribute = {
++    name = &quot;expires&quot;;
++    required = true;
++    descrip = &quot;when this result expires&quot;;
++  };
++
++  attribute = {
++    name = &quot;color&quot;;
++    required = true;
++    descrip = &quot;color as this probe thinks it should be&quot;;
++  };
++
++  attribute = {
++    name = &quot;interval&quot;;
++    default = &quot;60&quot;;
++    descrip = &quot;time between measurements&quot;;
++  };
++
++  attribute = {
++    name = &quot;received&quot;;
++    default = &quot;0&quot;;
++    descrip = &quot;date/time this result was received by the upwatch server&quot;;
++  };
++};
++
+
+Modified: upwatch/libdbi/uw_sysstat/run.c
+===================================================================
+--- upwatch/libdbi/uw_sysstat/run.c	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/run.c	2007-01-27 20:21:41 UTC (rev 665)
+@@ -30,6 +30,8 @@
+ 
+ char ipaddress[24];
+ 
++xmlNodePtr newnode(xmlDocPtr doc, char *name);
++
+ struct _errlogspec {
+   char *style;
+   char *path;
+@@ -174,6 +176,119 @@
+ }
+ #endif
+ 
++int do_local(xmlNodePtr doc )
++{
++  char buffer[1024];
++  char resultmsg[32768]=&quot;&quot;;
++  unsigned int color=STAT_GREEN;
++  GError *error=NULL;
++  GDir *dir;
++  G_CONST_RETURN gchar *filename;
++  char path[PATH_MAX] = &quot;/etc/upwatch.d/uw_local_scripts&quot;;
++  char cmd[PATH_MAX];
++  FILE *in;
++  char info[32768];
++  char buf[256];
++  xmlNodePtr node = (xmlNodePtr) newnode(doc, &quot;local&quot;);
++  struct stat st;
++  struct timeval start, now;
++
++  /* measure the time it takes to perform all checks */
++  gettimeofday(&amp;start, NULL);
++ 
++  /* Don't allow directories writable by others */
++  if (stat(path, &amp;st) &lt; 0) {
++    LOG(LOG_ERR,&quot;Cannot check permissions for %s&quot;, path);
++  }
++  if ( (st.st_uid == getuid()) &amp;&amp; (st.st_mode &amp; 077) != 0 ) {  /* we are world or group writable */
++    LOG(LOG_ERR,&quot;%s has bad permissions, refusing to run the scripts&quot;, path);
++    return;
++  }
++
++  /* Ok the directory is safe enough, lets open it. */
++  dir = g_dir_open (path, 0, &amp;error);
++  if (dir == NULL) {
++    LOG(LOG_ERR,&quot;Cannot open %s&quot;, path); /* Should not be reached */
++    perror(path);
++    return;
++  }
++
++  /* set a strict umask for safety */
++  umask(077);
++
++  /* Time to traverse the directory */
++  while ((filename = g_dir_read_name(dir)) != NULL) {
++    char fullpath[PATH_MAX];
++    if (filename[0] == '.') continue;  // skip '.', '..' and hidden files
++    sprintf(fullpath, &quot;%s/%s&quot;, path, filename);
++    if (!g_file_test(fullpath, G_FILE_TEST_IS_EXECUTABLE)) {
++      LOG(LOG_WARNING,&quot;Script %s is not executable, skipping.&quot;, fullpath);
++      continue;
++    }
++ 
++    if ( debug &gt; 4 ) printf(&quot;Checking script %s\n&quot;, fullpath);
++
++    /* The script should not be writable by others */
++    if (stat(fullpath, &amp;st) &lt; 0) {
++      LOG(LOG_ERR,&quot;Cannot check permissions for %s&quot;, fullpath);
++      continue;
++    }
++    if ( (st.st_uid == getuid()) &amp;&amp; (st.st_mode &amp; 077) != 0 ) {  /* we are world or group writable */
++      LOG(LOG_ERR,&quot;Script %s has insecure permissions, refusing it.&quot;, fullpath);
++      continue;
++    }
++    if ( debug &gt; 4 ) printf(&quot;Script %s is ok\n&quot;, fullpath);
++
++    uw_setproctitle(&quot;Running check %s&quot;, fullpath);
++
++    char msgbuf[8192]=&quot;&quot;;
++    unsigned int mycolor=STAT_GREEN; /* Untill proven otherwise */
++    sprintf(cmd, &quot;%s &gt; /tmp/.uw_sysstat.tmp&quot;, fullpath);
++    LOG(LOG_INFO, cmd);
++    if ( debug &gt; 4 ) printf(&quot;Running local check %s\n&quot;, fullpath);
++    system(cmd);
++    in = fopen(&quot;/tmp/.uw_sysstat.tmp&quot;, &quot;r&quot;);
++    if (in) {
++      int linecount=0;
++      while (fgets(buf, sizeof(buf), in)) {
++        if ( linecount == 0 ) { /* First line contains the color of the check */
++          linecount++;
++          mycolor=convert_color(buf); 
++        }
++        else { /* All the rest is part of the message */
++          snprintf(msgbuf, sizeof(msgbuf), &quot;%s\n%s&quot;, msgbuf, buf);
++        }
++          
++      }
++    } else {
++      strcpy(info, strerror(errno));
++    }
++    fclose(in);
++    unlink(&quot;tmp/.uw_sysstat.tmp&quot;);
++
++   /* If there is a message, put it into the big message. Prepend the script name. */
++   if (strlen( msgbuf ) != 0 ) {
++     snprintf(resultmsg, sizeof(resultmsg), &quot;%s%s:%s\n&quot;, resultmsg, fullpath, msgbuf );
++   }
++
++   /* is this the highest color? */
++   if ( mycolor &gt; color ) color = mycolor;
++  }
++
++  /* ok, we finished the scripts loop, set the results */
++  gettimeofday(&amp;now, NULL);
++  char totalstring[16]=&quot;&quot;; /* Big enough? */
++  snprintf( totalstring, sizeof(totalstring), &quot;%f&quot;, ((float) timeval_diff(&amp;now, &amp;start)) * 0.000001);
++  xmlSetProp(node, &quot;total&quot;, totalstring);
++  /* Here we set the color */
++  sprintf(buffer, &quot;%d&quot;, color);
++  xmlSetProp(node, &quot;color&quot;, buffer);
++  xmlNewTextChild(node, NULL, &quot;info&quot;, resultmsg);
++  g_dir_close(dir);
++
++  return color;
++}
++
+ #if HAVE_LIBPCRE
+ #define STATFILE &quot;/var/run/upwatch/uw_sysstat.stat&quot;
+ int check_log(GString *string, int idx)
+@@ -390,6 +505,29 @@
+   return node;
+ }
+ 
++/* Small helper function to convert a string to a valid upwatch color code. Probably not efficient */
++int convert_color ( char *string )
++{
++  int color=STAT_GREEN;
++  switch(string[0]) {
++               case 'r':
++                         color=STAT_RED;
++                         break;
++               case 'p':
++                         color=STAT_PURPLE;
++                         break;
++               case 'y':
++                         color=STAT_YELLOW;
++                         break;
++               case 'b':
++                         color=STAT_BLUE;
++                         break;
++               default: 
++                         color=STAT_GREEN;
++  } 
++  return color;
++}
++
+ #if USE_XMBMON || defined (__OpenBSD__)
+ void add_hwstat(xmlNodePtr node)
+ {
+@@ -662,7 +800,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+ 
+   // do the sysstat
+-  node = newnode(doc, &quot;sysstat&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;sysstat&quot;);
+   add_loadavg(node);
+   add_cpu(node);
+   add_paging(node);
+@@ -677,16 +815,21 @@
+   if (OPT_VALUE_HWSTATS ) { 
+     // do the hwstat
+     get_hwstats();
+-    node = newnode(doc, &quot;hwstat&quot;);
++    node = (xmlNodePtr) newnode(doc, &quot;hwstat&quot;);
+     add_hwstat(node);
+     color = xmlGetPropInt(node, &quot;color&quot;);
+     if (color &gt; highest_color) highest_color = color;
+   }
+ #endif
++  if (OPT_VALUE_LOCALCHECKS ) { 
++   // do the local checks
++    color = do_local((xmlNodePtr) doc);
++    if (color &gt; highest_color) highest_color = color;
++  }
+ 
+ #if HAVE_LIBPCRE
+   // do the errlog
+-  node = newnode(doc, &quot;errlog&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;errlog&quot;);
+   log = check_logs(&amp;color);
+   if (color &gt; highest_color) highest_color = color;
+   sprintf(buf, &quot;%u&quot;, color);
+@@ -701,7 +844,7 @@
+ 
+   // do the diskfree
+   uw_setproctitle(&quot;checking diskspace&quot;);
+-  node = newnode(doc, &quot;diskfree&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;diskfree&quot;);
+   add_diskfree_info(node);
+   color = xmlGetPropInt(node, &quot;color&quot;);
+ 
+
+Copied: upwatch/libdbi/uw_sysstat/uw_local_scripts (from rev 662, upwatch/trunk/uw_sysstat/uw_local_scripts)
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.conf
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.conf	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.conf	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,6 +1,10 @@
+ #serverid 0
+ # generate hwstats yes/no
+ hwstats no
++
++# Run local check script
++localchecks no
++
+ errlog syslog /var/log/messages
+ errlog maillog /var/log/maillog
+ output uw_send
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/maillog/sendmail	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/maillog/sendmail	2007-01-27 20:21:41 UTC (rev 665)
+@@ -8,6 +8,6 @@
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+ green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+-green [LOGDATE] sendmail[PID]: [MSGID]: [HOSTNAME] \[[IPADDR]\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
++green [LOGDATE] sendmail[PID]: .* did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+ red [LOGDATE] sendmail[PID]: grew WorkList for /var/spool/mqueue to 8000
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/amavisd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/amavisd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/amavisd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,3 +1,5 @@
+ green [LOGDATE] amavisd: No pid_file [PATH], can't stop the process
+ green [LOGDATE] amavisd: Shutting down amavisd: failed
++green [LOGDATE] amavisd: Shutting down amavisd: succeeded
++green [LOGDATE] amavisd: Starting amavisd: succeeded
+ 
+
+Copied: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel (from rev 662, upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel)
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/dccifd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/dccifd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/dccifd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1 +1,2 @@
+ green [LOGDATE] dccifd[PID]: missing message body
++green [LOGDATE] dccifd[PID]: [NUM]\.[NUM]\.[NUM] rejected messages to [NUM] targets and discarded messages to [NUM] targets among [NUM] total since [NUM][PATH] [NUM]:[NUM]:[NUM]
+
+Copied: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/grandstream (from rev 662, upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream)
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/hylafax
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/hylafax	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/hylafax	2007-01-27 20:21:41 UTC (rev 665)
+@@ -2,17 +2,24 @@
+ green [LOGDATE] FaxGetty[PID]: ANSWER: DATA CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: Ring detected without successful handshake
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;&lt;NONE&gt;&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;[NUM]&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] &quot;s&quot;
++green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION  DEVICE '[PATH]'
+ green [LOGDATE] FaxGetty[PID]: CAUGHT SIGNAL [NUM]
+ green [LOGDATE] FaxGetty[PID]: CLOSE [PATH]
+ green [LOGDATE] FaxGetty[PID]: GETTY: exit status [NUM]
+ green [LOGDATE] FaxGetty[PID]: GETTY: START &quot;[PATH] \+pap -chap&quot;, pid [NUM]
+ green [LOGDATE] FaxGetty[PID]: HELLO
+ green [LOGDATE] FaxGetty[PID]: MODEM MULTI-TECH SYSTEMS MT[NUM]ZPXI/[NUM]
++green [LOGDATE] FaxGetty[PID]: MODEM WWW\.SOFT-SWITCH\.ORG spandsp/
+ green [LOGDATE] FaxGetty[PID]: OPEN [PATH]
+ green [LOGDATE] FaxGetty[PID]: [PATH]: Can not lock device\.
+ green [LOGDATE] FaxGetty[PID]: Purge stale UUCP lock [PATH]
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): from .*, page [NUM] in [NUM]:[NUM], INF, [NUM]\.[NUM] line/mm, [NUM]-D MR, [NUM] bit/s
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): [PATH] from .*, route to &lt;unspecified&gt;, [NUM] pages in [NUM]:[NUM]
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd &quot;[PATH]&quot; &quot;[WORD][NUM]&quot; &quot;[NUM]&quot; &quot;&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;s&quot;
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd &quot;[PATH]&quot; &quot;[WORD][NUM]&quot; &quot;[NUM]&quot; &quot;&quot; &quot;[NUM]&quot; &quot;&lt;NONE&gt;&quot; &quot;&lt;NONE&gt;&quot; &quot;s&quot;
+ green [LOGDATE] FaxQueuer[PID]: Copyright \(c\) [NUM]-[NUM]
+ green [LOGDATE] FaxQueuer[PID]: HylaFAX \(tm\) Version
+ green [LOGDATE] FaxQueuer[PID]: NOTIFY: bin/notify &quot;doneq/q[NUM]&quot; &quot;(done|timedout|blocked|requeued)&quot;
+@@ -29,3 +36,5 @@
+ green [LOGDATE] HylaFAX[PID]: Warning, client address &quot;[IPADDR]&quot; is not listed for host name &quot;[HOSTNAME]&quot;\.
+ green [LOGDATE] HylaFAX[PID]: Warning, no inverse address mapping for client host name &quot;[HOSTNAME]&quot;\.
+ green [LOGDATE] hylafax: Shutting down HylaFAX queue manager:  failed
++green [LOGDATE] /usr/sbin/faxquit[PID]: FIFO: open: No such device or address
++
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2007-01-27 20:21:41 UTC (rev 665)
+@@ -705,9 +705,13 @@
+ green [LOGDATE] kernel: kmod: runaway modprobe loop assumed and stopped
+ green [LOGDATE] kernel: CIFS VFS: Calculated size 0x[NUM] vs actual length 0x[NUM]
+ green [LOGDATE] kernel: CIFS VFS: bad smb size detected for Mid=[NUM]
++green [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Normal
++green [LOGDATE] kernel: Netfilter messages via NETLINK v[NUM]\.[NUM]
+ ignore [LOGDATE] kernel: CIFS VFS: Send error in read = [NUM]
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
++yellow [LOGDATE] kernel: zaptel Disabled echo canceller because of tone \(rx\) on channel [NUM
++yellow [LOGDATE] kernel: qozap: CRC error for HDLC frame on card [NUM] \(cardID [NUM]\) S/T port [NUM]
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+@@ -721,3 +725,5 @@
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+ red [LOGDATE] kernel: VM: killing process
+ red [LOGDATE] kernel: ip_conntrack: table full, dropping packet.
++red [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Exceeds Safe Limit
++
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2007-01-27 20:21:41 UTC (rev 665)
+@@ -4,6 +4,7 @@
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ LOGDATE [A-Za-z]{3}\s{1,2}[\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++SMBLOGDATE \[[-+]?\d+/[-+]?\d+/[-+]?\d+ [-+]?\d+:[-+]?\d+:[-+]?\d+, [-+]?\d+\]
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/named	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/named	2007-01-27 20:21:41 UTC (rev 665)
+@@ -4,7 +4,7 @@
+ green [LOGDATE] named[PID]: Cleaned cache of [NUM] RRset
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: bad zone transfer request: '[HOSTNAME]/IN': non-authoritative zone \(NOTAUTH\)
+ ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
+-ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
++ignore [LOGDATE] named[PID]: client .*: error sending response: host unreachable
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: no more recursive clients: quota reached
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update forwarding denied
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update '[HOSTNAME]/IN' denied
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/openntpd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/openntpd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -15,5 +15,6 @@
+ green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
+ green [LOGDATE] ntpd[PID]: sendto: Connection refused
+ green [LOGDATE] ntpd[PID]: IMSG_HOST_DNS with invalid peerID
++green [LOGDATE] ntpd[PID]: clock is now (un)?synced
+ yellow [LOGDATE] ntpd[PID]: could not parse &quot;[HOSTNAME]&quot;: Temporary failure in name resolution
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/smb	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/smb	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,22 +1,27 @@
+ green [LOGDATE] smb: nmbd shutdown failed
+ green [LOGDATE] smb: smbd shutdown failed
+-green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] client/smbmount.c:send_fs_socket\([NUM]\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/access.c:check_access\([NUM]\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:get_peer_addr\([NUM]\)
++green [LOGDATE] mount.smbfs[PID]: [SMBLOGDATE] client/smbmount.c:send_fs_socket\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/access.c:check_access\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:get_peer_addr\([NUM]\)
+ ignore [LOGDATE] smbd[PID]:\s*getpeername failed. Error was Transport endpoint is not connected
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:read_socket_data\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:read_socket_data\([NUM]\)
+ ignore [LOGDATE] smb_lookup: find .* failed, error=-512
+ green [LOGDATE] smb_add_request: request \[.*, .*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+-green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] tdb/tdbutil.c:tdb_log\([NUM]\) 
++green [LOGDATE] mount.smbfs[PID]: [SMBLOGDATE] tdb/tdbutil.c:tdb_log\([NUM]\) 
+ green [LOGDATE] kernel: smb_proc_readX_data:
+ ignore [LOGDATE] smbd[PID]:\s*Error writing [NUM] bytes to client. [NUM]. \(Connection reset by peer\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:send_smb\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:send_smb\([NUM]\)
+ ignore [LOGDATE] smbd[PID]: write_socket_data: write failure. Error = Connection reset by peer
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_socket_data\([NUM]\) 
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:write_socket_data\([NUM]\) 
+ green [LOGDATE] smb_add_request: request \[.*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+-green [LOGDATE] nmbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] nmbd/nmbd_responserecordsdb.c:find_response_record\([NUM]\) 
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_responserecordsdb.c:find_response_record\([NUM]\) 
+ green [LOGDATE] nmbd[PID]: find_response_record: response packet id [NUM] received with no matching record.
+-green [LOGDATE] smbd[13734]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_data\([NUM]\)
+-ignore [LOGDATE] smbd[13734]:\s*write_data: write failure in writing to client [IPADDR]. Error Connection reset by peer
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:write_data\([NUM]\)
++green [LOGDATE] nmbd[PID]: \*+
++green [LOGDATE] nmbd[PID]: \s*$
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_become_lmb.c:unbecome_local_master_success\([NUM]\)
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_incomingdgrams.c:process_local_master_announce\([NUM]\)
++
++ignore [LOGDATE] smbd[PID]:\s*write_data: write failure in writing to client [IPADDR]. Error Connection reset by peer
+
+Copied: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/snom (from rev 662, upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom)
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sshd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sshd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,5 +1,4 @@
+ green [LOGDATE] sshd[PID]: refused connect from [IPADDR]
+-
+ green [LOGDATE] sshd:\s*$
+ green [LOGDATE] sshd: Generating SSH[NUM] DSA host key: 
+ green [LOGDATE] sshd: Generating SSH[NUM] RSA host key: 
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -3,3 +3,5 @@
+ green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart\.
+ green [LOGDATE] syslog: syslogd shutdown failed 
+ green [LOGDATE] syslog: syslogd startup failed
++green [LOGDATE] [HOSTNAME][PID]: reboot [IPADDR] sip:[EMAIL]:[NUM]
++green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart \(remote reception\)\.
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/tftpd
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/tftpd	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/tftpd	2007-01-27 20:21:41 UTC (rev 665)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] in.tftpd[PID]: nak: Operation not permitted
+ green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+ green [LOGDATE] in.tftpd[PID]: RRQ from [IPADDR] filename .*
++green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+
+Copied: upwatch/libdbi/uw_sysstat/uw_sysstat.d/syslog/yum (from rev 662, upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/yum)
+
+Modified: upwatch/libdbi/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/libdbi/uw_sysstat/uw_sysstat.def	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_sysstat/uw_sysstat.def	2007-01-27 20:21:41 UTC (rev 665)
+@@ -10,7 +10,7 @@
+ homerc        = &quot;$$/upwatch.conf&quot;;
+ homerc        = &quot;$$/uw_sysstat.conf&quot;;
+ detail        = 
+-'uw_sysstat does the following: ';
++'Upwatch client for system health probes';
+ 
+ // this section is for the generated specfile
+ spec-requires = &quot;glib2&quot;;
+@@ -32,6 +32,10 @@
+ spec-files = `echo &quot;%dir&quot; $confdir/uw_sysstat.d/quagga`;
+ spec-files = `for i in \`find uw_sysstat.d/quagga -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ 
++// Include the uw_local example scripts
++spec-files = `echo &quot;%dir&quot; $confdir/uw_local_scripts`;
++spec-files = `for i in \`find uw_local_scripts -type f | grep -v .svn\` ; do echo /usr/share/upwatch/examples/$i; done`;
++
+ // describe commandline flags
+ flag = {
+     name      = realm;
+@@ -118,6 +122,15 @@
+ };
+ 
+ flag = {
++    name      = localchecks;
++    arg_type  = bool;
++    descrip   = &quot;Run local scripts&quot;;
++    doc       =
++'Run local check scripts. Please make sure the uw_local scripts directory has proper permissions. ';
++};
++
++
++flag = {
+     name      = diskfree-red;
+     arg_default  = 95;
+     arg_type  = number;
+
+Modified: upwatch/libdbi/uw_tcpconnect/Makefile.am
+===================================================================
+--- upwatch/libdbi/uw_tcpconnect/Makefile.am	2007-01-27 20:08:38 UTC (rev 664)
++++ upwatch/libdbi/uw_tcpconnect/Makefile.am	2007-01-27 20:21:41 UTC (rev 665)
+@@ -9,7 +9,7 @@
+ 
+ uw_tcpconnect_SOURCES = run.c uw_tcpconnect.h uw_tcpconnect.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_tcpconnect_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+-uw_tcpconnect_LDADD = uw_tcpconnect_$(DB_O) uw_tcpconnect_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
++uw_tcpconnect_LDADD = uw_tcpconnect_$(DB_O) uw_tcpconnect_$(MAIN_O) @LIBOPTS_LIBS@ $(LIBUPWATCH) $(LIBST) @LIBDBI_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000199.html">[Upwatch-commits] r664 - upwatch/trunk
+</A></li>
+	<LI>Next message: <A HREF="000200.html">[Upwatch-commits] r666 - upwatch/libdbi/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#201">[ date ]</a>
+              <a href="thread.html#201">[ thread ]</a>
+              <a href="subject.html#201">[ subject ]</a>
+              <a href="author.html#201">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

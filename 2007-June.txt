@@ -1,0 +1,113 @@
+From raarts at mail.berlios.de  Fri Jun  1 14:06:43 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Fri, 1 Jun 2007 14:06:43 +0200
+Subject: [Upwatch-commits] r680 - upwatch/trunk/uw_iptraf
+Message-ID: <200706011206.l51C6hJJ019595@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-06-01 14:06:43 +0200 (Fri, 01 Jun 2007)
+New Revision: 680
+
+Modified:
+   upwatch/trunk/uw_iptraf/uw_iptraf.def
+Log:
+Fix duplicate options.
+
+
+Modified: upwatch/trunk/uw_iptraf/uw_iptraf.def
+===================================================================
+--- upwatch/trunk/uw_iptraf/uw_iptraf.def	2007-05-29 20:48:58 UTC (rev 679)
++++ upwatch/trunk/uw_iptraf/uw_iptraf.def	2007-06-01 12:06:43 UTC (rev 680)
+@@ -112,7 +112,7 @@
+ 
+ flag = {
+     name      = network;
+-    value     = n;
++    value     = N;
+     arg_type  = string;
+     stack_arg;
+     descrip   = "internal network in CIDR format";
+@@ -124,7 +124,7 @@
+ 
+ flag = {
+     name      = extignore;
+-    value     = n;
++    value     = X;
+     arg_type  = string;
+     stack_arg;
+     descrip   = "external network (in CIDR format) to ignore";
+
+
+
+From raarts at mail.berlios.de  Fri Jun  1 14:24:55 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Fri, 1 Jun 2007 14:24:55 +0200
+Subject: [Upwatch-commits] r681 - in upwatch/trunk: uw_accept uw_acceptbb
+	uw_setip
+Message-ID: <200706011224.l51COtRi022355@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-06-01 14:24:54 +0200 (Fri, 01 Jun 2007)
+New Revision: 681
+
+Modified:
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_setip/uw_setip.def
+Log:
+More dupe options.
+
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_accept/uw_accept.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -32,7 +32,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1985;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -34,7 +34,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1984;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+
+Modified: upwatch/trunk/uw_setip/uw_setip.def
+===================================================================
+--- upwatch/trunk/uw_setip/uw_setip.def	2007-06-01 12:06:43 UTC (rev 680)
++++ upwatch/trunk/uw_setip/uw_setip.def	2007-06-01 12:24:54 UTC (rev 681)
+@@ -31,7 +31,7 @@
+ flag = {
+     must-set;
+     name      = listen;
+-    value     = l;        /* flag style option character */
++    value     = L;        /* flag style option character */
+     arg_default  = 1990;  /* option argument indication  */
+     arg_type  = number;   /* option argument indication  */
+     max       = NOLIMIT;  /* occurrence limit (none)     */
+@@ -52,7 +52,7 @@
+ 
+ flag = {
+     name      = setipquery;
+-    value     = A;
++    value     = S;
+     arg_type  = string;
+     arg_default = "update server set ip = '%s', nat = '%s' where id = '%s'";
+     descrip   = "SQL query to use for updating ip addresses";
+
+
+

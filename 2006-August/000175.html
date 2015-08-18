@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r641 - upwatch/libdbi/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r641%20-%20upwatch/libdbi/common&In-Reply-To=%3C200608221437.k7MEb5iu027142%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000174.html">
+   <LINK REL="Next"  HREF="000176.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r641 - upwatch/libdbi/common</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r641%20-%20upwatch/libdbi/common&In-Reply-To=%3C200608221437.k7MEb5iu027142%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r641 - upwatch/libdbi/common">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Aug 22 16:37:05 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000174.html">[Upwatch-commits] r640 - upwatch/libdbi/common
+</A></li>
+        <LI>Next message: <A HREF="000176.html">[Upwatch-commits] r642 - in upwatch/libdbi: common config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#175">[ date ]</a>
+              <a href="thread.html#175">[ thread ]</a>
+              <a href="subject.html#175">[ subject ]</a>
+              <a href="author.html#175">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-22 16:37:04 +0200 (Tue, 22 Aug 2006)
+New Revision: 641
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+Log:
+Don't add the yellow and red colums to the other tables when the probe does not have a yellow treshold setting.
+while there: if this setting is not there, please don't document it automatically ;-)
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 13:51:34 UTC (rev 640)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 14:37:04 UTC (rev 641)
+@@ -125,8 +125,10 @@
+ CREATE TABLE pr_[+name+]_raw (
+   id bigint unsigned NOT NULL auto_increment,   -- unique id for result
+   probe int unsigned NOT NULL default '1',      -- probe identifier
++[+ IF yellow +]
+   yellow float NOT NULL default '[+yellow+]',   -- value for yellow alert
+   red float NOT NULL default '[+red+]',         -- value for red alert
++[+ ENDIF yellow +]
+   stattime int unsigned NOT NULL default '0',   -- time when result was generated
+   color smallint unsigned NOT NULL default '200', -- color value [+
+ FOR result +][+
+@@ -206,8 +208,10 @@
+ CREATE TABLE pr_[+name+]_[+period+] (
+   id bigint unsigned NOT NULL auto_increment,	-- unique id for result
+   probe int unsigned NOT NULL default '1',	-- probe identifier
++[+ IF yellow +]
+   yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
+   red float NOT NULL default '[+red+]', 	-- value for red alert 
++[+ ENDIF yellow +]
+   slot smallint(5) unsigned NOT NULL default '0', -- timeslot in this period
+   stattime int unsigned NOT NULL default '0',	-- time when result was generated
+   color smallint unsigned NOT NULL default '200', -- color value [+ 
+@@ -463,6 +467,7 @@
+                   &lt;entry colname = &quot;Extra&quot;&gt;&lt;para&gt; &lt;/para&gt;&lt;/entry&gt;
+                   &lt;entry colname = &quot;Description&quot;&gt;&lt;para&gt;frequency in minutes &lt;/para&gt;&lt;/entry&gt;
+                &lt;/row&gt;
++[+ IF yellow +]
+                &lt;row&gt;
+                   &lt;entry colname = &quot;Field&quot;&gt;&lt;para&gt;yellow &lt;/para&gt;&lt;/entry&gt;
+                   &lt;entry colname = &quot;Type&quot;&gt;&lt;para&gt;float &lt;/para&gt;&lt;/entry&gt;
+@@ -479,6 +484,7 @@
+                   &lt;entry colname = &quot;Extra&quot;&gt;&lt;para&gt; &lt;/para&gt;&lt;/entry&gt;
+                   &lt;entry colname = &quot;Description&quot;&gt;&lt;para&gt;value for red alert &lt;/para&gt;&lt;/entry&gt;
+                &lt;/row&gt;
++[+ ENDIF yellow +]
+                &lt;row&gt;
+                   &lt;entry colname = &quot;Field&quot;&gt;&lt;para&gt;disable &lt;/para&gt;&lt;/entry&gt;
+                   &lt;entry colname = &quot;Type&quot;&gt;&lt;para&gt;enum('yes', 'no') &lt;/para&gt;&lt;/entry&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000174.html">[Upwatch-commits] r640 - upwatch/libdbi/common
+</A></li>
+	<LI>Next message: <A HREF="000176.html">[Upwatch-commits] r642 - in upwatch/libdbi: common config
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#175">[ date ]</a>
+              <a href="thread.html#175">[ thread ]</a>
+              <a href="subject.html#175">[ subject ]</a>
+              <a href="author.html#175">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

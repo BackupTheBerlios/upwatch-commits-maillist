@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r518 - upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r518%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog&In-Reply-To=%3C200603061030.k26AU8OV029302%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000048.html">
+   <LINK REL="Next"  HREF="000050.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r518 - upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r518%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog&In-Reply-To=%3C200603061030.k26AU8OV029302%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r518 - upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Mar  6 11:30:08 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000048.html">[Upwatch-commits] r517 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000050.html">[Upwatch-commits] r519 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-06 11:30:08 +0100 (Mon, 06 Mar 2006)
+New Revision: 518
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+Log:
+Sendmail rejecting messages because of loadavg is bad.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-06 10:26:13 UTC (rev 517)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-03-06 10:30:08 UTC (rev 518)
+@@ -5,4 +5,5 @@
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+-
++green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
++red [LOGDATE] sendmail[PID]: rejecting connections on daemon MTA: load average: [NUM]
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000048.html">[Upwatch-commits] r517 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000050.html">[Upwatch-commits] r519 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

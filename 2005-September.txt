@@ -1,0 +1,415 @@
+From wijnand at berlios.de  Fri Sep  2 12:21:11 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 12:21:11 +0200
+Subject: [Upwatch-commits] r493 - upwatch/trunk/uw_mysql
+Message-ID: <200509021021.j82ALBkT018185@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 12:20:26 +0200 (Fri, 02 Sep 2005)
+New Revision: 493
+
+Modified:
+   upwatch/trunk/uw_mysql/run.c
+Log:
+Now really fix the call to mysql_options(), thanks to raarts for fixing this.
+
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2005-08-31 21:01:22 UTC (rev 492)
++++ upwatch/trunk/uw_mysql/run.c	2005-09-02 10:20:26 UTC (rev 493)
+@@ -248,14 +248,15 @@
+   MYSQL *mysql = mysql_init(NULL);
+   MYSQL_RES *result;
+   struct timeval start, now;
++  unsigned int option;
+ 
+   dbhost = probe->ipaddress;
+   dbname = probe->dbname;
+   dbuser = probe->dbuser;
+   dbpasswd = probe->dbpasswd;
+ 
+-  /* mysql_options(mysql, MYSQL_OPT_COMPRESS, 0); */
+-  /* mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, 50); */
++  option = 0 ; mysql_options(mysql, MYSQL_OPT_COMPRESS, &option);
++  option = 50; mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, &option);
+   gettimeofday(&start, NULL);
+   if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
+     probe->msg = strdup(mysql_error(mysql));
+
+
+
+From wijnand at berlios.de  Fri Sep  2 16:44:34 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 16:44:34 +0200
+Subject: [Upwatch-commits] r494 - upwatch/trunk
+Message-ID: <200509021444.j82EiY3Z020029@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 16:44:32 +0200 (Fri, 02 Sep 2005)
+New Revision: 494
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Add /usr/local/include/postgresql
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-09-02 10:20:26 UTC (rev 493)
++++ upwatch/trunk/configure.ac	2005-09-02 14:44:32 UTC (rev 494)
+@@ -591,6 +591,10 @@
+ 	then
+ 		LIBPQ_CFLAGS=-I/usr/include/postgresql
+ 	fi
++	if test -f /usr/local/include/postgresql/libpq-fe.h
++	then
++		LIBPQ_CFLAGS=-I/usr/local/include/postgresql
++	fi
+ fi
+ AM_CONDITIONAL(HAVE_LIBPQ, test $HAVE_LIBPQ -eq 1)
+ AC_SUBST(LIBPQ_LIBS)
+
+
+
+From wijnand at berlios.de  Fri Sep  2 16:50:00 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 16:50:00 +0200
+Subject: [Upwatch-commits] r495 - in upwatch/trunk: uw_dns uw_imap uw_mysql uw_ping uw_pop3 uw_postgresql uw_smtp uw_snmpget uw_tcpconnect
+Message-ID: <200509021450.j82Eo0AW020431@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 16:49:51 +0200 (Fri, 02 Sep 2005)
+New Revision: 495
+
+Modified:
+   upwatch/trunk/uw_dns/run.c
+   upwatch/trunk/uw_imap/run.c
+   upwatch/trunk/uw_mysql/run.c
+   upwatch/trunk/uw_ping/run.c
+   upwatch/trunk/uw_pop3/run.c
+   upwatch/trunk/uw_postgresql/run.c
+   upwatch/trunk/uw_smtp/run.c
+   upwatch/trunk/uw_snmpget/run.c
+   upwatch/trunk/uw_tcpconnect/run.c
+Log:
+Add #include <db.h> explicitly to the monitors run.c files.
+For some reason gcc fails in some cases. Maybe it is more strict on some platforms?
+
+
+Modified: upwatch/trunk/uw_dns/run.c
+===================================================================
+--- upwatch/trunk/uw_dns/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_dns/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <sys/time.h>
+ #include <sys/types.h>
+
+Modified: upwatch/trunk/uw_imap/run.c
+===================================================================
+--- upwatch/trunk/uw_imap/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_imap/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <st.h>
+ #include <sys/time.h>
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_mysql/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <sys/time.h>
+ 
+
+Modified: upwatch/trunk/uw_ping/run.c
+===================================================================
+--- upwatch/trunk/uw_ping/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_ping/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <sys/time.h>
+ #include <sys/types.h>
+
+Modified: upwatch/trunk/uw_pop3/run.c
+===================================================================
+--- upwatch/trunk/uw_pop3/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_pop3/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <st.h>
+ #include <sys/time.h>
+
+Modified: upwatch/trunk/uw_postgresql/run.c
+===================================================================
+--- upwatch/trunk/uw_postgresql/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_postgresql/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <sys/time.h>
+ 
+
+Modified: upwatch/trunk/uw_smtp/run.c
+===================================================================
+--- upwatch/trunk/uw_smtp/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_smtp/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <st.h>
+ #include <sys/time.h>
+
+Modified: upwatch/trunk/uw_snmpget/run.c
+===================================================================
+--- upwatch/trunk/uw_snmpget/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_snmpget/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <limits.h>
+ #include <sys/time.h>
+
+Modified: upwatch/trunk/uw_tcpconnect/run.c
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/run.c	2005-09-02 14:44:32 UTC (rev 494)
++++ upwatch/trunk/uw_tcpconnect/run.c	2005-09-02 14:49:51 UTC (rev 495)
+@@ -1,4 +1,5 @@
+ #include "config.h"
++#include <db.h>
+ #include <generic.h>
+ #include <st.h>
+ #include <sys/time.h>
+
+
+
+From wijnand at berlios.de  Fri Sep  2 21:07:28 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 21:07:28 +0200
+Subject: [Upwatch-commits] r496 - upwatch/trunk/st-1.4
+Message-ID: <200509021907.j82J7SBk020827@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 21:07:26 +0200 (Fri, 02 Sep 2005)
+New Revision: 496
+
+Modified:
+   upwatch/trunk/st-1.4/Makefile.am
+Log:
+Recognize OpenBSD
+
+
+Modified: upwatch/trunk/st-1.4/Makefile.am
+===================================================================
+--- upwatch/trunk/st-1.4/Makefile.am	2005-09-02 14:49:51 UTC (rev 495)
++++ upwatch/trunk/st-1.4/Makefile.am	2005-09-02 19:07:26 UTC (rev 496)
+@@ -9,6 +9,9 @@
+ if NETBSD
+ MYCFLAGS = -DNETBSD
+ endif
++if OPENBSD
++MYCFLAGS = -DOPENBSD
++endif
+ if SOLARIS
+ MYCFLAGS = -DSOLARIS
+ endif
+
+
+
+From wijnand at berlios.de  Fri Sep  2 21:11:32 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 21:11:32 +0200
+Subject: [Upwatch-commits] r497 - upwatch/trunk
+Message-ID: <200509021911.j82JBWVP021066@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 21:11:31 +0200 (Fri, 02 Sep 2005)
+New Revision: 497
+
+Modified:
+   upwatch/trunk/Makefile.am
+Log:
+Always make st-1.4 a subdir, it is needed when --enable-monitors is the only thing that gets enabled.
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2005-09-02 19:07:26 UTC (rev 496)
++++ upwatch/trunk/Makefile.am	2005-09-02 19:11:31 UTC (rev 497)
+@@ -68,7 +68,7 @@
+ if ENABLE_SERVER
+ SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} compat util scripts config common
+ else
+-SUBDIRS = upwatch ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
++SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
+ endif
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+
+
+
+From wijnand at berlios.de  Fri Sep  2 21:13:35 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 21:13:35 +0200
+Subject: [Upwatch-commits] r498 - upwatch/trunk
+Message-ID: <200509021913.j82JDZRG021190@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 21:13:34 +0200 (Fri, 02 Sep 2005)
+New Revision: 498
+
+Removed:
+   upwatch/trunk/uw_notify/
+Log:
+It seems uw_notify will not be used anymore, so it should rot in the attic.
+
+
+
+
+From wijnand at berlios.de  Fri Sep  2 21:47:21 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 21:47:21 +0200
+Subject: [Upwatch-commits] r499 - upwatch/trunk
+Message-ID: <200509021947.j82JlLtK022811@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 21:47:18 +0200 (Fri, 02 Sep 2005)
+New Revision: 499
+
+Modified:
+   upwatch/trunk/TODO
+Log:
+Update to reality
+
+
+Modified: upwatch/trunk/TODO
+===================================================================
+--- upwatch/trunk/TODO	2005-09-02 19:13:34 UTC (rev 498)
++++ upwatch/trunk/TODO	2005-09-02 19:47:18 UTC (rev 499)
+@@ -3,7 +3,12 @@
+ - uw_snmp, snmp trap catcher
+ - uw_ftp/uw_https etc
+ - uw_diskfree
+-- opensource it
++- opensource it (done?)
++- some classes/libs to make integration in a current website easy (perl/php etc)
++- example frontend that uses those classes
++- fix uw_dns
++- make uw_accept email in other languages than dutch (should be configured in the database, each contact has his own language) (gettext?)
++- more ways for uw_process to notify contacts ( jabber? )
+ 
+ Adapt specfile for multiple distributions. This may be useful:
+ 
+
+
+
+From wijnand at berlios.de  Fri Sep  2 21:49:43 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Fri, 2 Sep 2005 21:49:43 +0200
+Subject: [Upwatch-commits] r500 - upwatch/trunk
+Message-ID: <200509021949.j82JnhrR022900@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-02 21:49:40 +0200 (Fri, 02 Sep 2005)
+New Revision: 500
+
+Modified:
+   upwatch/trunk/README
+Log:
+Update to reality
+
+
+Modified: upwatch/trunk/README
+===================================================================
+--- upwatch/trunk/README	2005-09-02 19:47:18 UTC (rev 499)
++++ upwatch/trunk/README	2005-09-02 19:49:40 UTC (rev 500)
+@@ -1,15 +1,16 @@
+-This is version 0.3 of UpWatch, a device monitoring and statistics
++This is version 0.98 of UpWatch, a device monitoring and statistics
+ framework. UpWatch boasts extendability, extreme speed and scalability,
+ useful statistics and graphs, and a web interface.
+ 
+ Currently it uses PHP, MySQL, and the daemons are written in C.
+  
+-CVS =================================================================
++SVN =================================================================
+ 
+-If you have CVS access, issue the following commands:
++If you have SVN access, issue the following commands:
+ 
+-cvs checkout upwatch
+-./autogen.sh
++svn checkout svn://svn.berlios.de/upwatch/upwatch/trunk upwatch
++cd upwatch
++cfg/bootstrap
+ ./configure
+ make
+ 
+
+
+
+From wijnand at berlios.de  Mon Sep  5 21:50:22 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Mon, 5 Sep 2005 21:50:22 +0200
+Subject: [Upwatch-commits] r501 - upwatch/trunk/upwatch
+Message-ID: <200509051950.j85JoMu4002947@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-09-05 21:50:21 +0200 (Mon, 05 Sep 2005)
+New Revision: 501
+
+Modified:
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/probe.h
+Log:
+init_no_cache()  returns nothing, so this function is void, not int.
+
+fixes one case of -Werror with gcc4
+
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2005-09-02 19:49:40 UTC (rev 500)
++++ upwatch/trunk/upwatch/pr_process.c	2005-09-05 19:50:21 UTC (rev 501)
+@@ -20,7 +20,7 @@
+ //*******************************************************************
+ // For probes that use no cache: disable this field
+ //******************************************************************* 
+-int init_no_cache(module *probe)
++void init_no_cache(module *probe)
+ {
+   probe->needs_cache = 0;
+ }
+
+Modified: upwatch/trunk/upwatch/probe.h
+===================================================================
+--- upwatch/trunk/upwatch/probe.h	2005-09-02 19:49:40 UTC (rev 500)
++++ upwatch/trunk/upwatch/probe.h	2005-09-05 19:50:21 UTC (rev 501)
+@@ -60,7 +60,7 @@
+   int (*process)(struct transaction *t);
+ } trx;
+ 
+-int init_no_cache(module *probe);
++void init_no_cache(module *probe);
+ 
+ #define STANDARD_MODULE_STUFF(a) PROBE_##a, #a, NULL, 1, NULL, \
+   NULL, sizeof(struct a##_result), sizeof(struct a##_def), 0, 0, 0, 0, 0
+
+
+

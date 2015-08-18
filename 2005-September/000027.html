@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r496 - upwatch/trunk/st-1.4
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r496%20-%20upwatch/trunk/st-1.4&In-Reply-To=%3C200509021907.j82J7SBk020827%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   <LINK REL="Next"  HREF="000028.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r496 - upwatch/trunk/st-1.4</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r496%20-%20upwatch/trunk/st-1.4&In-Reply-To=%3C200509021907.j82J7SBk020827%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r496 - upwatch/trunk/st-1.4">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Sep  2 21:07:28 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[Upwatch-commits] r495 - in upwatch/trunk: uw_dns uw_imap uw_mysql uw_ping uw_pop3 uw_postgresql uw_smtp uw_snmpget uw_tcpconnect
+</A></li>
+        <LI>Next message: <A HREF="000028.html">[Upwatch-commits] r497 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-09-02 21:07:26 +0200 (Fri, 02 Sep 2005)
+New Revision: 496
+
+Modified:
+   upwatch/trunk/st-1.4/Makefile.am
+Log:
+Recognize OpenBSD
+
+
+Modified: upwatch/trunk/st-1.4/Makefile.am
+===================================================================
+--- upwatch/trunk/st-1.4/Makefile.am	2005-09-02 14:49:51 UTC (rev 495)
++++ upwatch/trunk/st-1.4/Makefile.am	2005-09-02 19:07:26 UTC (rev 496)
+@@ -9,6 +9,9 @@
+ if NETBSD
+ MYCFLAGS = -DNETBSD
+ endif
++if OPENBSD
++MYCFLAGS = -DOPENBSD
++endif
+ if SOLARIS
+ MYCFLAGS = -DSOLARIS
+ endif
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[Upwatch-commits] r495 - in upwatch/trunk: uw_dns uw_imap uw_mysql uw_ping uw_pop3 uw_postgresql uw_smtp uw_snmpget uw_tcpconnect
+</A></li>
+	<LI>Next message: <A HREF="000028.html">[Upwatch-commits] r497 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

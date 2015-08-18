@@ -1,0 +1,1658 @@
+From wijnand at mail.berlios.de  Mon Aug  7 11:46:36 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Mon, 7 Aug 2006 11:46:36 +0200
+Subject: [Upwatch-commits] r636 - upwatch/trunk/util
+Message-ID: <200608070946.k779kau4029165@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-07 11:46:35 +0200 (Mon, 07 Aug 2006)
+New Revision: 636
+
+Modified:
+   upwatch/trunk/util/chklog.c
+Log:
+Fix chklog, I killed a warning the wrong way.
+
+
+
+Modified: upwatch/trunk/util/chklog.c
+===================================================================
+--- upwatch/trunk/util/chklog.c	2006-07-27 13:46:34 UTC (rev 635)
++++ upwatch/trunk/util/chklog.c	2006-08-07 09:46:35 UTC (rev 636)
+@@ -33,7 +33,7 @@
+ 
+   setvbuf(stdout, (char *)NULL, _IOLBF, 0); // make stdout linebuffered
+ 
+-  logregex_refresh_type("/etc/upwatch.d/uw_sysstat.d", (char *) &OPT_ARG(TYPE));
++  logregex_refresh_type("/etc/upwatch.d/uw_sysstat.d", (char *) OPT_ARG(TYPE));
+ 
+   if (strcmp(*argv, "-") == 0) {
+     in = stdin;
+
+
+
+From wijnand at mail.berlios.de  Mon Aug  7 14:41:00 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Mon, 7 Aug 2006 14:41:00 +0200
+Subject: [Upwatch-commits] r637 -
+	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200608071241.k77Cf0N0014311@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-07 14:40:22 +0200 (Mon, 07 Aug 2006)
+New Revision: 637
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/amavisd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,3 +1,5 @@
+ green [LOGDATE] amavisd: No pid_file [PATH], can't stop the process
+ green [LOGDATE] amavisd: Shutting down amavisd: failed
++green [LOGDATE] amavisd: Shutting down amavisd: succeeded
++green [LOGDATE] amavisd: Starting amavisd: succeeded
+ 
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/bsd.kernel	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1 @@
++green [LOGDATE] [PATH]: [PATH]: optimization changed from [WORD] to [WORD]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/dccifd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1 +1,2 @@
+ green [LOGDATE] dccifd[PID]: missing message body
++green [LOGDATE] dccifd[PID]: [NUM]\.[NUM]\.[NUM] rejected messages to [NUM] targets and discarded messages to [NUM] targets among [NUM] total since [NUM][PATH] [NUM]:[NUM]:[NUM]
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/grandstream	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1 @@
++green [LOGDATE].* GS_LOG:
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/hylafax	2006-08-07 12:40:22 UTC (rev 637)
+@@ -2,17 +2,24 @@
+ green [LOGDATE] FaxGetty[PID]: ANSWER: DATA CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION
+ green [LOGDATE] FaxGetty[PID]: ANSWER: Ring detected without successful handshake
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] "<NONE>"
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] "[NUM]"
++green [LOGDATE] FaxGetty[PID]: ANSWER: Call ID [NUM] "s"
++green [LOGDATE] FaxGetty[PID]: ANSWER: FAX CONNECTION  DEVICE '[PATH]'
+ green [LOGDATE] FaxGetty[PID]: CAUGHT SIGNAL [NUM]
+ green [LOGDATE] FaxGetty[PID]: CLOSE [PATH]
+ green [LOGDATE] FaxGetty[PID]: GETTY: exit status [NUM]
+ green [LOGDATE] FaxGetty[PID]: GETTY: START "[PATH] \+pap -chap", pid [NUM]
+ green [LOGDATE] FaxGetty[PID]: HELLO
+ green [LOGDATE] FaxGetty[PID]: MODEM MULTI-TECH SYSTEMS MT[NUM]ZPXI/[NUM]
++green [LOGDATE] FaxGetty[PID]: MODEM WWW\.SOFT-SWITCH\.ORG spandsp/
+ green [LOGDATE] FaxGetty[PID]: OPEN [PATH]
+ green [LOGDATE] FaxGetty[PID]: [PATH]: Can not lock device\.
+ green [LOGDATE] FaxGetty[PID]: Purge stale UUCP lock [PATH]
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): from .*, page [NUM] in [NUM]:[NUM], INF, [NUM]\.[NUM] line/mm, [NUM]-D MR, [NUM] bit/s
+ green [LOGDATE] FaxGetty[PID]: RECV FAX \([NUM]\): [PATH] from .*, route to <unspecified>, [NUM] pages in [NUM]:[NUM]
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd "[PATH]" "[WORD][NUM]" "[NUM]" "" "<NONE>" "<NONE>" "<NONE>" "s"
++green [LOGDATE] FaxGetty[PID]: RECV FAX: bin/faxrcvd "[PATH]" "[WORD][NUM]" "[NUM]" "" "[NUM]" "<NONE>" "<NONE>" "s"
+ green [LOGDATE] FaxQueuer[PID]: Copyright \(c\) [NUM]-[NUM]
+ green [LOGDATE] FaxQueuer[PID]: HylaFAX \(tm\) Version
+ green [LOGDATE] FaxQueuer[PID]: NOTIFY: bin/notify "doneq/q[NUM]" "(done|timedout|blocked|requeued)"
+@@ -29,3 +36,5 @@
+ green [LOGDATE] HylaFAX[PID]: Warning, client address "[IPADDR]" is not listed for host name "[HOSTNAME]"\.
+ green [LOGDATE] HylaFAX[PID]: Warning, no inverse address mapping for client host name "[HOSTNAME]"\.
+ green [LOGDATE] hylafax: Shutting down HylaFAX queue manager:  failed
++green [LOGDATE] /usr/sbin/faxquit[PID]: FIFO: open: No such device or address
++
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-07 12:40:22 UTC (rev 637)
+@@ -705,9 +705,12 @@
+ green [LOGDATE] kernel: kmod: runaway modprobe loop assumed and stopped
+ green [LOGDATE] kernel: CIFS VFS: Calculated size 0x[NUM] vs actual length 0x[NUM]
+ green [LOGDATE] kernel: CIFS VFS: bad smb size detected for Mid=[NUM]
++green [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Normal
+ ignore [LOGDATE] kernel: CIFS VFS: Send error in read = [NUM]
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
++yellow [LOGDATE] kernel: zaptel Disabled echo canceller because of tone \(rx\) on channel [NUM
++yellow [LOGDATE] kernel: qozap: CRC error for HDLC frame on card [NUM] \(cardID [NUM]\) S/T port [NUM]
+ 
+ red [LOGDATE] kernel: end_request: I/O error, dev [NUM]:[NUM] \(hd[a-z]\), sector [NUM]
+ red [LOGDATE] kernel:   Error: Illegal request -- \(Sense key=[NUM]\)
+@@ -721,3 +724,5 @@
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+ red [LOGDATE] kernel: VM: killing process
+ red [LOGDATE] kernel: ip_conntrack: table full, dropping packet.
++red [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Exceeds Safe Limit
++
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snom	2006-08-07 12:40:22 UTC (rev 637)
+@@ -0,0 +1,16 @@
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Answering Challenge for REGISTER
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to confirmed
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to early
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to proceeding
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to terminated
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Dialog [NUM]/[NUM] going to trying
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* end DST: [NUM][PATH] [NUM]:[NUM]:[NUM] \([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Registered at registrar as [EMAIL]
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* sip::process_auth:Match challenge for \[USER=\], realm=[WORD]
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting holding_call
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting transfer_dest
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Deleting transfer_source
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* Denying call id=[NUM] reason=user-busy
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* start_dst\([NUM]\) end_dst\([NUM]\) offset_dst\([NUM]\) offset_utc\([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* start DST: [NUM][PATH] [NUM]:[NUM]:[NUM] \([NUM]\)
++green [LOGDATE]\.[NUM]\.[NUM]\.[NUM] [IPADDR] .* timeout::callback: Registering with timeout of [NUM] ms
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,5 +1,4 @@
+ green [LOGDATE] sshd[PID]: refused connect from [IPADDR]
+-
+ green [LOGDATE] sshd:\s*$
+ green [LOGDATE] sshd: Generating SSH[NUM] DSA host key: 
+ green [LOGDATE] sshd: Generating SSH[NUM] RSA host key: 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sysklogd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -3,3 +3,5 @@
+ green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart\.
+ green [LOGDATE] syslog: syslogd shutdown failed 
+ green [LOGDATE] syslog: syslogd startup failed
++green [LOGDATE] [HOSTNAME][PID]: reboot [IPADDR] sip:[EMAIL]:[NUM]
++green [LOGDATE] syslogd [NUM]\.[NUM]\.[NUM]: restart \(remote reception\)\.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-08-07 09:46:35 UTC (rev 636)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-08-07 12:40:22 UTC (rev 637)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] in.tftpd[PID]: nak: Operation not permitted
+ green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+ green [LOGDATE] in.tftpd[PID]: RRQ from [IPADDR] filename .*
++green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
+
+
+
+From wijnand at mail.berlios.de  Wed Aug  9 12:13:42 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Wed, 9 Aug 2006 12:13:42 +0200
+Subject: [Upwatch-commits] r638 - upwatch/trunk/util
+Message-ID: <200608091013.k79ADgQO007338@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-09 12:13:41 +0200 (Wed, 09 Aug 2006)
+New Revision: 638
+
+Modified:
+   upwatch/trunk/util/uwregexp.c
+Log:
+fix uwregexp
+
+Modified: upwatch/trunk/util/uwregexp.c
+===================================================================
+--- upwatch/trunk/util/uwregexp.c	2006-08-07 12:40:22 UTC (rev 637)
++++ upwatch/trunk/util/uwregexp.c	2006-08-09 10:13:41 UTC (rev 638)
+@@ -38,7 +38,7 @@
+       break;
+     }
+ 
+-    logregex_refresh_type("/etc/upwatch.d/uw_sysstat.d", (char *) &style);
++    logregex_refresh_type("/etc/upwatch.d/uw_sysstat.d", (char *) style);
+     logregex_expand_macros(style, regexp, buf);
+ 
+     printf("Resulting regex: %s\n", buf);
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 15 17:16:49 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 15 Aug 2006 17:16:49 +0200
+Subject: [Upwatch-commits] r639 - in upwatch/trunk/uw_sysstat/uw_sysstat.d:
+	maillog syslog
+Message-ID: <200608151516.k7FFGnlF027310@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-15 17:16:48 +0200 (Tue, 15 Aug 2006)
+New Revision: 639
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/yum
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+Log:
+synx regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-08-15 15:16:48 UTC (rev 639)
+@@ -8,6 +8,6 @@
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+ green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+-green [LOGDATE] sendmail[PID]: [MSGID]: [HOSTNAME] \[[IPADDR]\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
++green [LOGDATE] sendmail[PID]: .* did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+ red [LOGDATE] sendmail[PID]: grew WorkList for /var/spool/mqueue to 8000
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-08-15 15:16:48 UTC (rev 639)
+@@ -706,6 +706,7 @@
+ green [LOGDATE] kernel: CIFS VFS: Calculated size 0x[NUM] vs actual length 0x[NUM]
+ green [LOGDATE] kernel: CIFS VFS: bad smb size detected for Mid=[NUM]
+ green [LOGDATE] kernel: DAC[NUM]#[NUM]: Enclosure [NUM] Temperature Sensor [NUM] Temperature Normal
++green [LOGDATE] kernel: Netfilter messages via NETLINK v[NUM]\.[NUM]
+ ignore [LOGDATE] kernel: CIFS VFS: Send error in read = [NUM]
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-08-15 15:16:48 UTC (rev 639)
+@@ -4,6 +4,7 @@
+ # entries are matched in the order specified
+ WLOGDATE (Mon|Tue|Wed|Thu|Fri|Sat|Sun) [A-Za-z]* [\d ]\d \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ LOGDATE [A-Za-z]{3}\s{1,2}[\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
++SMBLOGDATE \[[-+]?\d+/[-+]?\d+/[-+]?\d+ [-+]?\d+:[-+]?\d+:[-+]?\d+, [-+]?\d+\]
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-08-15 15:16:48 UTC (rev 639)
+@@ -4,7 +4,7 @@
+ green [LOGDATE] named[PID]: Cleaned cache of [NUM] RRset
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: bad zone transfer request: '[HOSTNAME]/IN': non-authoritative zone \(NOTAUTH\)
+ ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: invalid file
+-ignore [LOGDATE] named[PID]: client [IPADDR]#[NUM]: error sending response: host unreachable
++ignore [LOGDATE] named[PID]: client .*: error sending response: host unreachable
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: no more recursive clients: quota reached
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update forwarding denied
+ green [LOGDATE] named[PID]: client [IPADDR]#[NUM]: update '[HOSTNAME]/IN' denied
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-08-15 15:16:48 UTC (rev 639)
+@@ -15,5 +15,6 @@
+ green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
+ green [LOGDATE] ntpd[PID]: sendto: Connection refused
+ green [LOGDATE] ntpd[PID]: IMSG_HOST_DNS with invalid peerID
++green [LOGDATE] ntpd[PID]: clock is now (un)?synced
+ yellow [LOGDATE] ntpd[PID]: could not parse "[HOSTNAME]": Temporary failure in name resolution
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-08-15 15:16:48 UTC (rev 639)
+@@ -1,22 +1,27 @@
+ green [LOGDATE] smb: nmbd shutdown failed
+ green [LOGDATE] smb: smbd shutdown failed
+-green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] client/smbmount.c:send_fs_socket\([NUM]\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/access.c:check_access\([NUM]\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:get_peer_addr\([NUM]\)
++green [LOGDATE] mount.smbfs[PID]: [SMBLOGDATE] client/smbmount.c:send_fs_socket\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/access.c:check_access\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:get_peer_addr\([NUM]\)
+ ignore [LOGDATE] smbd[PID]:\s*getpeername failed. Error was Transport endpoint is not connected
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:read_socket_data\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:read_socket_data\([NUM]\)
+ ignore [LOGDATE] smb_lookup: find .* failed, error=-512
+ green [LOGDATE] smb_add_request: request \[.*, .*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+-green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] tdb/tdbutil.c:tdb_log\([NUM]\) 
++green [LOGDATE] mount.smbfs[PID]: [SMBLOGDATE] tdb/tdbutil.c:tdb_log\([NUM]\) 
+ green [LOGDATE] kernel: smb_proc_readX_data:
+ ignore [LOGDATE] smbd[PID]:\s*Error writing [NUM] bytes to client. [NUM]. \(Connection reset by peer\)
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:send_smb\([NUM]\)
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:send_smb\([NUM]\)
+ ignore [LOGDATE] smbd[PID]: write_socket_data: write failure. Error = Connection reset by peer
+-green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_socket_data\([NUM]\) 
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:write_socket_data\([NUM]\) 
+ green [LOGDATE] smb_add_request: request \[.*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+-green [LOGDATE] nmbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] nmbd/nmbd_responserecordsdb.c:find_response_record\([NUM]\) 
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_responserecordsdb.c:find_response_record\([NUM]\) 
+ green [LOGDATE] nmbd[PID]: find_response_record: response packet id [NUM] received with no matching record.
+-green [LOGDATE] smbd[13734]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_data\([NUM]\)
+-ignore [LOGDATE] smbd[13734]:\s*write_data: write failure in writing to client [IPADDR]. Error Connection reset by peer
++green [LOGDATE] smbd[PID]: [SMBLOGDATE] lib/util_sock.c:write_data\([NUM]\)
++green [LOGDATE] nmbd[PID]: \*+
++green [LOGDATE] nmbd[PID]: \s*$
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_become_lmb.c:unbecome_local_master_success\([NUM]\)
++green [LOGDATE] nmbd[PID]: [SMBLOGDATE] nmbd/nmbd_incomingdgrams.c:process_local_master_announce\([NUM]\)
++
++ignore [LOGDATE] smbd[PID]:\s*write_data: write failure in writing to client [IPADDR]. Error Connection reset by peer
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/yum
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/yum	2006-08-09 10:13:41 UTC (rev 638)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/yum	2006-08-15 15:16:48 UTC (rev 639)
+@@ -0,0 +1 @@
++green [LOGDATE] yum: Installed: .*
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 22 15:51:38 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 22 Aug 2006 15:51:38 +0200
+Subject: [Upwatch-commits] r640 - upwatch/libdbi/common
+Message-ID: <200608221351.k7MDpcCQ012425@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-22 15:51:34 +0200 (Tue, 22 Aug 2006)
+New Revision: 640
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+Log:
+When there is no yellow treshold for a probe (eg pr_bb) don't add yellow and red columns to the database.
+Spotted while trying to get a valid postgresql schema, there was no default set for a numeric column.
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-15 15:16:48 UTC (rev 639)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 13:51:34 UTC (rev 640)
+@@ -27,8 +27,10 @@
+   ipaddress varchar(128) NOT NULL default '127.0.0.1',	-- target ipaddress or hostname
+   description text NOT NULL default '',		-- description
+   freq smallint unsigned NOT NULL default '1',	-- frequency in minutes
++[+ IF yellow +]
+   yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
+-  red float NOT NULL default '[+red+]', 	-- value for red alert [+ 		
++  red float NOT NULL default '[+red+]', 	-- value for red alert 
++[+ ENDIF yellow +] [+
+ FOR def +][+
+ CASE type +][+
+ == float +]
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 22 16:37:05 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 22 Aug 2006 16:37:05 +0200
+Subject: [Upwatch-commits] r641 - upwatch/libdbi/common
+Message-ID: <200608221437.k7MEb5iu027142@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-22 16:37:04 +0200 (Tue, 22 Aug 2006)
+New Revision: 641
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+Log:
+Don't add the yellow and red colums to the other tables when the probe does not have a yellow treshold setting.
+while there: if this setting is not there, please don't document it automatically ;-)
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 13:51:34 UTC (rev 640)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 14:37:04 UTC (rev 641)
+@@ -125,8 +125,10 @@
+ CREATE TABLE pr_[+name+]_raw (
+   id bigint unsigned NOT NULL auto_increment,   -- unique id for result
+   probe int unsigned NOT NULL default '1',      -- probe identifier
++[+ IF yellow +]
+   yellow float NOT NULL default '[+yellow+]',   -- value for yellow alert
+   red float NOT NULL default '[+red+]',         -- value for red alert
++[+ ENDIF yellow +]
+   stattime int unsigned NOT NULL default '0',   -- time when result was generated
+   color smallint unsigned NOT NULL default '200', -- color value [+
+ FOR result +][+
+@@ -206,8 +208,10 @@
+ CREATE TABLE pr_[+name+]_[+period+] (
+   id bigint unsigned NOT NULL auto_increment,	-- unique id for result
+   probe int unsigned NOT NULL default '1',	-- probe identifier
++[+ IF yellow +]
+   yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
+   red float NOT NULL default '[+red+]', 	-- value for red alert 
++[+ ENDIF yellow +]
+   slot smallint(5) unsigned NOT NULL default '0', -- timeslot in this period
+   stattime int unsigned NOT NULL default '0',	-- time when result was generated
+   color smallint unsigned NOT NULL default '200', -- color value [+ 
+@@ -463,6 +467,7 @@
+                   <entry colname = "Extra"><para> </para></entry>
+                   <entry colname = "Description"><para>frequency in minutes </para></entry>
+                </row>
++[+ IF yellow +]
+                <row>
+                   <entry colname = "Field"><para>yellow </para></entry>
+                   <entry colname = "Type"><para>float </para></entry>
+@@ -479,6 +484,7 @@
+                   <entry colname = "Extra"><para> </para></entry>
+                   <entry colname = "Description"><para>value for red alert </para></entry>
+                </row>
++[+ ENDIF yellow +]
+                <row>
+                   <entry colname = "Field"><para>disable </para></entry>
+                   <entry colname = "Type"><para>enum('yes', 'no') </para></entry>
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 22 16:57:02 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 22 Aug 2006 16:57:02 +0200
+Subject: [Upwatch-commits] r642 - in upwatch/libdbi: common config
+Message-ID: <200608221457.k7MEv2Ie029736@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-22 16:57:02 +0200 (Tue, 22 Aug 2006)
+New Revision: 642
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+   upwatch/libdbi/config/upwatch-full.mysql
+Log:
+Prevent name clashes in the database schema. 
+With these changes I am able to create a correct postgresql schema automatically using SQL::Translator.
+
+There should be no functional change
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 14:37:04 UTC (rev 641)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 14:57:02 UTC (rev 642)
+@@ -97,8 +97,8 @@
+ ESAC type +][+ ENDFOR def+]
+   PRIMARY KEY  (id),
+   KEY tbldomid (tblid, domid, id),
+-  KEY server (server),
+-  KEY notify (notify),
++  KEY server_key_[+name+] (server),
++  KEY notify_key_[+name+] (notify),
+   KEY ipaddress (ipaddress),
+   KEY domtbl (domid, tblid)
+ ) TYPE=MyISAM;
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:37:04 UTC (rev 641)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:57:02 UTC (rev 642)
+@@ -32,7 +32,7 @@
+   UNIQUE KEY probtime (probe,stattime),
+   UNIQUE KEY probclstat (probe,class,stattime),
+   KEY stattime (stattime),
+-  KEY contact (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
+@@ -57,10 +57,10 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY uprobe (class,probe),
+   KEY class (class),
+-  KEY probe (probe),
+-  KEY server (server),
++  KEY probe_key (probe),
++  KEY server_key (server),
+   KEY expires (expires),
+-  KEY contact (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_status set id = '1', message = 'do NOT delete!';
+@@ -108,7 +108,7 @@
+   status enum('enabled', 'disabled', 'ok') NOT NULL default 'enabled',
+   comment text NOT NULL,
+   PRIMARY KEY  (id),
+-  KEY (contact)
++  KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO notify set id = '1', name = 'empty', status = 'disabled', comment = 'do NOT delete!';
+@@ -133,7 +133,7 @@
+   persist enum('yes', 'no') NOT NULL default 'no',
+   comment text NOT NULL,
+   PRIMARY KEY  (id),
+-  KEY (notify)
++  KEY notify_key (notify)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO notifycond set id = '1', notify = '1';
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 22 17:25:46 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 22 Aug 2006 17:25:46 +0200
+Subject: [Upwatch-commits] r643 - in upwatch/libdbi: common config
+Message-ID: <200608221525.k7MFPkc7000223@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-22 17:25:45 +0200 (Tue, 22 Aug 2006)
+New Revision: 643
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+   upwatch/libdbi/config/upwatch-common.mysql
+   upwatch/libdbi/config/upwatch-full.mysql
+   upwatch/libdbi/config/upwatch-realm.mysql
+Log:
+Use correct SQL.
+All queries for the default database are fixed now except for "INSERT into probe" for each probe.
+I will fix that later when my eyes feel better after looking to that autogen(hell!) crap.
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/common/probe.tpl	2006-08-22 15:25:45 UTC (rev 643)
+@@ -110,7 +110,7 @@
+       (error (sprintf "addbyhand not set for probe %s" (get "probe.name")) )
+   )
+ +]
+-INSERT into pr_[+name+]_def set id = '1', description = 'empty';
++INSERT into pr_[+name+]_def (id, description) VALUES (1, 'empty');
+ INSERT into probe set id = '[+id+]', name = '[+name+]', description = '[+descrip+]', [+
+  if (exist? "expiry") +]expiry = '[+expiry+]', [+ endif +]addbyhand = '[+addbyhand+]', [+
+  if (exist? "fuse") +]fuse = '[+fuse+]', [+ endif +]class = '[+class+]', graphgroup = '[+graphgroup+]', graphtypes = '[+graphtypes+]', comment = '[+comment+]';[+ ENDFOR probe +][+
+
+Modified: upwatch/libdbi/config/upwatch-common.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-common.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-common.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -1,5 +1,3 @@
+-
+-
+ --
+ -- Table structure for table 'probe'
+ --
+@@ -22,5 +20,4 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
+-
++INSERT INTO probe ( id, name, addbyhand, addbycust, comment ) VALUES ( 1,'empty','no','no','do NOT delete!');
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -9,8 +9,8 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_group set id = '1', name = 'empty', description = 'do NOT delete!';
+-INSERT INTO pr_group set id = '2', name = 'Default';
++INSERT INTO pr_group (id, name, description ) VALUES (1,'empty','do NOT delete!');
++INSERT INTO pr_group (id, name) VALUES (2,'Default');
+ 
+ --
+ -- Table structure for table 'pr_hist'
+@@ -18,12 +18,12 @@
+ 
+ CREATE TABLE pr_hist (
+   id int unsigned NOT NULL auto_increment,
+-  server int unsigned NOT NULL default '1',
++  server int unsigned NOT NULL default 1,
+   hide enum('yes', 'no') not null default 'no',
+-  contact int unsigned NOT NULL default '1',  -- user field: pointer to contact database
+-  class smallint unsigned NOT NULL default '1',
+-  probe int unsigned NOT NULL default '1',
+-  pgroup int unsigned NOT NULL default '1',     -- group id
++  contact int unsigned NOT NULL default 1,  -- user field: pointer to contact database
++  class smallint unsigned NOT NULL default 1,
++  probe int unsigned NOT NULL default 1,
++  pgroup int unsigned NOT NULL default 1,     -- group id
+   stattime int unsigned NOT NULL default '0',
+   prv_color smallint unsigned NOT NULL default '200',
+   color smallint unsigned NOT NULL default '200',
+@@ -35,7 +35,7 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
++INSERT INTO pr_hist ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+ -- Table structure for table 'pr_status'
+@@ -43,11 +43,11 @@
+ 
+ CREATE TABLE pr_status (
+   id int unsigned NOT NULL auto_increment,
+-  class int unsigned NOT NULL default '1',
+-  probe int unsigned NOT NULL default '1',
+-  server int unsigned NOT NULL default '1',
++  class int unsigned NOT NULL default 1,
++  probe int unsigned NOT NULL default 1,
++  server int unsigned NOT NULL default 1,
+   hide enum('yes', 'no') not null default 'no',
+-  contact int unsigned NOT NULL default '1',  -- user field: pointer to contact database
++  contact int unsigned NOT NULL default 1,  -- user field: pointer to contact database
+   yellow float NOT NULL default '0',
+   red float NOT NULL default '0',
+   stattime int unsigned NOT NULL default '0',
+@@ -63,11 +63,13 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_status set id = '1', message = 'do NOT delete!';
++INSERT INTO pr_status ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+ -- Table structure for table 'rack'
+ --
++
++-- FIXME: this table does not belong in the upwatch database
+   
+ CREATE TABLE rack (
+   id int unsigned NOT NULL auto_increment,
+@@ -78,7 +80,7 @@
+   PRIMARY KEY  (id) 
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO rack set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO rack ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'server'
+@@ -93,7 +95,7 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO server set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO server ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'notify'
+@@ -111,7 +113,7 @@
+   KEY contact_key (contact)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO notify set id = '1', name = 'empty', status = 'disabled', comment = 'do NOT delete!';
++INSERT INTO notify ( id, name, status, comment ) VALUES ( 1,'empty','disabled','do NOT delete!');
+ 
+ --
+ -- Table structure for table 'notifycond'
+@@ -136,5 +138,5 @@
+   KEY notify_key (notify)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO notifycond set id = '1', notify = '1';
++INSERT INTO notifycond ( id, notify, comment ) VALUES ( 1,1,'do NOT delete!');
+ 
+
+Modified: upwatch/libdbi/config/upwatch-realm.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-realm.mysql	2006-08-22 14:57:02 UTC (rev 642)
++++ upwatch/libdbi/config/upwatch-realm.mysql	2006-08-22 15:25:45 UTC (rev 643)
+@@ -17,7 +17,7 @@
+   PRIMARY KEY  (id)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_realm set id = '1', name = 'empty', comment = 'do NOT delete!';
++INSERT INTO pr_realm ( id, name, comment ) VALUES ( 1, 'empty','do NOT delete!');
+ 
+ CREATE TABLE pr_regex (
+   id int unsigned NOT NULL auto_increment,
+@@ -29,7 +29,7 @@
+   UNIQUE KEY packex (package,regex)
+ ) TYPE=MyISAM;
+ 
+-INSERT INTO pr_regex set id = '1', logtype = 'none', package = 'none', action = 'green', regex = 'do NOT delete!';
++INSERT INTO pr_regex ( id, logtype, package, action, regex ) VALUES (1,'none','none','green','do NOT delete!');
+ 
+ CREATE TABLE pr_macros (
+   id int unsigned NOT NULL auto_increment,
+@@ -39,7 +39,7 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY typename (logtype,name)
+ ) TYPE=MyISAM;
+-INSERT INTO pr_macros set id = '1', logtype = 'none', name = 'empty', regex = 'do NOT delete!';
++INSERT INTO pr_macros (id, logtype, name, regex) VALUES ( 1,'none','empty','do NOT delete!');
+ 
+ CREATE TABLE pr_rmacros (
+   id int unsigned NOT NULL auto_increment,
+@@ -49,7 +49,7 @@
+   PRIMARY KEY  (id),
+   UNIQUE KEY typex (logtype,regex)
+ ) TYPE=MyISAM;
+-INSERT INTO pr_rmacros set id = '1', logtype = 'none', name = 'empty', regex = 'do NOT delete!';
++INSERT INTO pr_rmacros (id, logtype, name, regex) VALUES ( 1,'none','empty','do NOT delete!');
+ 
+ 
+ 
+
+
+
+From wijnand at mail.berlios.de  Wed Aug 23 11:04:13 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Wed, 23 Aug 2006 11:04:13 +0200
+Subject: [Upwatch-commits] r644 - upwatch/libdbi/config
+Message-ID: <200608230904.k7N94D4p002432@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-23 11:04:13 +0200 (Wed, 23 Aug 2006)
+New Revision: 644
+
+Modified:
+   upwatch/libdbi/config/upwatch-full.mysql
+Log:
+The rack, notify and notify_cond tables are not used (anymore) so keep the default schema clean.
+
+
+Modified: upwatch/libdbi/config/upwatch-full.mysql
+===================================================================
+--- upwatch/libdbi/config/upwatch-full.mysql	2006-08-22 15:25:45 UTC (rev 643)
++++ upwatch/libdbi/config/upwatch-full.mysql	2006-08-23 09:04:13 UTC (rev 644)
+@@ -66,23 +66,6 @@
+ INSERT INTO pr_status ( id, message ) VALUES ( 1,'do NOT delete!');
+ 
+ --
+--- Table structure for table 'rack'
+---
+-
+--- FIXME: this table does not belong in the upwatch database
+-  
+-CREATE TABLE rack (
+-  id int unsigned NOT NULL auto_increment,
+-  contact int NOT NULL default 1,
+-  name varchar(128) NOT NULL default '',
+-  comment text NOT NULL,
+-  color smallint unsigned NOT NULL default '0',
+-  PRIMARY KEY  (id) 
+-) TYPE=MyISAM;
+-
+-INSERT INTO rack ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+-
+---
+ -- Table structure for table 'server'
+ --
+ 
+@@ -97,46 +80,3 @@
+ 
+ INSERT INTO server ( id, name, comment ) VALUES ( 1,'empty','do NOT delete!');
+ 
+---
+--- Table structure for table 'notify'
+---
+-
+-CREATE TABLE notify (
+-  id int NOT NULL auto_increment,
+-  name varchar(128) NOT NULL default '',
+-  contact int NOT NULL default 1,
+-  mail int NOT NULL default 1,
+-  sms int NOT NULL default 1,
+-  status enum('enabled', 'disabled', 'ok') NOT NULL default 'enabled',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id),
+-  KEY contact_key (contact)
+-) TYPE=MyISAM;
+-
+-INSERT INTO notify ( id, name, status, comment ) VALUES ( 1,'empty','disabled','do NOT delete!');
+-
+---
+--- Table structure for table 'notifycond'
+---
+-
+-CREATE TABLE notifycond (
+-  id int NOT NULL auto_increment,
+-  notify int NOT NULL default 1,
+-  bycolor enum('yes', 'no') NOT NULL default 'yes',
+-  atcolor smallint NOT NULL default '400',
+-  consecutive smallint NOT NULL default 1,
+-  bydate enum('yes', 'no') NOT NULL default 'no',
+-  fromwday tinyint NOT NULL default 0,
+-  fromhour tinyint NOT NULL default 0,
+-  frommin tinyint NOT NULL default 0,
+-  towday tinyint NOT NULL default 0,
+-  tohour tinyint NOT NULL default 0,
+-  tomin tinyint NOT NULL default 0,
+-  persist enum('yes', 'no') NOT NULL default 'no',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id),
+-  KEY notify_key (notify)
+-) TYPE=MyISAM;
+-
+-INSERT INTO notifycond ( id, notify, comment ) VALUES ( 1,1,'do NOT delete!');
+-
+
+
+
+From wijnand at mail.berlios.de  Mon Aug 28 15:58:12 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Mon, 28 Aug 2006 15:58:12 +0200
+Subject: [Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept
+	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts
+Message-ID: <200608281358.k7SDwCFb031515@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-28 15:58:06 +0200 (Mon, 28 Aug 2006)
+New Revision: 645
+
+Added:
+   upwatch/trunk/uw_process/local.c
+   upwatch/trunk/uw_sysstat/uw_local_scripts/
+   upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh
+Modified:
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/probe.h
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_process/modules.inc
+   upwatch/trunk/uw_process/uw_process.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_sysstat/Makefile.am
+   upwatch/trunk/uw_sysstat/probe.def
+   upwatch/trunk/uw_sysstat/run.c
+   upwatch/trunk/uw_sysstat/uw_sysstat.conf
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Feature: uw_local
+
+Description:
+Place your custom scripts in $sysconfdir/upwatch/uw_local_scripts (upwatch:upwatch mode 700!) with user upwatch and mode 700 (dir + script must have these permissions correct!). Each uw_sysstat run those scripts will be run. Those scripts should create a temp file with the first line a color. Resulting lines are optional and are used to give a message.
+Example:
+red
+Apache was not running, trying to restart
+
+You can do extra commands to restart for example. Be sure to have correct sudo rules or a other way to do it as user upwatch!
+
+One example script will be installed in share/upwatch/examples/uw_local_script, but we need lots of them of course. A admin should be able to copy most of the needed scripts from there.
+
+Todo: 
+* create a nice template for uw_local scripts.
+* the default email delay for this check can better be 0
+
+Caveats: if a script takes a long time to run uw_sysstat will not proceed since it is waiting. I want a limit of 30seconds max but I am not sure how to do this.
+
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/upwatch/pr_process.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -325,8 +325,8 @@
+                       "       description = '%s'", 
+                        res->name, res->server, res->ipaddress ? res->ipaddress : "", 
+                        res->hostname);
++    def->probeid = mysql_insert_id(t->probe->db);
+     mysql_free_result(result);
+-    def->probeid = mysql_insert_id(t->probe->db);
+     LOG(LOG_NOTICE, "%s:%u@%s: pr_%s_def created for %s, id = %u", 
+         res->realm, res->stattime, t->fromhost, res->name, res->hostname, def->probeid);
+     result = my_query(t->probe->db, 0,
+
+Modified: upwatch/trunk/upwatch/probe.h
+===================================================================
+--- upwatch/trunk/upwatch/probe.h	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/upwatch/probe.h	2006-08-28 13:58:06 UTC (rev 645)
+@@ -169,6 +169,15 @@
+ #include "../common/common.h"
+ };
+ 
++/****************************** probe local ************************/
++struct local_result {
++  STANDARD_PROBE_RESULT;
++};
++struct local_def {
++  STANDARD_PROBE_DEF;
++#include "../common/common.h"
++};
++
+ /****************************** probe errlog ************************/
+ struct errlog_result {
+   STANDARD_PROBE_RESULT;
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_accept/uw_accept.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -77,4 +77,5 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
++#include option_realm_ign.def
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_null/uw_null.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -81,4 +81,4 @@
+ #include license_gpl.def
+ #include generic_options.def
+ #include option_realm_ign.def
+-#include minimal_options.def
++#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/Makefile.am	2006-08-28 13:58:06 UTC (rev 645)
+@@ -30,7 +30,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_process_SOURCES = run.c process.c notify.c generic_ct.c uw_process.c insertcache.c \
+- ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c tcpconnect.c \
++ ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c local.c tcpconnect.c \
+ $(USE_LIBPQ) $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c hwstat.c \
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+ uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+
+Added: upwatch/trunk/uw_process/local.c
+===================================================================
+--- upwatch/trunk/uw_process/local.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/local.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -0,0 +1,49 @@
++#include "config.h"
++#include <string.h>
++#include <generic.h>
++#include "slot.h"
++#include "uw_process_glob.h"
++
++#ifdef DMALLOC
++#include "dmalloc.h"
++#endif
++
++//*******************************************************************
++// Format the probe definition fields for inclusion in the notification body
++//*******************************************************************
++static void local_notify_mail_body_probe_def(trx *t, char *buf, size_t buflen)
++{
++  struct local_def *def = (struct local_def *)t->def;
++  struct local_result *res = (struct local_result *)t->res;
++
++  sprintf(buf, "%-20s: %s\n"
++               "%-20s: %s\n",
++  "IP Address", def->ipaddress,
++  "Description", def->description);
++}
++
++
++module local_module  = {
++  STANDARD_MODULE_STUFF(local),
++  NO_FREE_DEF,
++  NO_FREE_RES,
++  NO_INIT,
++  NO_START_RUN,
++  NO_ACCEPT_PROBE,
++  NO_XML_RESULT_NODE,
++  ct_get_from_xml,
++  accept_result,
++  NO_GET_DEF_FIELDS,
++  NO_SET_DEF_FIELDS,
++  get_def_by_servid,
++  NO_ADJUST_RESULT,
++  NO_END_RESULT,
++  NO_END_RUN,
++  NO_EXIT,
++  NO_FIND_DOMAIN,
++  NO_STORE_RESULTS,
++  NO_NOTIFY_MAIL_SUBJECT_EXTRA,
++  NO_NOTIFY_MAIL_BODY_PROBE_DEF,
++  NO_SUMMARIZE
++};
++
+
+Modified: upwatch/trunk/uw_process/modules.inc
+===================================================================
+--- upwatch/trunk/uw_process/modules.inc	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/modules.inc	2006-08-28 13:58:06 UTC (rev 645)
+@@ -16,6 +16,7 @@
+ extern module errlog_module;
+ extern module diskfree_module;
+ extern module hwstat_module;
++extern module local_module;
+ 
+ module *modules[] = {
+   &httpget_module,
+@@ -31,6 +32,7 @@
+   &errlog_module,
+   &diskfree_module,
+   &hwstat_module,
++  &local_module,
+   &bb_cpu_module,
+   &bb_module,
+ #if HAVE_LIBPQ
+
+Modified: upwatch/trunk/uw_process/uw_process.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_process.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/uw_process.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -216,4 +216,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_route/uw_route.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -101,4 +101,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2006-08-28 13:58:06 UTC (rev 645)
+@@ -34,7 +34,7 @@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch 
+-EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d
++EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d uw_local_scripts
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
+@@ -44,9 +44,19 @@
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ; \
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	  chown -R upwatch:upwatch ${DESTDIR}${confdir}/uw_sysstat.d ; \
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${confdir}/uw_local_scripts ;\
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	else \
+ 	  mkdir -p ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
++          mkdir -p ${DESTDIR}${confdir}/uw_local_scripts ;\
++          mkdir -p ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	fi
+ 
+
+Modified: upwatch/trunk/uw_sysstat/probe.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/probe.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/probe.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -523,3 +523,63 @@
+     descrip = "date/time this result was received by the upwatch server";
+   };
+ };
++
++probe = {
++  name = "local";
++  id = 19;
++  descrip = "Local checks";
++  addbyhand = "no";
++  class = "";
++  graphgroup = "";
++  graphtypes = "default";
++  comment = "";
++
++  attribute = {
++    name = "server";
++    required = true;
++    descrip = "id of this server in the database";
++  };
++
++  attribute = {
++    name = "ipaddress";
++    default = "127.0.0.1";
++    descrip = "target ip address";
++  };
++
++  attribute = {
++    name = "realm";
++    required = true;
++    descrip = "database realm for these values";
++  };
++
++  attribute = {
++    name = "date";
++    required = true;
++    descrip = "date/time for this result";
++  };
++
++  attribute = {
++    name = "expires";
++    required = true;
++    descrip = "when this result expires";
++  };
++
++  attribute = {
++    name = "color";
++    required = true;
++    descrip = "color as this probe thinks it should be";
++  };
++
++  attribute = {
++    name = "interval";
++    default = "60";
++    descrip = "time between measurements";
++  };
++
++  attribute = {
++    name = "received";
++    default = "0";
++    descrip = "date/time this result was received by the upwatch server";
++  };
++};
++
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -30,6 +30,8 @@
+ 
+ char ipaddress[24];
+ 
++xmlNodePtr newnode(xmlDocPtr doc, char *name);
++
+ struct _errlogspec {
+   char *style;
+   char *path;
+@@ -174,6 +176,107 @@
+ }
+ #endif
+ 
++int do_local(xmlNodePtr doc )
++{
++  char buffer[1024];
++  char resultmsg[32768]="";
++  unsigned int color=STAT_GREEN;
++  GError *error=NULL;
++  GDir *dir;
++  G_CONST_RETURN gchar *filename;
++  char path[PATH_MAX] = "/etc/upwatch.d/uw_local_scripts";
++  char cmd[PATH_MAX];
++  FILE *in;
++  char info[32768];
++  char buf[256];
++  xmlNodePtr node = (xmlNodePtr) newnode(doc, "local");
++  struct stat st;
++  struct timeval start, now;
++
++  /* measure the time it takes to perform all checks */
++  gettimeofday(&start, NULL);
++ 
++  /* Don't allow directories writable by others */
++  if ( stat(path, &st ) == -1 ) return;
++  if ( (st.st_mode & 077) != 0)  return;  /* we are world or group writable */
++  /* XXX FIXME, we have to check the full path for bad permissions*/
++
++  /* Ok the directory is safe enough, lets open it. */
++  dir = g_dir_open (path, 0, &error);
++  if (dir == NULL) {
++    perror(path);
++    return;
++  }
++
++  /* set a strict umask for safety */
++  umask(077);
++
++  /* Time to traverse the directory */
++  while ((filename = g_dir_read_name(dir)) != NULL) {
++    char fullpath[PATH_MAX];
++    if (filename[0] == '.') continue;  // skip '.', '..' and hidden files
++    sprintf(fullpath, "%s/%s", path, filename);
++    if (!g_file_test(fullpath, G_FILE_TEST_IS_EXECUTABLE)) {
++      continue;
++    }
++ 
++    if ( debug > 4 ) printf("Checking script %s\n", fullpath);
++
++    /* The script should not be writable by others */
++    if ( stat(fullpath, &st ) == -1 ) continue;
++    if ( (st.st_mode & 077) != 0)  continue;  /* we are world or group writable */
++    if ( debug > 4 ) printf("Script %s is ok\n", fullpath);
++
++    uw_setproctitle("Running check %s", fullpath);
++
++    char msgbuf[8192]="";
++    unsigned int mycolor=STAT_GREEN; /* Untill proven otherwise */
++    sprintf(cmd, "%s > /tmp/.uw_sysstat.tmp", fullpath);
++    LOG(LOG_INFO, cmd);
++    if ( debug > 4 ) printf("Running local check %s\n", fullpath);
++    system(cmd);
++    in = fopen("/tmp/.uw_sysstat.tmp", "r");
++    if (in) {
++      int linecount=0;
++      while (fgets(buf, sizeof(buf), in)) {
++        if ( linecount == 0 ) { /* First line contains the color of the check */
++          linecount++;
++          mycolor=convert_color(buf); 
++        }
++        else { /* All the rest is part of the message */
++          snprintf(msgbuf, sizeof(msgbuf), "%s\n%s", msgbuf, buf);
++        }
++          
++      }
++    } else {
++      strcpy(info, strerror(errno));
++    }
++    fclose(in);
++    unlink("tmp/.uw_sysstat.tmp");
++
++   /* If there is a message, put it into the big message. Prepend the script name. */
++   if (strlen( msgbuf ) != 0 ) {
++     snprintf(resultmsg, sizeof(resultmsg), "%s%s:%s\n", resultmsg, fullpath, msgbuf );
++   }
++
++   /* is this the highest color? */
++   if ( mycolor > color ) color = mycolor;
++  }
++
++  /* ok, we finished the scripts loop, set the results */
++  gettimeofday(&now, NULL);
++  char totalstring[16]=""; /* Big enough? */
++  snprintf( totalstring, sizeof(totalstring), "%f", ((float) timeval_diff(&now, &start)) * 0.000001);
++  xmlSetProp(node, "total", totalstring);
++  /* Here we set the color */
++  sprintf(buffer, "%d", color);
++  xmlSetProp(node, "color", buffer);
++  xmlNewTextChild(node, NULL, "info", resultmsg);
++  g_dir_close(dir);
++
++  return color;
++}
++
+ #if HAVE_LIBPCRE
+ #define STATFILE "/var/run/upwatch/uw_sysstat.stat"
+ int check_log(GString *string, int idx)
+@@ -390,6 +493,29 @@
+   return node;
+ }
+ 
++/* Small helper function to convert a string to a valid upwatch color code. Probably not efficient */
++int convert_color ( char *string )
++{
++  int color=STAT_GREEN;
++  switch(string[0]) {
++               case 'r':
++                         color=STAT_RED;
++                         break;
++               case 'p':
++                         color=STAT_PURPLE;
++                         break;
++               case 'y':
++                         color=STAT_YELLOW;
++                         break;
++               case 'b':
++                         color=STAT_BLUE;
++                         break;
++               default: 
++                         color=STAT_GREEN;
++  } 
++  return color;
++}
++
+ #if USE_XMBMON || defined (__OpenBSD__)
+ void add_hwstat(xmlNodePtr node)
+ {
+@@ -662,7 +788,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+ 
+   // do the sysstat
+-  node = newnode(doc, "sysstat");
++  node = (xmlNodePtr) newnode(doc, "sysstat");
+   add_loadavg(node);
+   add_cpu(node);
+   add_paging(node);
+@@ -677,16 +803,21 @@
+   if (OPT_VALUE_HWSTATS ) { 
+     // do the hwstat
+     get_hwstats();
+-    node = newnode(doc, "hwstat");
++    node = (xmlNodePtr) newnode(doc, "hwstat");
+     add_hwstat(node);
+     color = xmlGetPropInt(node, "color");
+     if (color > highest_color) highest_color = color;
+   }
+ #endif
++  if (OPT_VALUE_LOCALCHECKS ) { 
++   // do the local checks
++    color = do_local((xmlNodePtr) doc);
++    if (color > highest_color) highest_color = color;
++  }
+ 
+ #if HAVE_LIBPCRE
+   // do the errlog
+-  node = newnode(doc, "errlog");
++  node = (xmlNodePtr) newnode(doc, "errlog");
+   log = check_logs(&color);
+   if (color > highest_color) highest_color = color;
+   sprintf(buf, "%u", color);
+@@ -701,7 +832,7 @@
+ 
+   // do the diskfree
+   uw_setproctitle("checking diskspace");
+-  node = newnode(doc, "diskfree");
++  node = (xmlNodePtr) newnode(doc, "diskfree");
+   add_diskfree_info(node);
+   color = xmlGetPropInt(node, "color");
+ 
+
+Added: upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh	2006-08-28 13:58:06 UTC (rev 645)
+@@ -0,0 +1,37 @@
++#!/bin/sh
++
++# Sample script to check uw_send availlability
++
++# sudo rules needed:
++# Defaults:upwatch !authenticate
++# custom installations:
++# Cmnd_Alias UPWATCH = /usr/local/sbin/uw_*
++# upwatch ALL=(upwatch) UPWATCH
++# or for /etc/init.d/ type scripts
++# upwatch ALL=/etc/init.d/uw_*
++
++OUTPUT=/tmp/.uw_sysstat.tmp
++
++restart()
++{
++  if [ -x /etc/init.d/uw_send ]
++  then
++	/etc/init.d/uw_send restart
++  else
++        sudo -u upwatch uw_send
++  fi
++}
++
++if [ -z "`ps -aux | grep uw_send | grep -v grep | grep -v "uw_local_scripts"`" ]
++then
++  echo red > $OUTPUT
++  echo "uw_send was not running, trying to restart" >> $OUTPUT
++  restart
++elif [ `uwq uw_send | grep ^uw_send | awk '{print $3}'` -gt 9 ] # 10 or more items in the queue
++then
++  echo red > $OUTPUT
++  echo "uw_send was not sending results last 10 minutes, trying to restart" >> $OUTPUT
++  restart
++else
++  echo green > $OUTPUT
++fi
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.conf
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.conf	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.conf	2006-08-28 13:58:06 UTC (rev 645)
+@@ -1,6 +1,10 @@
+ #serverid 0
+ # generate hwstats yes/no
+ hwstats no
++
++# Run local check script
++localchecks no
++
+ errlog syslog /var/log/messages
+ errlog maillog /var/log/maillog
+ output uw_send
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -32,6 +32,10 @@
+ spec-files = `echo "%dir" $confdir/uw_sysstat.d/quagga`;
+ spec-files = `for i in \`find uw_sysstat.d/quagga -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ 
++// Include the uw_local example scripts
++spec-files = `echo "%dir" $confdir/uw_local_scripts`;
++spec-files = `for i in \`find uw_local_scripts -type f | grep -v .svn\` ; do echo /usr/share/upwatch/examples/$i; done`;
++
+ // describe commandline flags
+ flag = {
+     name      = realm;
+@@ -118,6 +122,15 @@
+ };
+ 
+ flag = {
++    name      = localchecks;
++    arg_type  = bool;
++    descrip   = "Run local scripts";
++    doc       =
++'Run local check scripts. Please make sure the uw_local scripts directory has proper permissions. ';
++};
++
++
++flag = {
+     name      = diskfree-red;
+     arg_default  = 95;
+     arg_type  = number;
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 29 09:52:58 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 29 Aug 2006 09:52:58 +0200
+Subject: [Upwatch-commits] r646 - in upwatch/trunk: . cfg
+Message-ID: <200608290752.k7T7qwlB008660@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-29 09:52:56 +0200 (Tue, 29 Aug 2006)
+New Revision: 646
+
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/cfg/bootstrap
+Log:
+Move generating the ChangeLog to the bootstrapping part.
+* This makes it easier to create a working clean tar file for non developers
+* I am always late when building to type my svn password so make fails ;-) (no, I don't want to use keys for svn)
+
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-08-28 13:58:06 UTC (rev 645)
++++ upwatch/trunk/Makefile.am	2006-08-29 07:52:56 UTC (rev 646)
+@@ -69,7 +69,7 @@
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+ 
+-dist_doc_DATA = AUTHORS COPYING ChangeLog NEWS README upwatch-base.mysql upwatch-full.mysql
++dist_doc_DATA = AUTHORS COPYING NEWS README upwatch-base.mysql upwatch-full.mysql
+ 
+ if ENABLE_SERVER
+ SERVER_DIST = probes.enum 
+@@ -96,12 +96,6 @@
+ force:
+ 	touch force
+ 
+-#ChangeLog: force
+-#       cfg/cvs2cl.pl -U AUTHORS -b -T --hide-filenames
+-#       rm -f force
+-ChangeLog:
+-	svn log > ChangeLog
+-
+ RELEASE: force
+ 	svnversion . > RELEASE
+ 	rm -f force
+
+Modified: upwatch/trunk/cfg/bootstrap
+===================================================================
+--- upwatch/trunk/cfg/bootstrap	2006-08-28 13:58:06 UTC (rev 645)
++++ upwatch/trunk/cfg/bootstrap	2006-08-29 07:52:56 UTC (rev 646)
+@@ -1,5 +1,8 @@
+ #! /bin/sh
+ 
++# Get the ChangeLog now
++svn log > ChangeLog
++
+ # test if libtoolize is called glibtoolize (MacOSX)
+ BOGUS=`glibtoolize -n 2>/dev/null`
+ TEST=$?
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 29 10:54:01 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 29 Aug 2006 10:54:01 +0200
+Subject: [Upwatch-commits] r647 - upwatch/trunk/uw_sysstat
+Message-ID: <200608290854.k7T8s1EL010417@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-29 10:54:00 +0200 (Tue, 29 Aug 2006)
+New Revision: 647
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Fix script permission checks.
+st.st_mode is only really usefull if you stat(2) the file first, I forgot two simple but very important lines :-(
+
+While there: if there is a problem: log it to hit the sysadmin with the cluestick
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-29 07:52:56 UTC (rev 646)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-29 08:54:00 UTC (rev 647)
+@@ -197,9 +197,13 @@
+   gettimeofday(&start, NULL);
+  
+   /* Don't allow directories writable by others */
+-  if ( stat(path, &st ) == -1 ) return;
+-  if ( (st.st_mode & 077) != 0)  return;  /* we are world or group writable */
+-  /* XXX FIXME, we have to check the full path for bad permissions*/
++  if (stat(path, &st) < 0) {
++    LOG(LOG_ERR,"Cannot check permissions for the uw_local_scripts directory");
++  }
++  if ( (st.st_uid == getuid()) && (st.st_mode & 077) != 0 ) {  /* we are world or group writable */
++    LOG(LOG_ERR,"The uw_local_scripts directory has bad permissions, refusing to run the scripts");
++    return;
++  }
+ 
+   /* Ok the directory is safe enough, lets open it. */
+   dir = g_dir_open (path, 0, &error);
+@@ -217,14 +221,21 @@
+     if (filename[0] == '.') continue;  // skip '.', '..' and hidden files
+     sprintf(fullpath, "%s/%s", path, filename);
+     if (!g_file_test(fullpath, G_FILE_TEST_IS_EXECUTABLE)) {
++      LOG(LOG_WARNING,"Script %s is not executable, skipping.", fullpath);
+       continue;
+     }
+  
+     if ( debug > 4 ) printf("Checking script %s\n", fullpath);
+ 
+     /* The script should not be writable by others */
+-    if ( stat(fullpath, &st ) == -1 ) continue;
+-    if ( (st.st_mode & 077) != 0)  continue;  /* we are world or group writable */
++    if (stat(fullpath, &st) < 0) {
++      LOG(LOG_ERR,"Cannot check permissions for %s", fullpath);
++      continue;
++    }
++    if ( (st.st_uid == getuid()) && (st.st_mode & 077) != 0 ) {  /* we are world or group writable */
++      LOG(LOG_ERR,"Script %s has insecure permissions, refusing it.", fullpath);
++      continue;
++    }
+     if ( debug > 4 ) printf("Script %s is ok\n", fullpath);
+ 
+     uw_setproctitle("Running check %s", fullpath);
+
+
+
+From wijnand at mail.berlios.de  Tue Aug 29 11:08:32 2006
+From: wijnand at mail.berlios.de (wijnand at BerliOS)
+Date: Tue, 29 Aug 2006 11:08:32 +0200
+Subject: [Upwatch-commits] r648 - upwatch/trunk/uw_sysstat
+Message-ID: <200608290908.k7T98WZW016285@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-08-29 11:08:32 +0200 (Tue, 29 Aug 2006)
+New Revision: 648
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+When there is a problem with the uw_local_scripts directory give the path in the log message
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-29 08:54:00 UTC (rev 647)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-29 09:08:32 UTC (rev 648)
+@@ -198,16 +198,17 @@
+  
+   /* Don't allow directories writable by others */
+   if (stat(path, &st) < 0) {
+-    LOG(LOG_ERR,"Cannot check permissions for the uw_local_scripts directory");
++    LOG(LOG_ERR,"Cannot check permissions for %s", path);
+   }
+   if ( (st.st_uid == getuid()) && (st.st_mode & 077) != 0 ) {  /* we are world or group writable */
+-    LOG(LOG_ERR,"The uw_local_scripts directory has bad permissions, refusing to run the scripts");
++    LOG(LOG_ERR,"%s has bad permissions, refusing to run the scripts", path);
+     return;
+   }
+ 
+   /* Ok the directory is safe enough, lets open it. */
+   dir = g_dir_open (path, 0, &error);
+   if (dir == NULL) {
++    LOG(LOG_ERR,"Cannot open %s", path); /* Should not be reached */
+     perror(path);
+     return;
+   }
+
+
+

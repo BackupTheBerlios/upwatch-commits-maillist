@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r647 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r647%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200608290854.k7T8s1EL010417%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000180.html">
+   <LINK REL="Next"  HREF="000182.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r647 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r647%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200608290854.k7T8s1EL010417%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r647 - upwatch/trunk/uw_sysstat">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Aug 29 10:54:01 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000180.html">[Upwatch-commits] r646 - in upwatch/trunk: . cfg
+</A></li>
+        <LI>Next message: <A HREF="000182.html">[Upwatch-commits] r648 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#181">[ date ]</a>
+              <a href="thread.html#181">[ thread ]</a>
+              <a href="subject.html#181">[ subject ]</a>
+              <a href="author.html#181">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-29 10:54:00 +0200 (Tue, 29 Aug 2006)
+New Revision: 647
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Fix script permission checks.
+st.st_mode is only really usefull if you stat(2) the file first, I forgot two simple but very important lines :-(
+
+While there: if there is a problem: log it to hit the sysadmin with the cluestick
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-29 07:52:56 UTC (rev 646)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-29 08:54:00 UTC (rev 647)
+@@ -197,9 +197,13 @@
+   gettimeofday(&amp;start, NULL);
+  
+   /* Don't allow directories writable by others */
+-  if ( stat(path, &amp;st ) == -1 ) return;
+-  if ( (st.st_mode &amp; 077) != 0)  return;  /* we are world or group writable */
+-  /* XXX FIXME, we have to check the full path for bad permissions*/
++  if (stat(path, &amp;st) &lt; 0) {
++    LOG(LOG_ERR,&quot;Cannot check permissions for the uw_local_scripts directory&quot;);
++  }
++  if ( (st.st_uid == getuid()) &amp;&amp; (st.st_mode &amp; 077) != 0 ) {  /* we are world or group writable */
++    LOG(LOG_ERR,&quot;The uw_local_scripts directory has bad permissions, refusing to run the scripts&quot;);
++    return;
++  }
+ 
+   /* Ok the directory is safe enough, lets open it. */
+   dir = g_dir_open (path, 0, &amp;error);
+@@ -217,14 +221,21 @@
+     if (filename[0] == '.') continue;  // skip '.', '..' and hidden files
+     sprintf(fullpath, &quot;%s/%s&quot;, path, filename);
+     if (!g_file_test(fullpath, G_FILE_TEST_IS_EXECUTABLE)) {
++      LOG(LOG_WARNING,&quot;Script %s is not executable, skipping.&quot;, fullpath);
+       continue;
+     }
+  
+     if ( debug &gt; 4 ) printf(&quot;Checking script %s\n&quot;, fullpath);
+ 
+     /* The script should not be writable by others */
+-    if ( stat(fullpath, &amp;st ) == -1 ) continue;
+-    if ( (st.st_mode &amp; 077) != 0)  continue;  /* we are world or group writable */
++    if (stat(fullpath, &amp;st) &lt; 0) {
++      LOG(LOG_ERR,&quot;Cannot check permissions for %s&quot;, fullpath);
++      continue;
++    }
++    if ( (st.st_uid == getuid()) &amp;&amp; (st.st_mode &amp; 077) != 0 ) {  /* we are world or group writable */
++      LOG(LOG_ERR,&quot;Script %s has insecure permissions, refusing it.&quot;, fullpath);
++      continue;
++    }
+     if ( debug &gt; 4 ) printf(&quot;Script %s is ok\n&quot;, fullpath);
+ 
+     uw_setproctitle(&quot;Running check %s&quot;, fullpath);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000180.html">[Upwatch-commits] r646 - in upwatch/trunk: . cfg
+</A></li>
+	<LI>Next message: <A HREF="000182.html">[Upwatch-commits] r648 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#181">[ date ]</a>
+              <a href="thread.html#181">[ thread ]</a>
+              <a href="subject.html#181">[ subject ]</a>
+              <a href="author.html#181">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

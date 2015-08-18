@@ -1,0 +1,898 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r513%20-%20in%20upwatch/trunk%3A%20.%20common%20doc%20util%20uw_accept%20uw_acceptbb%20uw_dns%20uw_httpget%20uw_imap%20uw_iptraf%20uw_mssql%20uw_mysql%20uw_mysqlstats%20uw_null%20uw_ping%20uw_pop3%20uw_postgresql%20uw_process%20uw_purple%20uw_route%20uw_send%20uw_setip%20uw_smtp%20uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_tcpconnect&In-Reply-To=%3C200603031934.k23JYRqX019434%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r513%20-%20in%20upwatch/trunk%3A%20.%20common%20doc%20util%20uw_accept%20uw_acceptbb%20uw_dns%20uw_httpget%20uw_imap%20uw_iptraf%20uw_mssql%20uw_mysql%20uw_mysqlstats%20uw_null%20uw_ping%20uw_pop3%20uw_postgresql%20uw_process%20uw_purple%20uw_route%20uw_send%20uw_setip%20uw_smtp%20uw_snmpget%20uw_syncprobes%20uw_sysstat%20uw_tcpconnect&In-Reply-To=%3C200603031934.k23JYRqX019434%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r513 - in upwatch/trunk: . common doc util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect">raarts at berlios.de
+       </A><BR>
+    <I>Fri Mar  3 20:34:27 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[Upwatch-commits] r514 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-03-03 20:34:07 +0100 (Fri, 03 Mar 2006)
+New Revision: 513
+
+Added:
+   upwatch/trunk/common/dbase_options_ign.def
+   upwatch/trunk/common/generic_options_ign.def
+   upwatch/trunk/common/option_realm_ign.def
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/RELEASE
+   upwatch/trunk/common/generic_options.def
+   upwatch/trunk/common/license_gpl.def
+   upwatch/trunk/common/minimal_options.def
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/admin-guide.html
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/program-guide.html
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/upwatch.html
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/upwatch-spec.tpl
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/util/chklog_options.def
+   upwatch/trunk/util/ctime_options.def
+   upwatch/trunk/util/slot_options.def
+   upwatch/trunk/util/uwq_options.def
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_httpget/uw_httpget.def
+   upwatch/trunk/uw_imap/uw_imap.def
+   upwatch/trunk/uw_iptraf/uw_iptraf.def
+   upwatch/trunk/uw_mssql/uw_mssql.def
+   upwatch/trunk/uw_mysql/uw_mysql.def
+   upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+   upwatch/trunk/uw_null/uw_null.conf
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_ping/uw_ping.def
+   upwatch/trunk/uw_pop3/uw_pop3.def
+   upwatch/trunk/uw_postgresql/uw_postgresql.def
+   upwatch/trunk/uw_process/uw_process.def
+   upwatch/trunk/uw_process/uw_tnot.def
+   upwatch/trunk/uw_purple/uw_purple.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_send/run.c
+   upwatch/trunk/uw_send/uw_send.def
+   upwatch/trunk/uw_setip/uw_setip.def
+   upwatch/trunk/uw_smtp/uw_smtp.def
+   upwatch/trunk/uw_snmpget/uw_snmpget.def
+   upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+   upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+Log:
+Build fixes for autogen 5.8.3. Please use a fresh checkout.
+Build fixes for Fedora Core 4
+Fix uw_sent to actually timeout read() en write().
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/Makefile.am	2006-03-03 19:34:07 UTC (rev 513)
+@@ -85,6 +85,7 @@
+   ${SERVER_DIST} \
+   install-sh config.sub mkinstalldirs depcomp cfg/cvs2cl.pl
+ 
++
+ upwatch.spec: force upwatch-spec.def upwatch-spec.tpl common/spec.tpl \
+   uw_*/*.spec-files uw_*/*.spec-requires  uw_*/*.spec-buildrequires
+ 	autogen -b upwatch -Dconfargs=&quot;$(CONFARGS)&quot; upwatch-spec.def
+@@ -105,6 +106,10 @@
+ ChangeLog:
+ 	svn log &gt; ChangeLog
+ 
++RELEASE: force
++	svnversion . &gt; RELEASE
++	rm -f force
++
+ CLEANFILES = upwatch.mysql upwatch.spec upwatch-*.tar.gz
+ 
+ install-data-local:
+@@ -126,7 +131,7 @@
+ 	  mkdir -p ${DESTDIR}/var/run/upwatch ;\
+ 	fi
+ 
+-rpm: all dist upwatch.spec 
++rpm: all dist upwatch.spec RELEASE
+ 	SED=sed $(RPMBUILD) -ta upwatch-${VERSION}.tar.gz
+ 
+ dist-hook:
+
+Modified: upwatch/trunk/RELEASE
+===================================================================
+--- upwatch/trunk/RELEASE	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/RELEASE	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1 +1 @@
+-0
++510M
+
+Added: upwatch/trunk/common/dbase_options_ign.def
+===================================================================
+--- upwatch/trunk/common/dbase_options_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/dbase_options_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,44 @@
++flag = {
++    name      = dbtype;
++    value     = T;        /* flag style option character */
++    arg-default = mysql;
++    arg_type  = string;   /* option argument indication  */
++    descrip   = &quot;ignored&quot;;
++};
++
++flag = {
++    name      = dbhost;
++    value     = h;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = &quot;ignored&quot;;
++};  
++    
++flag = {
++    name      = dbport;
++    arg_type  = numeric;   /* option argument indication  */
++    arg-default = 3306;
++    descrip   = &quot;ignored&quot;;
++};  
++    
++flag = {
++    name      = dbname;
++    value     = n;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = &quot;ignored&quot;;
++};  
++    
++flag = {
++    name      = dbuser;   
++    value     = u;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = &quot;ignored&quot;;
++};
++
++flag = {
++    name      = dbpasswd;
++    value     = p;        /* flag style option character */
++    arg_type  = string;   /* option argument indication  */
++    descrip   = &quot;ignored&quot;;
++};  
++
++
+
+Modified: upwatch/trunk/common/generic_options.def
+===================================================================
+--- upwatch/trunk/common/generic_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/generic_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,12 +1,3 @@
+-export        = &quot;#include &lt;config.h&gt;&quot;;
+-export        = &quot;#include &lt;limits.h&gt;&quot;;
+-export        = &quot;#include &lt;stdio.h&gt;&quot;;
+-export        = &quot;#include &lt;stdlib.h&gt;&quot;;
+-
+-explain;
+-long-opts;
+-gnu-usage;
+-
+ flag = {
+     name      = syslog;
+     value     = s;
+
+Added: upwatch/trunk/common/generic_options_ign.def
+===================================================================
+--- upwatch/trunk/common/generic_options_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/generic_options_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,32 @@
++flag = {
++    name      = syslog;
++    value     = s;
++    arg_type  = bool;
++    descrip   = &quot;ignored&quot;;
++};
++
++flag = {
++    name      = stderr;
++    settable;
++    value     = e;
++    arg_type  = bool;
++    descrip   = &quot;ignored&quot;;
++};
++
++flag = {
++    name      = debug;
++    value     = d;
++    arg_type  = number;
++    arg-default = 0;
++    arg-range = '0-&gt;9';
++    descrip   = &quot;ignored&quot;;
++};
++
++flag = {
++    name      = logfile;
++    value     = l;
++    arg_type  = string;
++    arg-default = &quot;/var/log/upwatch/upwatch.log&quot;;
++    descrip   = &quot;ignored&quot;;
++};
++
+
+Modified: upwatch/trunk/common/license_gpl.def
+===================================================================
+--- upwatch/trunk/common/license_gpl.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/license_gpl.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,3 +1,12 @@
++export        = &quot;#include &lt;config.h&gt;&quot;;
++export        = &quot;#include &lt;limits.h&gt;&quot;;
++export        = &quot;#include &lt;stdio.h&gt;&quot;;
++export        = &quot;#include &lt;stdlib.h&gt;&quot;;
++
++explain;
++long-opts;
++gnu-usage;
++
+ copyright = {
+   date = &quot;2002&quot;;
+   author=  &quot;Ron Arts&quot;;
+
+Modified: upwatch/trunk/common/minimal_options.def
+===================================================================
+--- upwatch/trunk/common/minimal_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/minimal_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,21 +1,3 @@
+-export        = &quot;#include &lt;config.h&gt;&quot;;
+-export        = &quot;#include &lt;limits.h&gt;&quot;;
+-export        = &quot;#include &lt;stdio.h&gt;&quot;;
+-export        = &quot;#include &lt;stdlib.h&gt;&quot;;
+-
+-explain;
+-long-opts;
+-
+-copyright = {
+-  date = &quot;2002&quot;;
+-  author=  &quot;Ron Arts&quot;;
+-  owner = &quot;Upwatch BV&quot;;
+-  eaddr = &quot;<A HREF="https://lists.berlios.de/mailman/listinfo/upwatch-commits">info at upwatch.com</A>&quot;;
+-  type = &quot;NOTE&quot;;
+-  text = 
+-'Redistribution Prohibited. Violation will be prosecuted to the maximum extent possible by applicable law.';
+-};
+-
+ flag = {
+     name      = verbose;
+     value     = v;
+
+Added: upwatch/trunk/common/option_realm_ign.def
+===================================================================
+--- upwatch/trunk/common/option_realm_ign.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/common/option_realm_ign.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -0,0 +1,6 @@
++flag = {
++    name      = realm;
++    value     = R;
++    arg_type  = string;
++    descrip   = &quot;ignored&quot;;
++};
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/configure.ac	2006-03-03 19:34:07 UTC (rev 513)
+@@ -278,7 +278,7 @@
+ )
+ AC_SUBST(LIBOPTS_INC_PREFIX)
+ 
+-for incpath in /usr/include/ $LIBOPTS_LIB_PREFIX /usr/local/include/ /cygdrive/c/include /usr/pkg/include/
++for incpath in /usr/include $LIBOPTS_LIB_PREFIX /usr/local/include /cygdrive/c/include /usr/pkg/include
+ do
+   if test -f $incpath/options.h
+   then
+@@ -399,7 +399,7 @@
+   LIBPCRE_CFLAGS=&quot;`pcre-config --cflags`&quot;
+   LIBPCRE_LIBS=&quot;`pcre-config --libs-posix`&quot;
+ fi
+-if test -z &quot;$LIBPCRE_CFLAGS&quot;
++if test -z &quot;$LIBPCRE_LIBS&quot;
+ then
+   HAVE_LIBPCRE=&quot;0&quot;
+ else
+@@ -558,11 +558,13 @@
+ if test $HAVE_LIBREADLINE -eq 1
+ then
+ 	LIBREADLINE_LIBS=-lreadline
++        AC_DEFINE(HAVE_LIBREADLINE,1,[Do we have the readline library])
+ else 
+ 	AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lcurses)
+ 	if test $HAVE_LIBREADLINE -eq 1
+ 	then
+ 		LIBREADLINE_LIBS=-lreadline
++                AC_DEFINE(HAVE_LIBREADLINE,1,[Do we have the readline library])
+ 	fi
+ fi
+ AM_CONDITIONAL(HAVE_LIBREADLINE, test $HAVE_LIBREADLINE -eq 1)
+
+Modified: upwatch/trunk/doc/admin-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch-spec.tpl
+===================================================================
+--- upwatch/trunk/upwatch-spec.tpl	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/upwatch-spec.tpl	2006-03-03 19:34:07 UTC (rev 513)
+@@ -6,7 +6,7 @@
+ Release: [+ release +]
+ Source: <A HREF="http://www.upwatch.com/%{name">http://www.upwatch.com/%{name</A>}-%{version}.tar.gz
+ Packager: Ron Arts &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/upwatch-commits">raarts at upwatch.com</A>&gt;
+-Copyright: GPL
++License: GPL
+ Group: Application/Monitoring
+ BuildRoot: %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+ BuildRequires: gzip glib2-devel autogen libxslt lynx readline-devel
+@@ -193,7 +193,7 @@
+ %package monitor
+ Summary: UpWatch - programs for a monitoring station
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch
+ [+ FOR monitorprog +]# [+monitorprog+] requirements:
+ [+ include (string-append (get &quot;monitorprog&quot;) &quot;/&quot; (get &quot;monitorprog&quot;) &quot;.spec-requires&quot;) ;+]
+@@ -253,7 +253,7 @@
+ %package server
+ Summary: UpWatch - server programs
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch 
+ [+ FOR serverprog +]# [+serverprog+] requirements:
+ [+ include (string-append (get &quot;serverprog&quot;) &quot;/&quot; (get &quot;serverprog&quot;) &quot;.spec-requires&quot;) ;+]
+@@ -320,7 +320,7 @@
+ %package [+ extraprog +]
+ Summary: UpWatch - monitor IP traffic
+ Group: Application/Monitoring
+-Copyright: GPL
++License: GPL
+ Requires: upwatch libxml2 &gt;= 2.4.19 libpcap glib2 &gt;= 2.0.4
+ 
+ %description [+ extraprog +]
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/Makefile.am	2006-03-03 19:34:07 UTC (rev 513)
+@@ -59,6 +59,7 @@
+ 	autogen -b uwq $(AGDEFINES) $(GENINCL) -T $(MAN1TPL) uwq_options.def
+ 
+ ctime_SOURCES = ctime.c ctime_options.c ctime_options.h ctime_options.def 
++ctime_CFLAGS = @LIBOPTS_CFLAGS@
+ ctime_LDADD = $(LIBOPTS) 
+ BUILT_SOURCES += ctime_options.h ctime.1
+ EXTRA_DIST += ctime_options.def
+
+Modified: upwatch/trunk/util/chklog_options.def
+===================================================================
+--- upwatch/trunk/util/chklog_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/chklog_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -58,4 +58,7 @@
+ in /etc/upwatch.d/logwatch.d&quot;;
+ };
+ 
++#include license_gpl.def
+ #include minimal_options.def
++#include dbase_options_ignored.def
++
+
+Modified: upwatch/trunk/util/ctime_options.def
+===================================================================
+--- upwatch/trunk/util/ctime_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/ctime_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -10,5 +10,6 @@
+ argument      = &quot;[string]&quot;;
+ 
+ #include minimal_options.def
++#include dbase_options_ignored.def
+ #include license_gpl.def
+ 
+
+Modified: upwatch/trunk/util/slot_options.def
+===================================================================
+--- upwatch/trunk/util/slot_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/slot_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -11,5 +11,6 @@
+ argument      = &quot;[string]&quot;;
+ 
+ #include minimal_options.def
++#include dbase_options_ignored.def
+ #include license_gpl.def
+ 
+
+Modified: upwatch/trunk/util/uwq_options.def
+===================================================================
+--- upwatch/trunk/util/uwq_options.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/util/uwq_options.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -33,5 +33,9 @@
+ 'For really long queues, this option speeds up display';
+ };
+ 
+-#include generic_options.def
++#include license_gpl.def
++#include minimal_options.def
+ 
++#include dbase_options_ign.def
++#include generic_options_ign.def
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_accept/uw_accept.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -74,7 +74,7 @@
+ For some more info about maildir see <A HREF="http://www.qmail.org/man/man5/maildir.html.">http://www.qmail.org/man/man5/maildir.html.</A>';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+-#include ../common/generic_options.def
+-#include license_gpl.def
++#include generic_options.def
+ 
+
+Modified: upwatch/trunk/uw_acceptbb/uw_acceptbb.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_acceptbb/uw_acceptbb.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -75,6 +75,6 @@
+ For some more info about maildir see <A HREF="http://www.qmail.org/man/man5/maildir.html.">http://www.qmail.org/man/man5/maildir.html.</A>';
+ };
+ 
+-#include ../common/generic_options.def
+ #include license_gpl.def
++#include generic_options.def
+ 
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_dns/uw_dns.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -110,7 +110,7 @@
+     descrip   = &quot;UpWatch password&quot;;
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_httpget/uw_httpget.def
+===================================================================
+--- upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -110,5 +110,6 @@
+     descrip   = &quot;UpWatch password&quot;;
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_imap/uw_imap.def
+===================================================================
+--- upwatch/trunk/uw_imap/uw_imap.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_imap/uw_imap.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_iptraf/uw_iptraf.def
+===================================================================
+--- upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_iptraf/uw_iptraf.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -134,4 +134,5 @@
+ (192.168.170.0/24)&quot;;
+ };
+ 
++#include license_gpl.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_mssql/uw_mssql.def
+===================================================================
+--- upwatch/trunk/uw_mssql/uw_mssql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mssql/uw_mssql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_mysql/uw_mysql.def
+===================================================================
+--- upwatch/trunk/uw_mysql/uw_mysql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mysql/uw_mysql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,6 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+
+Modified: upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_mysqlstats/uw_mysqlstats.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -90,7 +90,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.conf
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.conf	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_null/uw_null.conf	2006-03-03 19:34:07 UTC (rev 513)
+@@ -1,14 +1 @@
+-route httpget q_httpget
+-route imap q_imap
+-route iptraf q_iptraf
+-route httpget q_httpget
+-route mssql q_mssql
+-route mysql q_mysql
+-route ping q_ping
+-route pop3 q_pop3
+-route postgresql q_postgresql
+-route snmpget q_snmpget
+-route sysstat q_sysstat
+-route errlog q_errlog
+-route diskfree q_diskfree
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_null/uw_null.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -78,7 +78,8 @@
+ This is useful is you want to run uw_null under cron or for debugging.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
++#include option_realm_ign.def
+ 
+
+Modified: upwatch/trunk/uw_ping/uw_ping.def
+===================================================================
+--- upwatch/trunk/uw_ping/uw_ping.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_ping/uw_ping.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -121,7 +121,7 @@
+     descrip   = &quot;UpWatch password&quot;;
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_pop3/uw_pop3.def
+===================================================================
+--- upwatch/trunk/uw_pop3/uw_pop3.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_pop3/uw_pop3.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_postgresql/uw_postgresql.def
+===================================================================
+--- upwatch/trunk/uw_postgresql/uw_postgresql.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_postgresql/uw_postgresql.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_process/uw_process.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_process.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_process/uw_process.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -213,7 +213,7 @@
+ then start the debugger and run the program with `-d3 --slave q_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_process/uw_tnot.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_tnot.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_process/uw_tnot.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -244,7 +244,7 @@
+ then start the debugger and run the program with `-d3 --slave q_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_purple/uw_purple.def
+===================================================================
+--- upwatch/trunk/uw_purple/uw_purple.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_purple/uw_purple.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -57,7 +57,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_route/uw_route.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -98,7 +98,7 @@
+ you want to put iptraf probes into the uw_iptraf queue, use `route iptraf uw_iptraf`';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_send/run.c	2006-03-03 19:34:07 UTC (rev 513)
+@@ -11,14 +11,29 @@
+ #ifdef USE_ST
+ #include &lt;st.h&gt;
+ #else
++void sigalarm_handler (int signum)
++{
++  LOG(LOG_NOTICE, &quot;SIGALRM received&quot;, signum);
++}
++
+ int st_read(int fd, void *buf, size_t size, int timeout)
+ {
+-  return(read(fd, buf, size));
++  int ret;
++
++  alarm(timeout/1000000L);
++  ret = read(fd, buf, size);
++  alarm(0);
++  return ret;
+ }
+ 
+ int st_write(int fd, void *buf, size_t size, int timeout)
+ {
+-  return(write(fd, buf, size));
++  int ret;
++
++  alarm(timeout/1000000L);
++  ret = write(fd, buf, size);
++  alarm(0);
++  return ret;
+ }
+ #define st_netfd_fileno 
+ #define st_netfd_t int
+@@ -62,11 +77,20 @@
+ 
+ int init(void)
+ {
++
+   int ct = 0;
+   char **input;
+   char **host, **port, **user, **pwd, **thr;
+   int i = 0;
++#ifndef USE_ST
++  struct sigaction new_action;
+ 
++  new_action.sa_handler = sigalarm_handler;
++  sigemptyset (&amp;new_action.sa_mask);
++  new_action.sa_flags = 0;
++  sigaction (SIGALRM, &amp;new_action, NULL);
++#endif
++
+   hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, queue_free);
+ 
+   if (!HAVE_OPT(THREADS)) {
+
+Modified: upwatch/trunk/uw_send/uw_send.def
+===================================================================
+--- upwatch/trunk/uw_send/uw_send.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_send/uw_send.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -145,4 +145,6 @@
+ 'This script is called if uw_send is done sending data';
+ };
+ 
++#include license_gpl.def
+ #include generic_options.def
++#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_setip/uw_setip.def
+===================================================================
+--- upwatch/trunk/uw_setip/uw_setip.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_setip/uw_setip.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -61,5 +61,6 @@
+ filled with ip address, nat-router address and customer number, in that order.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+-#include ../common/generic_options.def
++#include generic_options.def
+
+Modified: upwatch/trunk/uw_smtp/uw_smtp.def
+===================================================================
+--- upwatch/trunk/uw_smtp/uw_smtp.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_smtp/uw_smtp.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_snmpget/uw_snmpget.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/uw_snmpget.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_snmpget/uw_snmpget.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,5 +91,6 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+===================================================================
+--- upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -57,7 +57,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -160,7 +160,6 @@
+ };
+ 
+ flag = {
+-    must-set; 
+     name      = ipaddress;
+     arg_type  = string;   /* option argument indication  */
+     arg_default = &quot;127.0.0.1&quot;;
+@@ -239,6 +238,7 @@
+ };
+ 
+ 
++#include license_gpl.def
+ #include generic_options.def
+-#include license_gpl.def
++#include dbase_options_ign.def
+ 
+
+Modified: upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2006-03-02 09:48:33 UTC (rev 512)
++++ upwatch/trunk/uw_tcpconnect/uw_tcpconnect.def	2006-03-03 19:34:07 UTC (rev 513)
+@@ -91,7 +91,7 @@
+ This flag may be given multiple times.';
+ };
+ 
++#include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-#include license_gpl.def
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[Upwatch-commits] r512 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[Upwatch-commits] r514 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,485 @@
+From wijnand at berlios.de  Wed May 10 15:14:45 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Wed, 10 May 2006 15:14:45 +0200
+Subject: [Upwatch-commits] r611 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200605101314.k4ADEjrv017679@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-10 15:14:44 +0200 (Wed, 10 May 2006)
+New Revision: 611
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+Log:
+Sync regex tree before something nasty happens to it
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-21 19:05:37 UTC (rev 610)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-05-10 13:14:44 UTC (rev 611)
+@@ -1,5 +1,5 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
++green [LOGDATE] gdm[PID]: Couldn't authenticate user
+ ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
+-ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
+ green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
+ green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-04-21 19:05:37 UTC (rev 610)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-05-10 13:14:44 UTC (rev 611)
+@@ -1,2 +1,3 @@
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] LOG:\s+recycled transaction log file
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] FATAL: no pg_hba.conf entry for host "\[[HOSTNAME]\]", user "[WORD]", database "[WORD]", SSL (on|off)
++green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] FATAL: Password authentication failed for user "[WORD]"
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-21 19:05:37 UTC (rev 610)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-05-10 13:14:44 UTC (rev 611)
+@@ -3,14 +3,14 @@
+ green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] client/smbmount.c:send_fs_socket\([NUM]\)
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/access.c:check_access\([NUM]\)
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:get_peer_addr\([NUM]\)
+-ignore [LOGDATE] smbd[PID]: getpeername failed. Error was Transport endpoint is not connected
++ignore [LOGDATE] smbd[PID]:\s*getpeername failed. Error was Transport endpoint is not connected
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:read_socket_data\([NUM]\)
+ ignore [LOGDATE] smb_lookup: find .* failed, error=-512
+ green [LOGDATE] smb_add_request: request \[.*, .*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+ green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] tdb/tdbutil.c:tdb_log\([NUM]\) 
+ green [LOGDATE] kernel: smb_proc_readX_data:
+-ignore [LOGDATE] smbd[PID]: Error writing [NUM] bytes to client. [NUM]. \(Connection reset by peer\)
++ignore [LOGDATE] smbd[PID]:\s*Error writing [NUM] bytes to client. [NUM]. \(Connection reset by peer\)
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:send_smb\([NUM]\)
+ ignore [LOGDATE] smbd[PID]: write_socket_data: write failure. Error = Connection reset by peer
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_socket_data\([NUM]\) 
+@@ -18,3 +18,5 @@
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+ green [LOGDATE] nmbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] nmbd/nmbd_responserecordsdb.c:find_response_record\([NUM]\) 
+ green [LOGDATE] nmbd[PID]: find_response_record: response packet id [NUM] received with no matching record.
++green [LOGDATE] smbd[13734]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_data\([NUM]\)
++ignore [LOGDATE] smbd[13734]:\s*write_data: write failure in writing to client [IPADDR]. Error Connection reset by peer
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-04-21 19:05:37 UTC (rev 610)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-05-10 13:14:44 UTC (rev 611)
+@@ -72,3 +72,5 @@
+ green [LOGDATE] sshd[PID]: Authentication refused: bad ownership or modes for file [PATH]
+ green [LOGDATE] sshd: sshd shutdown failed
+ ignore [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: Connection timed out
++ignore [LOGDATE] sshd[PID]: error: Bind to port [NUM] on [IPADDR] failed: Address already in use.
++green [LOGDATE] sshd\(pam_unix\)[PID]: service\(sshd\) ignoring max retries; [NUM] > [NUM]
+
+
+
+From wijnand at berlios.de  Wed May 10 15:23:04 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Wed, 10 May 2006 15:23:04 +0200
+Subject: [Upwatch-commits] r612 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+Message-ID: <200605101323.k4ADN4CO018592@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-10 15:23:04 +0200 (Wed, 10 May 2006)
+New Revision: 612
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+Log:
+Oops, bring back one regex
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-05-10 13:14:44 UTC (rev 611)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-05-10 13:23:04 UTC (rev 612)
+@@ -1,5 +1,6 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
+ green [LOGDATE] gdm[PID]: Couldn't authenticate user
+ ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
++ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
+ green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
+ green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+
+
+From wijnand at berlios.de  Mon May 15 20:36:07 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Mon, 15 May 2006 20:36:07 +0200
+Subject: [Upwatch-commits] r613 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+Message-ID: <200605151836.k4FIa7LT011338@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-15 20:36:04 +0200 (Mon, 15 May 2006)
+New Revision: 613
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/quagga
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+Log:
+More regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-05-15 18:36:04 UTC (rev 613)
+@@ -47,6 +47,8 @@
+ green [LOGDATE] postfix/scache[PID]: statistics: 
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Connection refused \(port [NUM]\) 
+ green [LOGDATE] postfix/sendmail[PID]: fatal: No recipient addresses found in message header
++ignore [LOGDATE] postfix/smtpd[PID]: too many errors after NOOP from [HOSTNAME]\[[IPADDR]\]
++ignore [LOGDATE] postfix/smtp[PID]: .*?: host [HOSTNAME]\[[IPADDR]\] said: 451
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-05-15 18:36:04 UTC (rev 613)
+@@ -7,5 +7,6 @@
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
++green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+ 
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-05-15 18:36:04 UTC (rev 613)
+@@ -11,5 +11,6 @@
+ green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down BGP Notification send
+ green [LOGDATE] BGP: %MAXPFXEXCEED: No. of prefix received from [IPADDR] \(afi [NUM]\): [NUM] exceed limit [NUM]
+ green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Cease/Maximum Number of Prefixes Reached\) [NUM] bytes
++green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down Peer closed the session
+ 
+ yellow [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(OPEN Message Error/Authentication Failure\) [NUM] bytes
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-05-15 18:36:04 UTC (rev 613)
+@@ -701,6 +701,10 @@
+ green [LOGDATE] kernel: ACPI: System description tables not found
+ green [LOGDATE] kernel: ESR value before enabling vector: [NUM]
+ green [LOGDATE] kernel: \.\.TIMER: 
++green [LOGDATE] kernel: kmod: runaway modprobe loop assumed and stopped
++green [LOGDATE] kernel: CIFS VFS: Calculated size 0x[NUM] vs actual length 0x[NUM]
++green [LOGDATE] kernel: CIFS VFS: bad smb size detected for Mid=[NUM]
++ignore [LOGDATE] kernel: CIFS VFS: Send error in read = [NUM]
+ 
+ yellow [LOGDATE]  kernel: eth[NUM]: [NUM] transmit timed out, status .*, resetting...
+ 
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/quagga
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/quagga	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/quagga	2006-05-15 18:36:04 UTC (rev 613)
+@@ -0,0 +1,2 @@
++green [LOGDATE] bgpd[PID]: SMUX connection closed: [NUM]
++green [LOGDATE] zebra[PID]: SMUX connection closed: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-05-10 13:23:04 UTC (rev 612)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/snmpd	2006-05-15 18:36:04 UTC (rev 613)
+@@ -2,4 +2,6 @@
+ green [LOGDATE] snmpd[PID]: Received SNMP packet\(s\) from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: Connection from UDP: \[[IPADDR]\]:[NUM]
+ green [LOGDATE] snmpd[PID]: [smux_accept] accepted fd [NUM] from  \[[IPADDR]\]:[NUM]
+-green [LOGDATE] snmpd[20178]: accepted smux peer: oid SNMPv2-SMI::enterprises\.[NUM]\.[NUM]\.[NUM]\.[NUM], descr 
++green [LOGDATE] snmpd[PID]: [smux_accept] accepted fd [NUM] from [IPADDR]:[NUM]
++green [LOGDATE] snmpd[PID]: accepted smux peer: oid SNMPv2-SMI::enterprises\.[NUM]\.[NUM]\.[NUM]\.[NUM], descr 
++green [LOGDATE] snmpd[PID]: Got trap from peer on fd [NUM]
+
+
+
+From wijnand at berlios.de  Tue May 16 00:24:51 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Tue, 16 May 2006 00:24:51 +0200
+Subject: [Upwatch-commits] r614 - upwatch/trunk/uw_sysstat
+Message-ID: <200605152224.k4FMOp3J015149@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-16 00:24:50 +0200 (Tue, 16 May 2006)
+New Revision: 614
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+When using OpenBSD, don't use the crappy xmbmon but use the platforms native sensors framework via sysctl(3).
+This can be beautified but it works solid for now and I am very happy with it.
+
+More information about the sensors framework: http://openbsd.org/papers/bsdcan06-biosensors.pdf
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-05-15 18:36:04 UTC (rev 613)
++++ upwatch/trunk/uw_sysstat/run.c	2006-05-15 22:24:50 UTC (rev 614)
+@@ -22,6 +22,11 @@
+ #if USE_XMBMON
+ #include "mbmon.h"
+ #endif
++#ifdef __OpenBSD__
++#include <sys/param.h>
++#include <sys/sysctl.h>
++#include <sys/sensors.h>
++#endif
+ 
+ char ipaddress[24];
+ 
+@@ -54,7 +59,7 @@
+ } stats_t;
+ stats_t st;
+ 
+-#if USE_XMBMON
++#if USE_XMBMON|| defined (__OpenBSD__)
+ typedef struct {
+   float temp1;
+   float temp2;
+@@ -113,7 +118,57 @@
+   //       hw.vc0, hw.vc1, hw.v33, hw.v50p, hw.v12p, hw.v12n, hw.v50n);
+ }
+ #endif
++#ifdef __OpenBSD__
++void get_hwstats(void)
++{
++  int i;
++  struct sensor s; 
++  size_t slen = sizeof(s); 
++  float value;
++  for (i=0;i<256;i++)
++  {
++    int mib[] = { CTL_HW, HW_SENSORS, i }; 
++    if ( sysctl(mib, sizeof(mib)/sizeof(mib[0]), &s, &slen, NULL, 0) == -1 ) continue;
++    if (s.flags & SENSOR_FINVALID) continue;
+ 
++    /* Ok, we have a valid sensor now, now check the type */
++    switch (s.type) {
++      case SENSOR_TEMP:
++              if ( debug > 5 ) printf("Sensor %d is a temparature sensor\n", s.num);
++              value = (s.value - 273150000) / 1000000.0;
++              if(strcmp(s.desc,"Temp1")==0)  hw.temp1 = value; 
++              if(strcmp(s.desc,"Temp2")==0)  hw.temp2 = value;
++              if(strcmp(s.desc,"Temp3")==0)  hw.temp3 = value;
++              break;
++      case SENSOR_FANRPM:
++              if ( debug > 4 ) printf("Sensor %d is a fan speed sensor\n", s.num);
++              if(strcmp(s.desc,"Fan1")==0)  hw.rot1 = (int) s.value;
++              if(strcmp(s.desc,"Fan2")==0)  hw.rot2 = (int) s.value;
++              if(strcmp(s.desc,"Fan3")==0)  hw.rot3 = (int) s.value;
++              break;
++      case SENSOR_VOLTS_DC:
++              if ( debug > 5 ) printf("Sensor %d is a voltage sensor\n", s.num);
++              value = s.value / 1000000.0;
++              if(strcmp(s.desc,"VCore A")==0)  hw.vc0 = value;
++              if(strcmp(s.desc,"VCore B")==0)  hw.vc1 = value;
++              if(strcmp(s.desc,"+3.3V")==0)  hw.v33 = value;
++              if(strcmp(s.desc,"+5V")==0)  hw.v50p = value;
++              if(strcmp(s.desc,"+12V")==0)  hw.v12p = value;
++              if(strcmp(s.desc,"-12V")==0)  hw.v12n = value;
++              if(strcmp(s.desc,"-5V")==0)  hw.v50n = value;
++              break;
++      default:
++              if ( debug > 5 ) printf("Sensor hw.sensors.%d is of a unknown type! It describes itselve as: %s\n", s.num, s.desc);
++              break;
++    }
++  }
++  if ( debug > 4 ) printf("Temp = %4.1f, %4.1f, %4.1f;",hw.temp1, hw.temp2, hw.temp3);
++  if ( debug > 4 ) printf("Rot = %4d, %4d, %4d\n", hw.rot1, hw.rot2, hw.rot3);
++  if ( debug > 4 ) printf("Vcore = %4.2f, %4.2f\nVolt = %4.2f, %4.2f, %5.2f, %6.2f, %5.2f\n", 
++         hw.vc0, hw.vc1, hw.v33, hw.v50p, hw.v12p, hw.v12n, hw.v50n);
++}
++#endif
++
+ #if HAVE_LIBPCRE
+ #define STATFILE "/var/run/upwatch/uw_sysstat.stat"
+ int check_log(GString *string, int idx)
+@@ -330,7 +385,7 @@
+   return node;
+ }
+ 
+-#if USE_XMBMON
++#if USE_XMBMON || defined (__OpenBSD__)
+ void add_hwstat(xmlNodePtr node)
+ {
+   char buffer[24];
+@@ -613,8 +668,8 @@
+   add_sysstat_info(node);
+   color = xmlGetPropInt(node, "color");
+   if (color > highest_color) highest_color = color;
+-#if USE_XMBMON
+-  if (OPT_VALUE_HWSTATS) {
++#if USE_XMBMON|| defined (__OpenBSD__)
++  if (OPT_VALUE_HWSTATS || __OpenBSD__) { /* FIXME, should be optional for OpenBSD users too (should it?)*/
+     // do the hwstat
+     get_hwstats();
+     node = newnode(doc, "hwstat");
+
+
+
+From wijnand at berlios.de  Tue May 16 10:48:04 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Tue, 16 May 2006 10:48:04 +0200
+Subject: [Upwatch-commits] r615 - upwatch/trunk/uw_sysstat
+Message-ID: <200605160848.k4G8m4Xn017450@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-16 10:48:03 +0200 (Tue, 16 May 2006)
+New Revision: 615
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Unbreak tree, this was stupid.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-05-15 22:24:50 UTC (rev 614)
++++ upwatch/trunk/uw_sysstat/run.c	2006-05-16 08:48:03 UTC (rev 615)
+@@ -669,7 +669,7 @@
+   color = xmlGetPropInt(node, "color");
+   if (color > highest_color) highest_color = color;
+ #if USE_XMBMON|| defined (__OpenBSD__)
+-  if (OPT_VALUE_HWSTATS || __OpenBSD__) { /* FIXME, should be optional for OpenBSD users too (should it?)*/
++  if (OPT_VALUE_HWSTATS ) { 
+     // do the hwstat
+     get_hwstats();
+     node = newnode(doc, "hwstat");
+
+
+
+From wijnand at berlios.de  Fri May 19 17:41:47 2006
+From: wijnand at berlios.de (wijnand at BerliOS)
+Date: Fri, 19 May 2006 17:41:47 +0200
+Subject: [Upwatch-commits] r616 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+Message-ID: <200605191541.k4JFflth032285@sheep.berlios.de>
+
+Author: wijnand
+Date: 2006-05-19 17:41:47 +0200 (Fri, 19 May 2006)
+New Revision: 616
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/automount
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/spamd
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-05-19 15:41:47 UTC (rev 616)
+@@ -48,6 +48,7 @@
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Connection refused \(port [NUM]\) 
+ green [LOGDATE] postfix/sendmail[PID]: fatal: No recipient addresses found in message header
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after NOOP from [HOSTNAME]\[[IPADDR]\]
++ignore [LOGDATE] postfix/smtpd[PID]: too many errors after RCPT from [HOSTNAME]\[[IPADDR]\]
+ ignore [LOGDATE] postfix/smtp[PID]: .*?: host [HOSTNAME]\[[IPADDR]\] said: 451
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-05-19 15:41:47 UTC (rev 616)
+@@ -1,12 +1,13 @@
+ green [LOGDATE] (sm-msp-queue|sendmail|sm-mta)[PID]: [MSGID]: ((from=.*|to=.*|ctladdr=.*|size=.*|class=.*|pri=.*|nrcpts=.*|msgid=.*|proto=.*|dsn=.*|delay=.*|xdelay=.*|mailer=.*|relay=.*)[,\s]*)*
+ green [LOGDATE] sendmail[PID]: alias database [PATH] (auto)?rebuilt by root
+ green [LOGDATE] sendmail[PID]: [PATH]: [NUM] aliases, longest [NUM] bytes, [NUM] bytes total
+-green [LOGDATE] sendmail[PID]: restarting on signal /usr/sbin/sendmail
++green [LOGDATE] sendmail[PID]: restarting on signal [PATH]
+ green [LOGDATE] sendmail[PID]: STARTTLS=.*, relay=.*, version=.*, verify=.*, cipher=.*, bits=.*
+ green [LOGDATE] sendmail[PID]: [MSGID]: forward .*: Group writable directory
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\([IPADDR]\) failed: 
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+ green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
++green [LOGDATE] sendmail[PID]: [MSGID]: HOSTNAME] \[[IPADDR]\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
+ 
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2006-05-19 15:41:47 UTC (rev 616)
+@@ -1,16 +1,17 @@
+-green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+-green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+-green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
+-green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Cease/Administratively Reset\) [NUM] bytes
+ green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down User reset
+ green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Up
+-green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Hold Timer Expired\) [NUM] bytes
+-green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Hold Timer Expired\) [NUM] bytes
+ green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down BGP Notification received
+ green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down BGP Notification send
+-green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down BGP Notification send
++green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down Peer closed the session
++green [LOGDATE] BGP: %MAXPFX: No. of prefix received from [IPADDR] \(afi [NUM]\) reaches [NUM], max [NUM]
+ green [LOGDATE] BGP: %MAXPFXEXCEED: No. of prefix received from [IPADDR] \(afi [NUM]\): [NUM] exceed limit [NUM]
++green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
++green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Cease/Administratively Reset\) [NUM] bytes
++green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Hold Timer Expired\) [NUM] bytes
++green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Hold Timer Expired\) [NUM] bytes
+ green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Cease/Maximum Number of Prefixes Reached\) [NUM] bytes
+-green [LOGDATE] BGP: %ADJCHANGE: neighbor [IPADDR] Down Peer closed the session
++green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease/Connection Rejected\) [NUM] bytes
++green [LOGDATE] BGP: %NOTIFICATION: sent to neighbor [IPADDR] [NUM]/[NUM] \(Cease/Connection collision resolution\) [NUM] bytes
++green [LOGDATE] BGP: SMUX_CLOSE with reason: [NUM]
+ 
+ yellow [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(OPEN Message Error/Authentication Failure\) [NUM] bytes
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/automount
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/automount	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/automount	2006-05-19 15:41:47 UTC (rev 616)
+@@ -0,0 +1 @@
++green [LOGDATE] automount[PID]: failed to mount [PATH]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-05-19 15:41:47 UTC (rev 616)
+@@ -173,6 +173,7 @@
+ green [LOGDATE] kernel: EXT[NUM]-fs: sd\([NUM],[NUM]\): orphan cleanup on readonly fs
+ green [LOGDATE] kernel: EXT[NUM]-fs warning: checktime reached, running e[NUM]fsck is recommended
+ green [LOGDATE] kernel: EXT[NUM]-fs: write access will be enabled during recovery\.
++green [LOGDATE] kernel: EXT3 FS on .*?, internal journal
+ green [LOGDATE] kernel: Failure registering capabilities with the kernel
+ green [LOGDATE] kernel: FDC [NUM] is a
+ green [LOGDATE] kernel: Fixup res [NUM] \([NUM]\) of dev [NUM]:[NUM]\.[NUM]: [NUM] -> [NUM]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/spamd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/spamd	2006-05-16 08:48:03 UTC (rev 615)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/spamd	2006-05-19 15:41:47 UTC (rev 616)
+@@ -4,3 +4,4 @@
+ green [LOGDATE] spamd[PID]: [IPADDR]: connected \([NUM]/[NUM]\)
+ green [LOGDATE] spamd[PID]: [IPADDR]: disconnected after [NUM] seconds\.
+ green [LOGDATE] spamd[PID]: \(GREY\) [IPADDR]: <[EMAIL]> -> <[EMAIL]>
++green [LOGDATE] spamd[PID]: listening for incoming connections.
+
+
+

@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r591 - in upwatch/trunk: common compat/bb/bbhimport upwatch uw_accept uw_dns uw_httpget uw_imap uw_purple uw_setip uw_syncprobes
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r591%20-%20in%20upwatch/trunk%3A%20common%20compat/bb/bbhimport%20upwatch%20uw_accept%20uw_dns%20uw_httpget%20uw_imap%20uw_purple%20uw_setip%20uw_syncprobes&In-Reply-To=%3C200604162008.k3GK8oPf018761%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000121.html">
+   <LINK REL="Next"  HREF="000123.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r591 - in upwatch/trunk: common compat/bb/bbhimport upwatch uw_accept uw_dns uw_httpget uw_imap uw_purple uw_setip uw_syncprobes</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r591%20-%20in%20upwatch/trunk%3A%20common%20compat/bb/bbhimport%20upwatch%20uw_accept%20uw_dns%20uw_httpget%20uw_imap%20uw_purple%20uw_setip%20uw_syncprobes&In-Reply-To=%3C200604162008.k3GK8oPf018761%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r591 - in upwatch/trunk: common compat/bb/bbhimport upwatch uw_accept uw_dns uw_httpget uw_imap uw_purple uw_setip uw_syncprobes">wijnand at berlios.de
+       </A><BR>
+    <I>Sun Apr 16 22:08:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000121.html">[Upwatch-commits] r590 - upwatch/trunk/uw_iptraf
+</A></li>
+        <LI>Next message: <A HREF="000123.html">[Upwatch-commits] r592 - upwatch/trunk/uw_accept
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-16 22:08:49 +0200 (Sun, 16 Apr 2006)
+New Revision: 591
+
+Modified:
+   upwatch/trunk/common/db.c
+   upwatch/trunk/compat/bb/bbhimport/run.c
+   upwatch/trunk/upwatch/db.h
+   upwatch/trunk/uw_accept/run.c
+   upwatch/trunk/uw_dns/run.c
+   upwatch/trunk/uw_httpget/run.c
+   upwatch/trunk/uw_imap/run.c
+   upwatch/trunk/uw_purple/run.c
+   upwatch/trunk/uw_setip/run.c
+   upwatch/trunk/uw_syncprobes/run.c
+Log:
+Much better fix for the open_database gcc warnings. I should have taken this route from the start to save me some work
+
+Modified: upwatch/trunk/common/db.c
+===================================================================
+--- upwatch/trunk/common/db.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/common/db.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -28,7 +28,7 @@
+   }
+ }
+ 
+-MYSQL *open_database(char *dbhost, int dbport, char *dbname, char *dbuser, char *dbpasswd)
++MYSQL *open_database(const char *dbhost, int dbport, const char *dbname, const char *dbuser, const char *dbpasswd)
+ {
+   MYSQL *mysql;
+ 
+
+Modified: upwatch/trunk/compat/bb/bbhimport/run.c
+===================================================================
+--- upwatch/trunk/compat/bb/bbhimport/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/compat/bb/bbhimport/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -30,8 +30,8 @@
+     return 0;
+   }
+ 
+-  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
+-			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
++			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (!mysql) {
+     printf(&quot;Can't open database\n&quot;);
+     return 0;
+
+Modified: upwatch/trunk/upwatch/db.h
+===================================================================
+--- upwatch/trunk/upwatch/db.h	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/upwatch/db.h	2006-04-16 20:08:49 UTC (rev 591)
+@@ -4,7 +4,7 @@
+ #include &lt;mysql.h&gt;
+ #include &lt;mysqld_error.h&gt;
+ 
+-MYSQL *open_database(char *dbhost, int dbport, char *dbname, char *dbuser, char *dbpasswd);
++MYSQL *open_database(const char *dbhost, int dbport, const char *dbname, const char *dbuser, const char *dbpasswd);
+ void close_database(MYSQL *mysql);
+ MYSQL_RES *my_query(MYSQL *mysql, int log_dupes, char *qry, ...);
+ MYSQL_RES *my_rawquery(MYSQL *mysql, int log_dupes, char *qry);
+
+Modified: upwatch/trunk/uw_accept/run.c
+===================================================================
+--- upwatch/trunk/uw_accept/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_accept/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -40,8 +40,8 @@
+ {
+   MYSQL *db;
+ 
+-  db = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
+-                     (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  db = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
++                     OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (db) {
+     MYSQL_RES *result;
+ 
+
+Modified: upwatch/trunk/uw_dns/run.c
+===================================================================
+--- upwatch/trunk/uw_dns/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_dns/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -131,8 +131,8 @@
+   
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
+-			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
++			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+
+Modified: upwatch/trunk/uw_httpget/run.c
+===================================================================
+--- upwatch/trunk/uw_httpget/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_httpget/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -104,8 +104,8 @@
+ 
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
+-                        (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
++                        OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+
+Modified: upwatch/trunk/uw_imap/run.c
+===================================================================
+--- upwatch/trunk/uw_imap/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_imap/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -82,8 +82,8 @@
+   
+   LOG(LOG_INFO, &quot;reading info from database&quot;);
+   uw_setproctitle(&quot;reading info from database&quot;);
+-  mysql = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME), 
+-			(char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  mysql = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME), 
++			OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (mysql) {
+     refresh_database(mysql);
+     close_database(mysql);
+
+Modified: upwatch/trunk/uw_purple/run.c
+===================================================================
+--- upwatch/trunk/uw_purple/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_purple/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -96,8 +96,8 @@
+   MYSQL *upwatch;
+   int count = 0;
+ 
+-  upwatch = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
+-                        (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  upwatch = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
++                        OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (!upwatch) return 0;
+ 
+   LOG(LOG_INFO, &quot;processing ..&quot;);
+
+Modified: upwatch/trunk/uw_setip/run.c
+===================================================================
+--- upwatch/trunk/uw_setip/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_setip/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -39,8 +39,8 @@
+ {
+   MYSQL *db;
+ 
+-  db = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
+-                     (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  db = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
++                     OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (db) {
+     MYSQL_RES *result;
+ 
+
+Modified: upwatch/trunk/uw_syncprobes/run.c
+===================================================================
+--- upwatch/trunk/uw_syncprobes/run.c	2006-04-16 19:35:05 UTC (rev 590)
++++ upwatch/trunk/uw_syncprobes/run.c	2006-04-16 20:08:49 UTC (rev 591)
+@@ -32,8 +32,8 @@
+   MYSQL_ROW row;
+   MYSQL *upwatch;
+ 
+-  upwatch = open_database((char *) &amp;OPT_ARG(DBHOST), OPT_VALUE_DBPORT, (char *) &amp;OPT_ARG(DBNAME),
+-                        (char *) &amp;OPT_ARG(DBUSER), (char *) &amp;OPT_ARG(DBPASSWD));
++  upwatch = open_database(OPT_ARG(DBHOST), OPT_VALUE_DBPORT, OPT_ARG(DBNAME),
++                        OPT_ARG(DBUSER), OPT_ARG(DBPASSWD));
+   if (!upwatch) return 0;
+ 
+   LOG(LOG_INFO, &quot;syncing..&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000121.html">[Upwatch-commits] r590 - upwatch/trunk/uw_iptraf
+</A></li>
+	<LI>Next message: <A HREF="000123.html">[Upwatch-commits] r592 - upwatch/trunk/uw_accept
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

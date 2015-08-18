@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r538%20-%20in%20upwatch/trunk%3A%20uw_dns%20uw_httpget%20uw_null%20uw_ping%20uw_syncprobes&In-Reply-To=%3C200603181409.k2IE9q6V029925%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000068.html">
+   <LINK REL="Next"  HREF="000070.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r538%20-%20in%20upwatch/trunk%3A%20uw_dns%20uw_httpget%20uw_null%20uw_ping%20uw_syncprobes&In-Reply-To=%3C200603181409.k2IE9q6V029925%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r538 - in upwatch/trunk: uw_dns uw_httpget uw_null uw_ping uw_syncprobes">wijnand at berlios.de
+       </A><BR>
+    <I>Sat Mar 18 15:09:52 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000068.html">[Upwatch-commits] r537 - upwatch/trunk
+</A></li>
+        <LI>Next message: <A HREF="000070.html">[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-18 15:09:51 +0100 (Sat, 18 Mar 2006)
+New Revision: 538
+
+Modified:
+   upwatch/trunk/uw_dns/uw_dns.def
+   upwatch/trunk/uw_httpget/uw_httpget.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_ping/uw_ping.def
+   upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+Log:
+Some autogen fixes. It seems it is still broken as hell.
+
+
+Modified: upwatch/trunk/uw_dns/uw_dns.def
+===================================================================
+--- upwatch/trunk/uw_dns/uw_dns.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_dns/uw_dns.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,24 +92,6 @@
+ This flag may be given multiple times.';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;Upwatch username&quot;;
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;UpWatch password&quot;;
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+
+Modified: upwatch/trunk/uw_httpget/uw_httpget.def
+===================================================================
+--- upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_httpget/uw_httpget.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,24 +92,7 @@
+ This flag may be given multiple times.';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;Upwatch username&quot;;
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;UpWatch password&quot;;
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_null/uw_null.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -82,4 +82,4 @@
+ #include dbase_options.def
+ #include generic_options.def
+ #include option_realm_ign.def
+-
++#include minimal_options.def
+
+Modified: upwatch/trunk/uw_ping/uw_ping.def
+===================================================================
+--- upwatch/trunk/uw_ping/uw_ping.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_ping/uw_ping.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -92,36 +92,7 @@
+ it knows which probe to retrieve from the definition table';
+ };
+ 
+-flag = {
+-    must-set;
+-    name      = statfile;
+-    value     = K;
+-    arg_type  = string;
+-    descrip   = &quot;file to keep current state of probes&quot;;
+-    doc       =
+-'To determine if probe status changed, we keep the previous status
+-in a file. This is the name of that file';
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwuser;
+-    value     = U;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;Upwatch username&quot;;
+-};
+-
+-flag = {
+-    must-set;
+-    name      = uwpasswd;
+-    value     = P;        /* flag style option character */
+-    arg_type  = string;   /* option argument indication  */
+-    max       = NOLIMIT;  /* occurrence limit (none)     */
+-    descrip   = &quot;UpWatch password&quot;;
+-};
+-
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_syncprobes/uw_syncprobes.def
+===================================================================
+--- upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-18 12:22:35 UTC (rev 537)
++++ upwatch/trunk/uw_syncprobes/uw_syncprobes.def	2006-03-18 14:09:51 UTC (rev 538)
+@@ -60,4 +60,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000068.html">[Upwatch-commits] r537 - upwatch/trunk
+</A></li>
+	<LI>Next message: <A HREF="000070.html">[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

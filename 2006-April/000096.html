@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r565%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch&In-Reply-To=%3C200604111619.k3BGJ28o029703%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000095.html">
+   <LINK REL="Next"  HREF="000097.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r565%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch&In-Reply-To=%3C200604111619.k3BGJ28o029703%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Apr 11 18:19:02 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000095.html">[Upwatch-commits] r564 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+        <LI>Next message: <A HREF="000097.html">[Upwatch-commits] r566 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-11 18:19:02 +0200 (Tue, 11 Apr 2006)
+New Revision: 565
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+More upwatch regexes.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-11 13:18:45 UTC (rev 564)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-11 16:19:02 UTC (rev 565)
+@@ -51,6 +51,9 @@
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): read: Interrupted system call
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\):\s*$ 
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): Processing [PATH]
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): processing ..
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): sleeping
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): syncing..
+ red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Too many connections
+ red [LOGDATE] uw_[WORD][PID] notify\.c\([NUM]\): UPWATCH: probe [WORD] is lagging in processing
+-red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Can't connect to MySQL server on '[HOSTNAME]' \(NUM\) dbhost=[HOSTNAME],dbport=[NUM],dbname=[USER],dbuser=[USER],dbpasswd=
++red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Can't connect to MySQL server on '[HOSTNAME]' \([NUM]\) dbhost=[HOSTNAME],dbport=[NUM],dbname=[WORD],db
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000095.html">[Upwatch-commits] r564 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+	<LI>Next message: <A HREF="000097.html">[Upwatch-commits] r566 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

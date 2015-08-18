@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r648 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r648%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200608290908.k7T98WZW016285%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000181.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r648 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r648%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200608290908.k7T98WZW016285%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r648 - upwatch/trunk/uw_sysstat">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Tue Aug 29 11:08:32 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000181.html">[Upwatch-commits] r647 - upwatch/trunk/uw_sysstat
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#182">[ date ]</a>
+              <a href="thread.html#182">[ thread ]</a>
+              <a href="subject.html#182">[ subject ]</a>
+              <a href="author.html#182">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-29 11:08:32 +0200 (Tue, 29 Aug 2006)
+New Revision: 648
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+When there is a problem with the uw_local_scripts directory give the path in the log message
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-29 08:54:00 UTC (rev 647)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-29 09:08:32 UTC (rev 648)
+@@ -198,16 +198,17 @@
+  
+   /* Don't allow directories writable by others */
+   if (stat(path, &amp;st) &lt; 0) {
+-    LOG(LOG_ERR,&quot;Cannot check permissions for the uw_local_scripts directory&quot;);
++    LOG(LOG_ERR,&quot;Cannot check permissions for %s&quot;, path);
+   }
+   if ( (st.st_uid == getuid()) &amp;&amp; (st.st_mode &amp; 077) != 0 ) {  /* we are world or group writable */
+-    LOG(LOG_ERR,&quot;The uw_local_scripts directory has bad permissions, refusing to run the scripts&quot;);
++    LOG(LOG_ERR,&quot;%s has bad permissions, refusing to run the scripts&quot;, path);
+     return;
+   }
+ 
+   /* Ok the directory is safe enough, lets open it. */
+   dir = g_dir_open (path, 0, &amp;error);
+   if (dir == NULL) {
++    LOG(LOG_ERR,&quot;Cannot open %s&quot;, path); /* Should not be reached */
+     perror(path);
+     return;
+   }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000181.html">[Upwatch-commits] r647 - upwatch/trunk/uw_sysstat
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#182">[ date ]</a>
+              <a href="thread.html#182">[ thread ]</a>
+              <a href="subject.html#182">[ subject ]</a>
+              <a href="author.html#182">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

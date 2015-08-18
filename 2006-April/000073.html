@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r542 - upwatch/trunk/doc
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r542%20-%20upwatch/trunk/doc&In-Reply-To=%3C200604021204.k32C47EY005898%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000074.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r542 - upwatch/trunk/doc</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r542%20-%20upwatch/trunk/doc&In-Reply-To=%3C200604021204.k32C47EY005898%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r542 - upwatch/trunk/doc">raarts at berlios.de
+       </A><BR>
+    <I>Sun Apr  2 14:04:07 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000074.html">[Upwatch-commits] r543 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-04-02 14:03:54 +0200 (Sun, 02 Apr 2006)
+New Revision: 542
+
+Modified:
+   upwatch/trunk/doc/client-configuration.xml
+Log:
+Clarified the use of the word 'ignore' in uw_sysstat regex files.
+
+
+Modified: upwatch/trunk/doc/client-configuration.xml
+===================================================================
+--- upwatch/trunk/doc/client-configuration.xml	2006-03-31 13:08:59 UTC (rev 541)
++++ upwatch/trunk/doc/client-configuration.xml	2006-04-02 12:03:54 UTC (rev 542)
+@@ -214,10 +214,13 @@
+        &lt;filename&gt;/etc/upwatch.d/uw_sysstat.d/errlog&lt;/filename&gt; (except &lt;filename&gt;rmacros.txt&lt;/filename&gt;
+        and &lt;filename&gt;macros.txt&lt;/filename&gt;). 
+        These files should contain regular expressions prefixed by one of the keywords 
+-       &lt;command&gt;green&lt;/command&gt;, &lt;command&gt;yellow&lt;/command&gt;, or &lt;command&gt;red&lt;/command&gt;. Next 
++       &lt;command&gt;green&lt;/command&gt;, &lt;command&gt;yellow&lt;/command&gt;, &lt;command&gt;red&lt;/command&gt; or &lt;command&gt;ignore&lt;/command&gt;. Next 
+        uw_sysstat starts scanning &lt;filename&gt;/var/log/messages&lt;/filename&gt;. It reads a line
+        from the logfile and the following happens:&lt;/para&gt;
+        &lt;itemizedlist&gt;
++       &lt;listitem&gt;&lt;para&gt;Check against the ignore list. If a match is found, flag green
++       condition, and continue with the next line. This is mostly used to skip lines that
++       would otherwise be flagged as red, for example because they contain the word ERROR.&lt;/para&gt;&lt;/listitem&gt;
+        &lt;listitem&gt;&lt;para&gt;Check against the red list. If match found, flag red
+        condition, and send the offending line to the upwatch server&lt;/para&gt;&lt;/listitem&gt;
+        &lt;listitem&gt;&lt;para&gt;Check line against the yellow list. If matches, flag yellow
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000074.html">[Upwatch-commits] r543 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

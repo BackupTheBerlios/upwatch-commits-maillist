@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r654 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r654%20-%20upwatch/trunk&In-Reply-To=%3C200610182147.k9ILlZnl000130%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000188.html">
+   <LINK REL="Next"  HREF="000190.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r654 - upwatch/trunk</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r654%20-%20upwatch/trunk&In-Reply-To=%3C200610182147.k9ILlZnl000130%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r654 - upwatch/trunk">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Wed Oct 18 23:47:35 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000188.html">[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+        <LI>Next message: <A HREF="000190.html">[Upwatch-commits] r655 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#189">[ date ]</a>
+              <a href="thread.html#189">[ thread ]</a>
+              <a href="subject.html#189">[ subject ]</a>
+              <a href="author.html#189">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-10-18 23:47:35 +0200 (Wed, 18 Oct 2006)
+New Revision: 654
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Previous libopts commit broke systems without libopts-config since a used variable was renamed.
+
+Since I didn't like the backwards compatible checks anyway I simplified them by specifying possible paths in a array.
+While there, bail out when libopts is not found since we really really need it. This annoyed me from day one :-)
+
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-10-18 06:47:02 UTC (rev 653)
++++ upwatch/trunk/configure.ac	2006-10-18 21:47:35 UTC (rev 654)
+@@ -262,27 +262,13 @@
+ 
+ if test -z &quot;$LIBOPTS_LIBS&quot;
+ then
+-  if test -f /usr/lib/libopts.a
+-  then
+-    LIBOPTS=/usr/lib/libopts.a
+-  fi
+-  if test -f /usr/lib64/libopts.a
+-  then
+-    LIBOPTS=/usr/lib64/libopts.a
+-  fi
+-  
+-  if test -f /usr/local/lib/libopts.a
+-  then
+-    LIBOPTS=/usr/local/lib/libopts.a
+-  fi
+-  if test -f /usr/local/lib64/libopts.a
+-  then
+-    LIBOPTS=/usr/local/lib64/libopts.a
+-  fi
+-  if test -f /usr/pkg/lib/libopts.a
+-  then
+-    LIBOPTS=/usr/pkg/lib/libopts.a
+-  fi
++  for libpath in /usr/lib /usr/local/lib /usr/lib/lib64 /usr/local/lib64 /usr/pkg/lib
++  do
++    if test -f $libpath/libopts.a
++    then
++      LIBOPTS_LIBS=$libpath/libopts.a
++    fi
++  done
+ fi
+ 
+ if test -z &quot;$LIBOPTS_CFLAGS&quot;
+@@ -311,6 +297,10 @@
+     fi
+   done
+ fi
++if test -z &quot;$LIBOPTS_LIBS&quot; -o -z &quot;$LIBOPTS_CFLAGS&quot;
++then
++  AC_MSG_ERROR([You really need autogen or libopts to compile upwatch])
++fi
+ AC_SUBST(LIBOPTS_LIBS)
+ AC_SUBST(LIBOPTS_CFLAGS)
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000188.html">[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+	<LI>Next message: <A HREF="000190.html">[Upwatch-commits] r655 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#189">[ date ]</a>
+              <a href="thread.html#189">[ thread ]</a>
+              <a href="subject.html#189">[ subject ]</a>
+              <a href="author.html#189">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

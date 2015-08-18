@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r691 - in upwatch/trunk: . doc uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r691%20-%20in%20upwatch/trunk%3A%20.%20doc%20uw_process&In-Reply-To=%3C200801291506.m0TF6YOD009731%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000227.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r691 - in upwatch/trunk: . doc uw_process</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r691%20-%20in%20upwatch/trunk%3A%20.%20doc%20uw_process&In-Reply-To=%3C200801291506.m0TF6YOD009731%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r691 - in upwatch/trunk: . doc uw_process">raarts at mail.berlios.de
+       </A><BR>
+    <I>Tue Jan 29 16:06:34 CET 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000227.html">[Upwatch-commits] r692 - in upwatch/trunk: . doc scripts
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2008-01-29 16:06:33 +0100 (Tue, 29 Jan 2008)
+New Revision: 691
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/uw_process/notify.c
+Log:
+Fix FREETDS include directory
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2007-12-21 11:27:28 UTC (rev 690)
++++ upwatch/trunk/configure.ac	2008-01-29 15:06:33 UTC (rev 691)
+@@ -593,7 +593,15 @@
+ if test $HAVE_LIBTDS -eq 1
+ then
+ 	LIBTDS_LIBS=-ltds
+-	case `grep TDS_VERSION_NO ${FREETDS_DIR:-/usr}/include/tdsver.h` in
++	if [ -f /usr/include/tdsver.h ]
++	then
++		LIBTDS_INCLUDE=/usr/include
++	fi
++	if [ -f /usr/include/freetds/tdsver.h ]
++	then
++		LIBTDS_INCLUDE=/usr/include/freetds
++	fi
++	case `grep TDS_VERSION_NO $LIBTDS_INCLUDE/tdsver.h` in
+ 	*0.64*)
+ 		LIBTDS_CFLAGS=&quot;-DFREETDS_0_64&quot;
+ 	;;
+@@ -607,6 +615,7 @@
+ 		LIBTDS_CFLAGS=&quot;-DFREETDS_PRE_0_62&quot;
+ 	;;
+ 	esac
++        LIBTDS_CFLAGS=&quot;$LIBTDS_CFLAGS -I$LIBTDS_INCLUDE&quot;
+ fi
+ AM_CONDITIONAL(HAVE_LIBTDS, test $HAVE_LIBTDS -eq 1)
+ AC_SUBST(LIBTDS_LIBS)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2007-12-21 11:27:28 UTC (rev 690)
++++ upwatch/trunk/uw_process/notify.c	2008-01-29 15:06:33 UTC (rev 691)
+@@ -335,7 +335,6 @@
+   );
+   free(servername);
+   
+-  LOG(LOG_NOTICE, &quot;notify: SMS=%s, email=%s&quot;,  t-&gt;def-&gt;sms, t-&gt;def-&gt;email);
+   if (t-&gt;def-&gt;email[0]) {
+     notified |= mail(t-&gt;def-&gt;email, subject, body, t-&gt;res-&gt;stattime);
+   }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000227.html">[Upwatch-commits] r692 - in upwatch/trunk: . doc scripts
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r678 - upwatch/trunk/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r678%20-%20upwatch/trunk/common&In-Reply-To=%3C200702051546.l15FkjGt010831%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r678 - upwatch/trunk/common</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r678%20-%20upwatch/trunk/common&In-Reply-To=%3C200702051546.l15FkjGt010831%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r678 - upwatch/trunk/common">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Mon Feb  5 16:46:46 CET 2007</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#213">[ date ]</a>
+              <a href="thread.html#213">[ thread ]</a>
+              <a href="subject.html#213">[ subject ]</a>
+              <a href="author.html#213">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-02-05 16:46:42 +0100 (Mon, 05 Feb 2007)
+New Revision: 678
+
+Modified:
+   upwatch/trunk/common/spec.tpl
+Log:
+Fix RPM building. (why are all initscripts included in rpm builds anyway?)
+
+
+Modified: upwatch/trunk/common/spec.tpl
+===================================================================
+--- upwatch/trunk/common/spec.tpl	2007-01-31 19:36:26 UTC (rev 677)
++++ upwatch/trunk/common/spec.tpl	2007-02-05 15:46:42 UTC (rev 678)
+@@ -5,6 +5,7 @@
+ %attr(0755,upwatch,upwatch) /usr/share/upwatch/init/[+prog-name+].redhat
+ %attr(0755,upwatch,upwatch) /usr/share/upwatch/init/[+prog-name+].suse
+ %attr(0755,upwatch,upwatch) /usr/share/upwatch/init/[+prog-name+].solaris
++%attr(0755,upwatch,upwatch) /usr/share/upwatch/init/[+prog-name+].debian
+ %config(noreplace) /etc/upwatch.d/[+prog-name+].conf
+ %attr(0444,upwatch,upwatch) /usr/share/man/man1/[+prog-name+].1.gz
+ [+ FOR spec-files +][+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#213">[ date ]</a>
+              <a href="thread.html#213">[ thread ]</a>
+              <a href="subject.html#213">[ subject ]</a>
+              <a href="author.html#213">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

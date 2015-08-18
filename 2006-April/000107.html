@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r577 - upwatch/trunk/uw_send
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r577%20-%20upwatch/trunk/uw_send&In-Reply-To=%3C200604132135.k3DLZabS025218%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000108.html">
+   <LINK REL="Next"  HREF="000109.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r577 - upwatch/trunk/uw_send</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r577%20-%20upwatch/trunk/uw_send&In-Reply-To=%3C200604132135.k3DLZabS025218%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r577 - upwatch/trunk/uw_send">wijnand at berlios.de
+       </A><BR>
+    <I>Thu Apr 13 23:35:36 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000108.html">[Upwatch-commits] r576 - in upwatch/trunk: . cfg common compat doc patches
+</A></li>
+        <LI>Next message: <A HREF="000109.html">[Upwatch-commits] r578 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#107">[ date ]</a>
+              <a href="thread.html#107">[ thread ]</a>
+              <a href="subject.html#107">[ subject ]</a>
+              <a href="author.html#107">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-13 23:35:36 +0200 (Thu, 13 Apr 2006)
+New Revision: 577
+
+Modified:
+   upwatch/trunk/uw_send/run.c
+Log:
+Fix compiler warnings.
+
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2006-04-13 20:50:54 UTC (rev 576)
++++ upwatch/trunk/uw_send/run.c	2006-04-13 21:35:36 UTC (rev 577)
+@@ -1,4 +1,5 @@
+ #include &quot;config.h&quot;
++#include &lt;signal.h&gt;
+ #include &lt;sys/types.h&gt;
+ #include &lt;sys/signal.h&gt;
+ #include &lt;sys/wait.h&gt;
+@@ -104,12 +105,12 @@
+   }
+ 
+   ct    = STACKCT_OPT( INPUT );
+-  input = STACKLST_OPT(INPUT);
+-  host  = STACKLST_OPT(HOST);
+-  port  = STACKLST_OPT(PORT);
+-  user  = STACKLST_OPT(UWUSER);
+-  pwd   = STACKLST_OPT(UWPASSWD);
+-  thr   = STACKLST_OPT(THREADS);
++  input = (char **) &amp;STACKLST_OPT(INPUT);
++  host  = (char **) &amp;STACKLST_OPT(HOST);
++  port  = (char **) &amp;STACKLST_OPT(PORT);
++  user  = (char **) &amp;STACKLST_OPT(UWUSER);
++  pwd   = (char **) &amp;STACKLST_OPT(UWPASSWD);
++  thr   = (char **) &amp;STACKLST_OPT(THREADS);
+ 
+   // read in options for queuing
+   for (i=0; input[i] &amp;&amp; i &lt; ct &amp;&amp; i &lt; 4; i++) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000108.html">[Upwatch-commits] r576 - in upwatch/trunk: . cfg common compat doc patches
+</A></li>
+	<LI>Next message: <A HREF="000109.html">[Upwatch-commits] r578 - upwatch/trunk/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#107">[ date ]</a>
+              <a href="thread.html#107">[ thread ]</a>
+              <a href="subject.html#107">[ subject ]</a>
+              <a href="author.html#107">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

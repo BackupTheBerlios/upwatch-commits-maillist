@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r564 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r564%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog%20upwatch&In-Reply-To=%3C200604111318.k3BDImXi028268%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000094.html">
+   <LINK REL="Next"  HREF="000096.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r564 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r564%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog%20upwatch&In-Reply-To=%3C200604111318.k3BDImXi028268%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r564 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Apr 11 15:18:48 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000094.html">[Upwatch-commits] r563 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+        <LI>Next message: <A HREF="000096.html">[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#95">[ date ]</a>
+              <a href="thread.html#95">[ thread ]</a>
+              <a href="subject.html#95">[ subject ]</a>
+              <a href="author.html#95">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-11 15:18:45 +0200 (Tue, 11 Apr 2006)
+New Revision: 564
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-04-11 13:18:45 UTC (rev 564)
+@@ -46,6 +46,7 @@
+ green [LOGDATE] postfix/anvil[PID]: statistics: 
+ green [LOGDATE] postfix/scache[PID]: statistics: 
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Connection refused \(port [NUM]\) 
++green [LOGDATE] postfix/sendmail[PID]: fatal: No recipient addresses found in message header
+ red [LOGDATE] postfix/local[PID]: table has changed -- exiting
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is already running
+ red [LOGDATE] postfix/postfix-script: fatal: the Postfix mail system is not running
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-11 13:18:45 UTC (rev 564)
+@@ -1,4 +1,5 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
+ green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
++green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
+ green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
+ green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/keepalived	2006-04-11 13:18:45 UTC (rev 564)
+@@ -5,3 +5,5 @@
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Received higher prio advert
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) removing protocol Virtual Routes
+ green [LOGDATE] Keepalived_vrrp: VRRP_Instance(VI_eth[NUM]) Transition to MASTER STATE
++red [LOGDATE] Keepalived_healthcheckers: Error connecting server \[[IPADDR]:[NUM]\]\.
++red [LOGDATE] Keepalived_healthcheckers: Cannot send get request to \[[IPADDR]:[NUM]\]\.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam	2006-04-11 13:18:45 UTC (rev 564)
+@@ -20,3 +20,4 @@
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: password changed for raarts
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: auth could not identify password for \[[USER]\]
+ green [LOGDATE] unix_chkpwd[PID]: password check failed for user \([USER]\)
++green [LOGDATE] passwd(pam_unix)[PID]: password changed for [USER]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-04-11 13:18:45 UTC (rev 564)
+@@ -1,2 +1,2 @@
+-green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] LOG: recycled transaction log file
++green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] LOG:\s+recycled transaction log file
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] FATAL: no pg_hba.conf entry for host &quot;\[[HOSTNAME]\]&quot;, user &quot;[WORD]&quot;, database &quot;[WORD]&quot;, SSL (on|off)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-11 13:18:45 UTC (rev 564)
+@@ -7,3 +7,7 @@
+ green [LOGDATE] smbd[PID]: getpeername failed. Error was Transport endpoint is not connected
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:read_socket_data\([NUM]\)
+ green [LOGDATE] smb_lookup: find .* failed, error=-512
++green [LOGDATE] smb_add_request: request \[.*, .*\] timed out!
++green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
++green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] tdb/tdbutil.c:tdb_log\([NUM]\) 
++green [LOGDATE] kernel: smb_proc_readX_data:
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-07 09:23:28 UTC (rev 563)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-11 13:18:45 UTC (rev 564)
+@@ -53,4 +53,4 @@
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): Processing [PATH]
+ red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Too many connections
+ red [LOGDATE] uw_[WORD][PID] notify\.c\([NUM]\): UPWATCH: probe [WORD] is lagging in processing
+-red [LOGDATE] uw_process[PID] db\.c\([NUM]\): Can't connect to MySQL server on '[HOSTNAME]' \(NUM\) dbhost=[HOSTNAME],dbport=[NUM],dbname=[USER],dbuser=[USER],dbpasswd=
++red [LOGDATE] uw_[WORD][PID] db\.c\([NUM]\): Can't connect to MySQL server on '[HOSTNAME]' \(NUM\) dbhost=[HOSTNAME],dbport=[NUM],dbname=[USER],dbuser=[USER],dbpasswd=
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000094.html">[Upwatch-commits] r563 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+	<LI>Next message: <A HREF="000096.html">[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#95">[ date ]</a>
+              <a href="thread.html#95">[ thread ]</a>
+              <a href="subject.html#95">[ subject ]</a>
+              <a href="author.html#95">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

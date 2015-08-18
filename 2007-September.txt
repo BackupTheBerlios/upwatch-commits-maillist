@@ -1,0 +1,240 @@
+From raarts at mail.berlios.de  Wed Sep 19 21:46:17 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Wed, 19 Sep 2007 21:46:17 +0200
+Subject: [Upwatch-commits] r685 - in upwatch/trunk: common util uw_accept
+	uw_send
+Message-ID: <200709191946.l8JJkH3v010886@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-09-19 21:46:16 +0200 (Wed, 19 Sep 2007)
+New Revision: 685
+
+Modified:
+   upwatch/trunk/common/dbase_options.def
+   upwatch/trunk/common/dbase_options_ign.def
+   upwatch/trunk/common/generic_options.def
+   upwatch/trunk/common/main.c
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_accept/Makefile.am
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_send/run.c
+Log:
+Fixes for using newer (and much stricter Grmmbl) autogen.
+
+
+Modified: upwatch/trunk/common/dbase_options.def
+===================================================================
+--- upwatch/trunk/common/dbase_options.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/dbase_options.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -25,7 +25,6 @@
+ };  
+     
+ flag = {
+-    must-set;
+     name      = dbport;
+     arg_type  = numeric;   /* option argument indication  */
+     arg-default = 3306;
+
+Modified: upwatch/trunk/common/dbase_options_ign.def
+===================================================================
+--- upwatch/trunk/common/dbase_options_ign.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/dbase_options_ign.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -1,6 +1,5 @@
+ flag = {
+     name      = dbtype;
+-    value     = T;        /* flag style option character */
+     arg-default = mysql;
+     arg_type  = string;   /* option argument indication  */
+     descrip   = "ignored";
+@@ -8,7 +7,6 @@
+ 
+ flag = {
+     name      = dbhost;
+-    value     = h;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = "ignored";
+ };  
+@@ -22,21 +20,18 @@
+     
+ flag = {
+     name      = dbname;
+-    value     = n;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = "ignored";
+ };  
+     
+ flag = {
+     name      = dbuser;   
+-    value     = u;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = "ignored";
+ };
+ 
+ flag = {
+     name      = dbpasswd;
+-    value     = p;        /* flag style option character */
+     arg_type  = string;   /* option argument indication  */
+     descrip   = "ignored";
+ };  
+
+Modified: upwatch/trunk/common/generic_options.def
+===================================================================
+--- upwatch/trunk/common/generic_options.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/generic_options.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -2,6 +2,7 @@
+     name      = syslog;
+     value     = s;
+     arg_type  = bool;
++    arg-default = false;
+     descrip   = "Use syslog for runtime messages";
+     doc       =
+ 'If this options is enabled (which it default is), the program writes 
+@@ -13,6 +14,7 @@
+     settable;
+     value     = e;
+     arg_type  = bool;
++    arg-default = true;
+     descrip   = "Write non-debug messages to stderr";
+     doc       =
+ 'If this options is enabled (which it default is), the program writes 
+@@ -23,7 +25,7 @@
+     name      = debug;
+     value     = d;
+     arg_type  = number;
+-    arg-default = 0;
++    arg-default = 1;
+     arg-range = '0->9';
+     descrip   = "Debug mode";
+     doc       =
+@@ -37,7 +39,7 @@
+     name      = logfile;
+     value     = l;
+     arg_type  = string;
+-    arg-default = "/var/log/upwatch/upwatch.log";
++    arg-default = "/var/log/upwatch/messages";
+     descrip   = "Log messages to this file";
+     doc       =
+ 'Specify the outputfile where all log messages should be written
+@@ -45,4 +47,3 @@
+ The logfile is written in the same format as the system log uses, i.e. date/time, 
+ hostname, program name + process id, message.';
+ };
+-
+
+Modified: upwatch/trunk/common/main.c
+===================================================================
+--- upwatch/trunk/common/main.c	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/common/main.c	2007-09-19 19:46:16 UTC (rev 685)
+@@ -96,7 +96,7 @@
+ 
+   if (OPT_VALUE_STDERR)  _log2stderr  = TRUE;
+   if (OPT_VALUE_SYSLOG)  _log2syslog  = TRUE;
+-  if (HAVE_OPT(LOGFILE)) _logfilename = OPT_ARG(LOGFILE);
++  if (OPT_ARG(LOGFILE))  _logfilename = OPT_ARG(LOGFILE);
+ 
+   LOG(LOG_NOTICE, "start (Version %s-%s, date %s %s)", VERSION, RELEASE, __DATE__, __TIME__);
+   LOG(LOG_INFO, "using GCC %s", __VERSION__);
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/util/Makefile.am	2007-09-19 19:46:16 UTC (rev 685)
+@@ -77,7 +77,7 @@
+ slot_LDADD = @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += slot_options.h
+ EXTRA_DIST += slot_options.def
+-CLEAN_FILES +=  slot_options.c slot_options.h
++CLEAN_FILES += slot_options.c slot_options.h
+ 
+ slot_options.h: slot_options.def ../common/minimal_options.def
+ 	autogen -b slot_options $(AGDEFINES) $(GENINCL) -L $(top_srcdir)/common slot_options.def
+@@ -91,7 +91,7 @@
+ chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ @LIBOPTS_LIBS@ $(LIBUPWATCH) 
+ BUILT_SOURCES += chklog_options.h
+ EXTRA_DIST += chklog_options.def
+-CLEAN_FILES +=  chklog_options.c chklog_options.h
++CLEAN_FILES += chklog_options.c chklog_options.h
+ 
+ chklog_options.h: chklog_options.def ../common/minimal_options.def
+ 	autogen -b chklog_options $(AGDEFINES) $(GENINCL) -L $(top_srcdir)/common chklog_options.def
+
+Modified: upwatch/trunk/uw_accept/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_accept/Makefile.am	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_accept/Makefile.am	2007-09-19 19:46:16 UTC (rev 685)
+@@ -14,6 +14,7 @@
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) 
+ INCLUDES = -I../upwatch -I $(INCL_ST)
+ EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def)
++CLEAN_FILES = uw_accept.h uw_accept.c
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_accept/uw_accept.def	2007-09-19 19:46:16 UTC (rev 685)
+@@ -67,6 +67,7 @@
+     name      = spooldir;
+     value     = S;
+     arg_type  = string;
++    arg_default = "/var/spool/upwatch";
+     descrip   = "maildir-type spooldirectory for result files";
+     doc       =
+ 'This probe generates files with data. These are put in maildir style
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2007-07-10 20:02:57 UTC (rev 684)
++++ upwatch/trunk/uw_send/run.c	2007-09-19 19:46:16 UTC (rev 685)
+@@ -153,7 +153,7 @@
+     }
+     q->user = strdup(buf);
+     q->pwd = strdup(pwd[i]);
+-    q->maxthreads = thr[i] ? atoi(thr[i]) : 1;
++    q->maxthreads = (thr && thr[i]) ? atoi(thr[i]) : 1;
+   }
+   if (HAVE_OPT(ONCE)) {
+     every = ONE_SHOT;
+
+
+
+From raarts at mail.berlios.de  Wed Sep 19 22:07:21 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Wed, 19 Sep 2007 22:07:21 +0200
+Subject: [Upwatch-commits] r686 - upwatch/trunk
+Message-ID: <200709192007.l8JK7LPC013881@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-09-19 22:07:21 +0200 (Wed, 19 Sep 2007)
+New Revision: 686
+
+Added:
+   upwatch/trunk/BuildRpm
+Log:
+Added this file for netland build process use.
+
+
+Added: upwatch/trunk/BuildRpm
+===================================================================
+--- upwatch/trunk/BuildRpm	2007-09-19 19:46:16 UTC (rev 685)
++++ upwatch/trunk/BuildRpm	2007-09-19 20:07:21 UTC (rev 686)
+@@ -0,0 +1,8 @@
++#!/bin/sh
++
++cfg/bootstrap
++./configure --enable-all
++
++make
++make rpm
++
+
+
+Property changes on: upwatch/trunk/BuildRpm
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+
+

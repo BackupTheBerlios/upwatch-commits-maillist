@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r668 - upwatch/libdbi/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r668%20-%20upwatch/libdbi/common&In-Reply-To=%3C200701272315.l0RNFwqW032581%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000202.html">
+   <LINK REL="Next"  HREF="000204.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r668 - upwatch/libdbi/common</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r668%20-%20upwatch/libdbi/common&In-Reply-To=%3C200701272315.l0RNFwqW032581%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r668 - upwatch/libdbi/common">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sun Jan 28 00:15:58 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000202.html">[Upwatch-commits] r667 - upwatch/libdbi/common
+</A></li>
+        <LI>Next message: <A HREF="000204.html">[Upwatch-commits] r669 - in upwatch/libdbi: common uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#203">[ date ]</a>
+              <a href="thread.html#203">[ thread ]</a>
+              <a href="subject.html#203">[ subject ]</a>
+              <a href="author.html#203">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-28 00:15:58 +0100 (Sun, 28 Jan 2007)
+New Revision: 668
+
+Modified:
+   upwatch/libdbi/common/probe.tpl
+Log:
+changed is a not null column so use NOW() for the default insert.
+
+
+Modified: upwatch/libdbi/common/probe.tpl
+===================================================================
+--- upwatch/libdbi/common/probe.tpl	2007-01-27 22:10:33 UTC (rev 667)
++++ upwatch/libdbi/common/probe.tpl	2007-01-27 23:15:58 UTC (rev 668)
+@@ -111,7 +111,7 @@
+       (error (sprintf &quot;addbyhand not set for probe %s&quot; (get &quot;probe.name&quot;)) )
+   )
+ +]
+-INSERT into pr_[+name+]_def (id, description) VALUES (1, 'empty');
++INSERT into pr_[+name+]_def (id, description, changed) VALUES (1, 'empty', NOW());
+ INSERT into probe (id, name, description,addbyhand,class,graphgroup,graphtypes,comment[+if (exist? &quot;expiry&quot;) +],expiry[+ endif +][+if (exist? &quot;fuse&quot;) +],fuse[+ endif +]) VALUES ('[+id+]','[+name+]','[+descrip+]','[+addbyhand+]','[+class+]','[+graphgroup+]','[+graphtypes+]','[+comment+]'[+if (exist? &quot;expiry&quot;) +],'[+expiry+]'[+endif +][+ if (exist? &quot;fuse&quot;) +],'[+fuse+]'[+endif+]); [+ ENDFOR probe +][+
+    == raw_mysql +]--
+ [+(dne &quot;-- &quot;)+]
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000202.html">[Upwatch-commits] r667 - upwatch/libdbi/common
+</A></li>
+	<LI>Next message: <A HREF="000204.html">[Upwatch-commits] r669 - in upwatch/libdbi: common uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#203">[ date ]</a>
+              <a href="thread.html#203">[ thread ]</a>
+              <a href="subject.html#203">[ subject ]</a>
+              <a href="author.html#203">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

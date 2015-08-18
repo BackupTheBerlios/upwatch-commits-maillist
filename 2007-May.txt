@@ -1,0 +1,32 @@
+From raarts at mail.berlios.de  Tue May 29 22:48:58 2007
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Tue, 29 May 2007 22:48:58 +0200
+Subject: [Upwatch-commits] r679 - upwatch/trunk/util
+Message-ID: <200705292048.l4TKmwVf008820@sheep.berlios.de>
+
+Author: raarts
+Date: 2007-05-29 22:48:58 +0200 (Tue, 29 May 2007)
+New Revision: 679
+
+Modified:
+   upwatch/trunk/util/uwq_options.def
+Log:
+Fix conlficting option flag.
+
+
+Modified: upwatch/trunk/util/uwq_options.def
+===================================================================
+--- upwatch/trunk/util/uwq_options.def	2007-02-05 15:46:42 UTC (rev 678)
++++ upwatch/trunk/util/uwq_options.def	2007-05-29 20:48:58 UTC (rev 679)
+@@ -26,7 +26,7 @@
+ 
+ flag = {
+     name      = no-stat;
+-    value     = n;
++    value     = N;
+     arg_type  = bool;
+     descrip   = "Don't stat() every file for date/time";
+     doc       =
+
+
+

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r598 - in upwatch/trunk: uw_null uw_process uw_route
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r598%20-%20in%20upwatch/trunk%3A%20uw_null%20uw_process%20uw_route&In-Reply-To=%3C200604162359.k3GNxx5i004746%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000128.html">
+   <LINK REL="Next"  HREF="000130.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r598 - in upwatch/trunk: uw_null uw_process uw_route</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r598%20-%20in%20upwatch/trunk%3A%20uw_null%20uw_process%20uw_route&In-Reply-To=%3C200604162359.k3GNxx5i004746%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r598 - in upwatch/trunk: uw_null uw_process uw_route">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Apr 17 01:59:59 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000128.html">[Upwatch-commits] r597 - upwatch/trunk/uw_mssql
+</A></li>
+        <LI>Next message: <A HREF="000130.html">[Upwatch-commits] r599 - in upwatch/trunk: uw_ping uw_pop3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-17 01:59:39 +0200 (Mon, 17 Apr 2006)
+New Revision: 598
+
+Modified:
+   upwatch/trunk/uw_null/run.c
+   upwatch/trunk/uw_process/run.c
+   upwatch/trunk/uw_route/run.c
+Log:
+g_ptr_array_sort(arr, mystrcmp); -&gt; g_ptr_array_sort(arr, (GCompareFunc) mystrcmp); kills some warnings
+
+Modified: upwatch/trunk/uw_null/run.c
+===================================================================
+--- upwatch/trunk/uw_null/run.c	2006-04-16 23:47:00 UTC (rev 597)
++++ upwatch/trunk/uw_null/run.c	2006-04-16 23:59:39 UTC (rev 598)
+@@ -71,7 +71,7 @@
+     g_ptr_array_free(arr, TRUE);
+     return 0;
+   }
+-  g_ptr_array_sort(arr, mystrcmp);
++  g_ptr_array_sort(arr, (GCompareFunc) mystrcmp);
+   if (debug &gt; 3) { fprintf(stderr, &quot;%u files in directory\n&quot;, files); sleep(3); }
+ 
+   // now we have a sorted list of files 
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2006-04-16 23:47:00 UTC (rev 597)
++++ upwatch/trunk/uw_process/run.c	2006-04-16 23:59:39 UTC (rev 598)
+@@ -517,7 +517,7 @@
+     g_ptr_array_free(arr, TRUE);
+     return 0;
+   }
+-  g_ptr_array_sort(arr, mystrcmp);
++  g_ptr_array_sort(arr, (GCompareFunc) mystrcmp);
+   if (debug &gt; 3) { fprintf(stderr, &quot;%u files in directory\n&quot;, files); sleep(3); }
+ 
+   // now we have a sorted list of files 
+
+Modified: upwatch/trunk/uw_route/run.c
+===================================================================
+--- upwatch/trunk/uw_route/run.c	2006-04-16 23:47:00 UTC (rev 597)
++++ upwatch/trunk/uw_route/run.c	2006-04-16 23:59:39 UTC (rev 598)
+@@ -98,7 +98,7 @@
+     g_ptr_array_free(arr, TRUE);
+     return 0;
+   }
+-  g_ptr_array_sort(arr, mystrcmp);
++  g_ptr_array_sort(arr, (GCompareFunc) mystrcmp);
+   if (debug &gt; 3) { fprintf(stderr, &quot;%u files in directory\n&quot;, files); sleep(3); }
+ 
+   // now we have a sorted list of files 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000128.html">[Upwatch-commits] r597 - upwatch/trunk/uw_mssql
+</A></li>
+	<LI>Next message: <A HREF="000130.html">[Upwatch-commits] r599 - in upwatch/trunk: uw_ping uw_pop3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

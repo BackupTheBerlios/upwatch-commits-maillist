@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r491 - upwatch/trunk/uw_postgresql
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r491%20-%20upwatch/trunk/uw_postgresql&In-Reply-To=%3C200508312047.j7VKlKpe003275%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000021.html">
+   <LINK REL="Next"  HREF="000023.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r491 - upwatch/trunk/uw_postgresql</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r491%20-%20upwatch/trunk/uw_postgresql&In-Reply-To=%3C200508312047.j7VKlKpe003275%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r491 - upwatch/trunk/uw_postgresql">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Aug 31 22:47:20 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000021.html">[Upwatch-commits] r490 - upwatch/trunk/uw_mysql
+</A></li>
+        <LI>Next message: <A HREF="000023.html">[Upwatch-commits] r492 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-08-31 22:47:19 +0200 (Wed, 31 Aug 2005)
+New Revision: 491
+
+Modified:
+   upwatch/trunk/uw_postgresql/run.c
+Log:
+Fix the sql query, the probe did not find the realm so all probes were discarded by uw_process.
+
+
+Modified: upwatch/trunk/uw_postgresql/run.c
+===================================================================
+--- upwatch/trunk/uw_postgresql/run.c	2005-08-31 07:49:05 UTC (rev 490)
++++ upwatch/trunk/uw_postgresql/run.c	2005-08-31 20:47:19 UTC (rev 491)
+@@ -110,7 +110,7 @@
+                 &quot;       pr_postgresql_def.yellow,  pr_postgresql_def.red &quot;
+                 &quot;FROM   pr_postgresql_def, pr_realm &quot;
+                 &quot;WHERE  pr_postgresql_def.id &gt; 1 and pr_postgresql_def.disable &lt;&gt; 'yes'&quot;
+-                &quot;       and pr_postgresql_def.pgroup = '%d'&quot;,
++                &quot;       and pr_postgresql_def.pgroup = '%d' and pr_realm.id = pr_postgresql_def.domid&quot;,
+                 (unsigned)OPT_VALUE_GROUPID);
+ 
+   result = my_query(mysql, 1, qry);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000021.html">[Upwatch-commits] r490 - upwatch/trunk/uw_mysql
+</A></li>
+	<LI>Next message: <A HREF="000023.html">[Upwatch-commits] r492 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r579 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r579%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604132216.k3DMGHPp027353%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000109.html">
+   <LINK REL="Next"  HREF="000111.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r579 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r579%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200604132216.k3DMGHPp027353%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r579 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Apr 14 00:16:17 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000109.html">[Upwatch-commits] r578 - upwatch/trunk/util
+</A></li>
+        <LI>Next message: <A HREF="000111.html">[Upwatch-commits] r580 - upwatch/trunk/uw_acceptbb
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#110">[ date ]</a>
+              <a href="thread.html#110">[ thread ]</a>
+              <a href="subject.html#110">[ subject ]</a>
+              <a href="author.html#110">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-14 00:16:17 +0200 (Fri, 14 Apr 2006)
+New Revision: 579
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Kill some compiler warnings
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-04-13 22:10:34 UTC (rev 578)
++++ upwatch/trunk/uw_sysstat/run.c	2006-04-13 22:16:17 UTC (rev 579)
+@@ -225,7 +225,7 @@
+ 
+   if (HAVE_OPT(ERRLOG)) {
+     int ct  = STACKCT_OPT(ERRLOG);
+-    char **errlog = STACKLST_OPT(ERRLOG);
++    char **errlog = (char **) &amp;STACKLST_OPT(ERRLOG);
+     for (idx=0, i=0; i &lt; ct &amp;&amp; idx &lt; 255; i++) {
+       char *start, *end;
+   
+@@ -567,7 +567,7 @@
+   xmlDocPtr doc;
+   xmlNodePtr node;
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   GString *log;
+   int i;
+   int color;
+@@ -637,10 +637,10 @@
+     // if status changed, it needs to be sent immediately. So drop into
+     // the high priority queue. Else just drop in the normal queue where
+     // uw_send in batched mode will pick it up later
+-    spool_result(OPT_ARG(SPOOLDIR), OPT_ARG(HPQUEUE), doc, NULL);
++    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(HPQUEUE), doc, NULL);
+   } else {
+     for (i=0; i &lt; ct; i++) {
+-      spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++      spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+     }
+   }
+   prv_highest_color = highest_color; // remember for next time
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000109.html">[Upwatch-commits] r578 - upwatch/trunk/util
+</A></li>
+	<LI>Next message: <A HREF="000111.html">[Upwatch-commits] r580 - upwatch/trunk/uw_acceptbb
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#110">[ date ]</a>
+              <a href="thread.html#110">[ thread ]</a>
+              <a href="subject.html#110">[ subject ]</a>
+              <a href="author.html#110">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

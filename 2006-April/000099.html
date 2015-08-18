@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r568 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r568%20-%20upwatch/trunk&In-Reply-To=%3C200604122142.k3CLgCwt012236%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000098.html">
+   <LINK REL="Next"  HREF="000100.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r568 - upwatch/trunk</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r568%20-%20upwatch/trunk&In-Reply-To=%3C200604122142.k3CLgCwt012236%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r568 - upwatch/trunk">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Apr 12 23:42:12 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000098.html">[Upwatch-commits] r567 - upwatch/trunk/uw_process
+</A></li>
+        <LI>Next message: <A HREF="000100.html">[Upwatch-commits] r569 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-12 23:42:11 +0200 (Wed, 12 Apr 2006)
+New Revision: 568
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Make ./configure --prefix= work again.
+Really needed if you want to get into other package systems on other platforms.
+
+Tested on OpenBSD, NetBSD and Linux
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-04-12 19:56:16 UTC (rev 567)
++++ upwatch/trunk/configure.ac	2006-04-12 21:42:11 UTC (rev 568)
+@@ -44,100 +44,100 @@
+ case $host in
+   *-*-linux*) 
+     linux=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
+     ;;
+   *-*-freebsd*) 
+     freebsd=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr//local/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr//local/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     CFLAGS=&quot;${CFLAGS} -I/usr/local/include&quot;
+     LDFLAGS=&quot;-L/usr/local/lib&quot;
+     ;;
+   *-*-netbsd*) 
+     netbsd=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/usr/local/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info' ; 		then infodir='/usr/local/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     CFLAGS=&quot;${CFLAGS} -I/usr/local/include -I/usr/pkg/include&quot;
+     LDFLAGS=&quot;-L/usr/local/lib -L/usr/pkg/lib&quot;
+     ;;
+   *-*-openbsd*)
+     openbsd=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ;          then bindir='/usr/local/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ;        then sbindir='/usr/local/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';   then libexecdir='/usr/local/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;            then datadir='/usr/local/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;           then sysconfdir='/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;       then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ;        then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ;          then libdir='/usr/local/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ;       then includedir='/usr/local/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ;         then oldincludedir='/usr/local/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info' ;             then infodir='/usr/local/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;               then mandir='/usr/local/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ;          then bindir='/usr/local/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ;        then sbindir='/usr/local/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';   then libexecdir='/usr/local/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;            then datadir='/usr/local/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;           then sysconfdir='/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;       then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ;        then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ;          then libdir='/usr/local/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ;       then includedir='/usr/local/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ;         then oldincludedir='/usr/local/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info' ;             then infodir='/usr/local/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;               then mandir='/usr/local/share/man' ; fi
+     CFLAGS=&quot;${CFLAGS} -I/usr/local/include&quot;
+     LDFLAGS=&quot;-L/usr/local/lib&quot;
+     ;;
+   *-*-solaris*)
+     solaris=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info';  		then infodir='/usr/local/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/local/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/local/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/local/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/local/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/local/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/local/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info';  		then infodir='/usr/local/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/local/share/man' ; fi
+     LIBS=&quot;-lgen ${LIBS}&quot;
+     ;;
+   *-*-cygwin*)
+     cygwin=true
+-    if test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+-    if test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
+-    if test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
+-    if test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/share' ; fi
+-    if test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
+-    if test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
+-    if test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
+-    if test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
+-    if test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
+-    if test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
+-    if test &quot;$infodir&quot; = '${prefix}/info';  		then infodir='/usr/share/info' ; fi
+-    if test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
++    if ! test &quot;$bindir&quot; = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
++    if ! test &quot;$sbindir&quot; = '${exec_prefix}/sbin' ; 	then sbindir='/usr/sbin' ; fi
++    if ! test &quot;$libexecdir&quot; = '${exec_prefix}/libexec';	then libexecdir='/usr/libexec' ; fi
++    if ! test &quot;$datadir&quot; = '${prefix}/share' ;		then datadir='/usr/share' ; fi
++    if ! test &quot;$sysconfdir&quot; = '${prefix}/etc' ;		then sysconfdir='/etc' ; fi
++    if ! test &quot;$sharedstatedir&quot; = '${prefix}/com' ;	then sharedstatedir='/usr/local/com' ; fi
++    if ! test &quot;$localstatedir&quot; = '${prefix}/var' ; 	then localstatedir='/var' ; fi
++    if ! test &quot;$libdir&quot; = '${exec_prefix}/lib' ; 		then libdir='/usr/local/lib' ; fi
++    if ! test &quot;$includedir&quot; = '${prefix}/include' ; 	then includedir='/usr/include' ; fi
++    if ! test &quot;$oldincludedir&quot; = '/usr/include' ; 	then oldincludedir='/usr/include' ; fi
++    if ! test &quot;$infodir&quot; = '${prefix}/info';  		then infodir='/usr/share/info' ; fi
++    if ! test &quot;$mandir&quot; = '${prefix}/man' ;		then mandir='/usr/share/man' ; fi
+     ;;
+   *)
+     generic=true
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000098.html">[Upwatch-commits] r567 - upwatch/trunk/uw_process
+</A></li>
+	<LI>Next message: <A HREF="000100.html">[Upwatch-commits] r569 - upwatch/trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

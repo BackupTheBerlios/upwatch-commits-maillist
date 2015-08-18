@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r596 - upwatch/trunk/uw_mysqlstats
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r596%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200604162343.k3GNhwW2000216%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000126.html">
+   <LINK REL="Next"  HREF="000128.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r596 - upwatch/trunk/uw_mysqlstats</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r596%20-%20upwatch/trunk/uw_mysqlstats&In-Reply-To=%3C200604162343.k3GNhwW2000216%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r596 - upwatch/trunk/uw_mysqlstats">wijnand at berlios.de
+       </A><BR>
+    <I>Mon Apr 17 01:43:58 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000126.html">[Upwatch-commits] r595 - upwatch/trunk/uw_mysql
+</A></li>
+        <LI>Next message: <A HREF="000128.html">[Upwatch-commits] r597 - upwatch/trunk/uw_mssql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#127">[ date ]</a>
+              <a href="thread.html#127">[ thread ]</a>
+              <a href="subject.html#127">[ subject ]</a>
+              <a href="author.html#127">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-17 01:43:24 +0200 (Mon, 17 Apr 2006)
+New Revision: 596
+
+Modified:
+   upwatch/trunk/uw_mysqlstats/run.c
+Log:
+Fix gcc warnings in uw_mysqlstats.
+remove the compress option since it is not used
+
+Modified: upwatch/trunk/uw_mysqlstats/run.c
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/run.c	2006-04-16 23:39:38 UTC (rev 595)
++++ upwatch/trunk/uw_mysqlstats/run.c	2006-04-16 23:43:24 UTC (rev 596)
+@@ -224,7 +224,7 @@
+ void write_results(void)
+ {
+   int ct  = STACKCT_OPT(OUTPUT);
+-  char **output = STACKLST_OPT(OUTPUT);
++  char **output = (char **) &amp;STACKLST_OPT(OUTPUT);
+   int i;
+   xmlDocPtr doc;
+ 
+@@ -262,8 +262,7 @@
+   dbuser = probe-&gt;dbuser;
+   dbpasswd = probe-&gt;dbpasswd;
+ 
+-  mysql_options(mysql, MYSQL_OPT_COMPRESS, 0);
+-  mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, &amp;timeout);
++  mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (char * ) &amp;timeout);
+ 
+   LOG(LOG_DEBUG, &quot;%s %s %s %s&quot;, dbhost, dbuser, dbpasswd, dbname);
+   if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000126.html">[Upwatch-commits] r595 - upwatch/trunk/uw_mysql
+</A></li>
+	<LI>Next message: <A HREF="000128.html">[Upwatch-commits] r597 - upwatch/trunk/uw_mssql
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#127">[ date ]</a>
+              <a href="thread.html#127">[ thread ]</a>
+              <a href="subject.html#127">[ subject ]</a>
+              <a href="author.html#127">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

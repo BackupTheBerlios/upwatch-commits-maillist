@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r612 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r612%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200605101323.k4ADN4CO018592%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000145.html">
+   <LINK REL="Next"  HREF="000147.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r612 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r612%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200605101323.k4ADN4CO018592%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r612 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Wed May 10 15:23:04 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000145.html">[Upwatch-commits] r611 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+        <LI>Next message: <A HREF="000147.html">[Upwatch-commits] r613 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#146">[ date ]</a>
+              <a href="thread.html#146">[ thread ]</a>
+              <a href="subject.html#146">[ subject ]</a>
+              <a href="author.html#146">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-05-10 15:23:04 +0200 (Wed, 10 May 2006)
+New Revision: 612
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+Log:
+Oops, bring back one regex
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-05-10 13:14:44 UTC (rev 611)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-05-10 13:23:04 UTC (rev 612)
+@@ -1,5 +1,6 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
+ green [LOGDATE] gdm[PID]: Couldn't authenticate user
+ ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
++ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
+ green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
+ green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000145.html">[Upwatch-commits] r611 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+	<LI>Next message: <A HREF="000147.html">[Upwatch-commits] r613 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#146">[ date ]</a>
+              <a href="thread.html#146">[ thread ]</a>
+              <a href="subject.html#146">[ subject ]</a>
+              <a href="author.html#146">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

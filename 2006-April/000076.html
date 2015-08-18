@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r545 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r545%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20syslog%20upwatch&In-Reply-To=%3C200604041632.k34GWXC6003268%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000075.html">
+   <LINK REL="Next"  HREF="000077.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r545 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r545%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20syslog%20upwatch&In-Reply-To=%3C200604041632.k34GWXC6003268%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r545 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Tue Apr  4 18:32:33 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000075.html">[Upwatch-commits] r544 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch
+</A></li>
+        <LI>Next message: <A HREF="000077.html">[Upwatch-commits] r546 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-04 18:32:28 +0200 (Tue, 04 Apr 2006)
+New Revision: 545
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-04 10:48:56 UTC (rev 544)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-04 16:32:28 UTC (rev 545)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
+ green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
+-
++green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
++green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-04-04 10:48:56 UTC (rev 544)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/linux.kernel	2006-04-04 16:32:28 UTC (rev 545)
+@@ -708,3 +708,4 @@
+ red [LOGDATE] kernel: attempt to access beyond end of device
+ red [LOGDATE] kernel: __alloc_pages: 0-order allocation failed 
+ red [LOGDATE] kernel: VM: killing process
++red [LOGDATE] kernel: ip_conntrack: table full, dropping packet.
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-04 10:48:56 UTC (rev 544)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/upwatch	2006-04-04 16:32:28 UTC (rev 545)
+@@ -41,5 +41,9 @@
+ green [LOGDATE] uw_[WORD][PID]: run\.c\([NUM]\): writing results
+ green [LOGDATE] uw_[WORD][PID]: spool\.c\([NUM]\): spooled to [PATH]
+ green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): [HOSTNAME]:[NUM]: Timer expired
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading [WORD] response
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading [WORD] command
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): timeout reading login request string
++green [LOGDATE] uw_[WORD][PID] run\.c\([NUM]\): st_read: Connection reset by peer
+ red [LOGDATE] uw_[WORD][PID]: db\.c\([NUM]\): Too many connections
+-red [LOGDATE] uw_[WORD][PID]: notify\.c\([NUM]\): UPWATCH: probe mysqlstats is lagging in processing
++red [LOGDATE] uw_[WORD][PID]: notify\.c\([NUM]\): UPWATCH: probe [WORD] is lagging in processing
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000075.html">[Upwatch-commits] r544 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: quagga syslog upwatch
+</A></li>
+	<LI>Next message: <A HREF="000077.html">[Upwatch-commits] r546 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: syslog upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,32 @@
+From raarts at mail.berlios.de  Wed Feb 20 20:10:06 2008
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Wed, 20 Feb 2008 20:10:06 +0100
+Subject: [Upwatch-commits] r693 - upwatch/trunk
+Message-ID: <200802201910.m1KJA6re029202@sheep.berlios.de>
+
+Author: raarts
+Date: 2008-02-20 20:10:05 +0100 (Wed, 20 Feb 2008)
+New Revision: 693
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Fix 64 bit library search path.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2008-01-30 10:44:54 UTC (rev 692)
++++ upwatch/trunk/configure.ac	2008-02-20 19:10:05 UTC (rev 693)
+@@ -262,7 +262,7 @@
+ 
+ if test -z "$LIBOPTS_LIBS"
+ then
+-  for libpath in /usr/lib /usr/local/lib /usr/lib/lib64 /usr/local/lib64 /usr/pkg/lib
++  for libpath in /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64 /usr/pkg/lib
+   do
+     if test -f $libpath/libopts.a
+     then
+
+
+

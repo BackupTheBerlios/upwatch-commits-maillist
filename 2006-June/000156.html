@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r622 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r622%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200606141207.k5EC7UnF019093%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000154.html">
+   <LINK REL="Next"  HREF="000157.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r622 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r622%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20syslog&In-Reply-To=%3C200606141207.k5EC7UnF019093%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r622 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Jun 14 14:07:30 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000154.html">[Upwatch-commits] r621 - upwatch/trunk/util
+</A></li>
+        <LI>Next message: <A HREF="000157.html">[Upwatch-commits] r623 - upwatch/trunk/uw_mysqlstats
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#156">[ date ]</a>
+              <a href="thread.html#156">[ thread ]</a>
+              <a href="subject.html#156">[ subject ]</a>
+              <a href="author.html#156">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-06-14 14:07:27 +0200 (Wed, 14 Jun 2006)
+New Revision: 622
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+Log:
+Sync regexes
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/postfix	2006-06-14 12:07:27 UTC (rev 622)
+@@ -47,6 +47,7 @@
+ green [LOGDATE] postfix/scache[PID]: statistics: 
+ green [LOGDATE] postfix/smtp[PID]: connect to [HOSTNAME]\[[IPADDR]\]: Connection refused \(port [NUM]\) 
+ green [LOGDATE] postfix/sendmail[PID]: fatal: No recipient addresses found in message header
++yellow [LOGDATE] postfix/[WORD][PID]: warning: My hostname [WORD] is not a fully qualified name - set myhostname or mydomain in [PATH]
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after NOOP from [HOSTNAME]\[[IPADDR]\]
+ ignore [LOGDATE] postfix/smtpd[PID]: too many errors after RCPT from [HOSTNAME]\[[IPADDR]\]
+ ignore [LOGDATE] postfix/smtp[PID]: .*?: host [HOSTNAME]\[[IPADDR]\] said: 451
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/sendmail	2006-06-14 12:07:27 UTC (rev 622)
+@@ -8,6 +8,6 @@
+ green [LOGDATE] sendmail[PID]: gethostbyaddr\(IPv(4|6):[IPADDR]\) failed:
+ green [LOGDATE] sendmail[PID]: accepting new messages \(again\)
+ green [LOGDATE] sendmail[PID]: accepting connections again for daemon MTA
+-green [LOGDATE] sendmail[PID]: [MSGID]: HOSTNAME] \[[IPADDR]\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
+-
++green [LOGDATE] sendmail[PID]: [MSGID]: [HOSTNAME] \[[IPADDR]\] did not issue MAIL/EXPN/VRFY/ETRN during connection to MTA
+ red [LOGDATE] sendmail[PID]: rejecting new messages: min free: [NUM]
++red [LOGDATE] sendmail[PID]: grew WorkList for /var/spool/mqueue to 8000
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/named	2006-06-14 12:07:27 UTC (rev 622)
+@@ -16,7 +16,6 @@
+ green [LOGDATE] named[PID]: dns_master_load: [PATH]:[NUM]: ignoring out-of-zone data \(.*\)
+ green [LOGDATE] named[PID]: drained [NUM] queries \(delay [NUM] sec\)
+ green [LOGDATE] named[PID]: exiting
+-
+ green [LOGDATE] named[PID]: Forwarding source address is \[[IPADDR]\]\.[NUM]
+ green [LOGDATE] named[PID]: group = [NUM]
+ green [LOGDATE] named[PID]: hint zone &quot;&quot; \(IN\) loaded \(serial [NUM]\)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-06-14 12:07:27 UTC (rev 622)
+@@ -2,9 +2,9 @@
+ green [LOGDATE] ntpd[PID]: ntp engine ready
+ green [LOGDATE] ntpd[PID]: peer [IPADDR] now invalid
+ green [LOGDATE] ntpd[PID]: peer [IPADDR] now valid
+-green [LOGDATE] services[NUM] ntpd[PID]: listening on [IPADDR]
+-green [LOGDATE] services[NUM] ntpd[PID]: ntp engine ready
+-green [LOGDATE] services[NUM] ntpd[PID]: peer [IPADDR] now valid
++green [LOGDATE] ntpd[PID]: listening on [IPADDR]
++green [LOGDATE] ntpd[PID]: ntp engine ready
++green [LOGDATE] ntpd[PID]: peer [IPADDR] now valid
+ green [LOGDATE] ntpd[PID]: adjusting local clock by
+ green [LOGDATE] ntpd[PID]: Terminating
+ green [LOGDATE] ntpd[PID]: ntp engine exiting
+@@ -14,4 +14,6 @@
+ green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
+ green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
+ green [LOGDATE] ntpd[PID]: sendto: Connection refused
++green [LOGDATE] ntpd[PID]: IMSG_HOST_DNS with invalid peerID
++yellow [LOGDATE] ntpd[PID]: could not parse &quot;[HOSTNAME]&quot;: Temporary failure in name resolution
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/pam	2006-06-14 12:07:27 UTC (rev 622)
+@@ -17,7 +17,7 @@
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: session closed for [USER_]
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: session (opened|closed) for [USER_]
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: session opened for [USER_]
+-green [LOGDATE] [WORD]\(pam_unix\)[PID]: password changed for raarts
++green [LOGDATE] [WORD]\(pam_unix\)[PID]: password changed for [USER]
+ green [LOGDATE] [WORD]\(pam_unix\)[PID]: auth could not identify password for \[[USER]\]
+ green [LOGDATE] unix_chkpwd[PID]: password check failed for user \([USER]\)
+ green [LOGDATE] passwd(pam_unix)[PID]: password changed for [USER]
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/postgresql	2006-06-14 12:07:27 UTC (rev 622)
+@@ -1,3 +1,4 @@
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] LOG:\s+recycled transaction log file
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] FATAL: no pg_hba.conf entry for host &quot;\[[HOSTNAME]\]&quot;, user &quot;[WORD]&quot;, database &quot;[WORD]&quot;, SSL (on|off)
+ green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] FATAL: Password authentication failed for user &quot;[WORD]&quot;
++green [LOGDATE] postgres[PID]: \[[NUM]-[NUM]\] LOG: duration: [NUM] ms statement: .*
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-06-06 19:48:53 UTC (rev 621)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/tftpd	2006-06-14 12:07:27 UTC (rev 622)
+@@ -1 +1,3 @@
+ green [LOGDATE] in.tftpd[PID]: nak: Operation not permitted
++green [LOGDATE] in.tftpd[PID]: sending NAK \([NUM], File not found\) to [IPADDR]
++green [LOGDATE] in.tftpd[PID]: RRQ from [IPADDR] filename .*
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000154.html">[Upwatch-commits] r621 - upwatch/trunk/util
+</A></li>
+	<LI>Next message: <A HREF="000157.html">[Upwatch-commits] r623 - upwatch/trunk/uw_mysqlstats
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#156">[ date ]</a>
+              <a href="thread.html#156">[ thread ]</a>
+              <a href="subject.html#156">[ subject ]</a>
+              <a href="author.html#156">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

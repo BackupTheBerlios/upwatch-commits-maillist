@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r652 - in upwatch/trunk: . common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r652%20-%20in%20upwatch/trunk%3A%20.%20common&In-Reply-To=%3C200610121050.k9CAoNOB000954%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000186.html">
+   <LINK REL="Next"  HREF="000188.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r652 - in upwatch/trunk: . common</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r652%20-%20in%20upwatch/trunk%3A%20.%20common&In-Reply-To=%3C200610121050.k9CAoNOB000954%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r652 - in upwatch/trunk: . common">raarts at mail.berlios.de
+       </A><BR>
+    <I>Thu Oct 12 12:50:23 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000186.html">[Upwatch-commits] r651 - upwatch/trunk/uw_postgresql
+</A></li>
+        <LI>Next message: <A HREF="000188.html">[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#187">[ date ]</a>
+              <a href="thread.html#187">[ thread ]</a>
+              <a href="subject.html#187">[ subject ]</a>
+              <a href="author.html#187">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-10-12 12:50:22 +0200 (Thu, 12 Oct 2006)
+New Revision: 652
+
+Modified:
+   upwatch/trunk/common/probe.tpl
+   upwatch/trunk/upwatch-spec.tpl
+Log:
+For several reasons (FC6 needs more detail in the Requires department,
+and we need that too, to auto-create our build environments) we
+added more BuildReq statements to the specfile.
+
+
+Modified: upwatch/trunk/common/probe.tpl
+===================================================================
+--- upwatch/trunk/common/probe.tpl	2006-10-09 12:03:15 UTC (rev 651)
++++ upwatch/trunk/common/probe.tpl	2006-10-12 10:50:22 UTC (rev 652)
+@@ -189,7 +189,7 @@
+   PRIMARY KEY (id),
+   UNIQUE KEY probstat (probe,stattime),
+   UNIQUE KEY statprob (stattime,probe)
+-) TYPE=MyISAM [+
++) TYPE=MyISAM DELAYED_KEY_WRITE=1 [+
+ IF max_rows +] MAX_ROWS=[+max_rows+] [+
+ ENDIF+][+
+ IF avg_row_length +] AVG_ROW_LENGTH=[+avg_row_length+][+
+
+Modified: upwatch/trunk/upwatch-spec.tpl
+===================================================================
+--- upwatch/trunk/upwatch-spec.tpl	2006-10-09 12:03:15 UTC (rev 651)
++++ upwatch/trunk/upwatch-spec.tpl	2006-10-12 10:50:22 UTC (rev 652)
+@@ -10,6 +10,7 @@
+ Group: Application/Monitoring
+ BuildRoot: %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+ BuildRequires: gzip glib2-devel autogen libxslt lynx readline-devel
++BuildRequires: mysql-devel libxml2-devel postgresql-devel 
+ Requires: libxml2 &gt;= 2.4.19 glib2
+ [+ FOR clientprog +]# [+clientprog+] requirements:
+ [+ include (string-append (get &quot;clientprog&quot;) &quot;/&quot; (get &quot;clientprog&quot;) &quot;.spec-requires&quot;) ;+]
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000186.html">[Upwatch-commits] r651 - upwatch/trunk/uw_postgresql
+</A></li>
+	<LI>Next message: <A HREF="000188.html">[Upwatch-commits] r653 - in upwatch/trunk: . compat/bb/bbhimport	util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap	uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_null uw_ping	uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send	uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#187">[ date ]</a>
+              <a href="thread.html#187">[ thread ]</a>
+              <a href="subject.html#187">[ subject ]</a>
+              <a href="author.html#187">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

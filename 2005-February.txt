@@ -1,0 +1,852 @@
+From raarts at sheep.berlios.de  Tue Feb  1 23:12:19 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Tue, 1 Feb 2005 23:12:19 +0100
+Subject: [Upwatch-commits] r473 - in upwatch/trunk: . doc upwatch util uw_sysstat xmbmon203
+Message-ID: <200502012212.j11MCJQP023393@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-02-01 23:12:18 +0100 (Tue, 01 Feb 2005)
+New Revision: 473
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/doc/program-guide.html
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/upwatch/Makefile.am
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_sysstat/run.c
+   upwatch/trunk/xmbmon203/pci_pm.c
+   upwatch/trunk/xmbmon203/sensors.c
+Log:
+Added check to compile without libpcre installed.
+Two small compile bugs that showed up when compiling
+with gcc 3.4.2 were fixed.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/configure.ac	2005-02-01 22:12:18 UTC (rev 473)
+@@ -330,11 +330,12 @@
+   LIBPCRE_CFLAGS="`pcre-config --cflags`"
+   LIBPCRE_LIBS="`pcre-config --libs-posix`"
+ fi
+-if test -z "$LIBPCRE_LIBS"
++if test -z "$LIBPCRE_CFLAGS"
+ then
+   HAVE_LIBPCRE="0"
+ else
+   HAVE_LIBPCRE="1"
++  AC_DEFINE(HAVE_LIBPCRE,1,[Do we have the perl REGEX library])
+ fi
+ AM_CONDITIONAL(HAVE_LIBPCRE, test $HAVE_LIBPCRE -eq 1)
+ AC_SUBST(LIBPCRE_CFLAGS)
+
+Modified: upwatch/trunk/doc/program-guide.html
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch/Makefile.am
+===================================================================
+--- upwatch/trunk/upwatch/Makefile.am	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/upwatch/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
+@@ -2,13 +2,17 @@
+ 
+ noinst_LIBRARIES = libupwatch.a libupwatcht.a
+ 
++if HAVE_LIBPCRE
++LOGREGEX = logregex.c
++endif
++
+ if ENABLE_SERVER
+ SERVER_SOURCE = pr_process.c pr_bb.c pr_bb_cpu.c pr_httpget.c pr_mysqlstats.c \
+  pr_ping.c pr_snmpget.c pr_sysstat.c pr_iptraf.c pr_generic.c pr_hwstat.c 
+ endif
+ 
+ sources = $(SERVER_SOURCE) slot.c spool.c uwstat.c xml.c util.c setproctitle.c ifaddrlist.c \
+- findsaddr-linux.c setsin.c compat.c log.c logregex.c  \
++ findsaddr-linux.c setsin.c compat.c log.c $(LOGREGEX)  \
+  compat.h db.h generic.h slot.h spool.h uwstat.h xml.h setproctitle.h ifaddrlist.h \
+  findsaddr.h gnuc.h logregex.h probe.h
+ 
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/util/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
+@@ -2,10 +2,13 @@
+ 
+ if HAVE_CURSES
+ UWSAIDAR = uwsaidar
++if HAVE_LIBPCRE
+ if HAVE_LIBREADLINE
+ UWREGEXP = uwregexp
+ endif
++CHKLOG = chklog
+ endif
++endif
+ 
+ if FREEBSD
+ FREEBSDLIBS = -lkvm -ldevstat
+@@ -19,7 +22,7 @@
+ MYCFLAGS = -DCYGWIN
+ endif
+ 
+-bin_PROGRAMS = ctime slot $(UWSAIDAR) $(UWREGEXP) uwq chklog
++bin_PROGRAMS = ctime slot $(UWSAIDAR) $(UWREGEXP) uwq $(CHKLOG) 
+ man_MANS = ctime.1 slot.1 uwq.1 chklog.1
+ INCLUDES = -I../upwatch 
+ BUILT_SOURCES = 
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/uw_sysstat/run.c	2005-02-01 22:12:18 UTC (rev 473)
+@@ -14,7 +14,9 @@
+ #include <ctype.h>
+ #include <fcntl.h>
+ #include <findsaddr.h>
++#if HAVE_LIBPCRE
+ #include <logregex.h>
++#endif
+ #if USE_XMBMON
+ #include "mbmon.h"
+ #endif
+@@ -110,6 +112,7 @@
+ }
+ #endif
+ 
++#if HAVE_LIBPCRE
+ #define STATFILE "/var/run/upwatch/uw_sysstat.stat"
+ int check_log(GString *string, int idx)
+ {
+@@ -200,6 +203,7 @@
+   }
+   return(string);
+ }
++#endif
+ 
+ int init(void)
+ {
+@@ -248,6 +252,7 @@
+       *end = 0;
+       errlogspec[idx++].path = start;
+     }
++#if HAVE_LIBPCRE
+     in = fopen(STATFILE, "r");
+     if (in) {
+       while (!feof(in)) {
+@@ -264,6 +269,7 @@
+       }
+       fclose(in);
+     }
++#endif
+   }
+ 
+ #if USE_XMBMON
+@@ -601,6 +607,7 @@
+   }
+ #endif
+ 
++#if HAVE_LIBPCRE
+   // do the errlog
+   node = newnode(doc, "errlog");
+   log = check_logs(&color);
+@@ -613,6 +620,7 @@
+     }
+     g_string_free(log, TRUE);
+   }
++#endif
+ 
+   // do the diskfree
+   uw_setproctitle("checking diskspace");
+
+Modified: upwatch/trunk/xmbmon203/pci_pm.c
+===================================================================
+--- upwatch/trunk/xmbmon203/pci_pm.c	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/xmbmon203/pci_pm.c	2005-02-01 22:12:18 UTC (rev 473)
+@@ -185,6 +185,7 @@
+ 			inq_smbba = getSMBBA71;
+ 			break;
+ 		default:
++			break;
+ 		}
+ #if !defined(LINUX) && defined(HAVE_SMBUS) && defined(SMBUS_IOCTL)
+ 		if (ret)
+
+Modified: upwatch/trunk/xmbmon203/sensors.c
+===================================================================
+--- upwatch/trunk/xmbmon203/sensors.c	2005-01-30 17:48:52 UTC (rev 472)
++++ upwatch/trunk/xmbmon203/sensors.c	2005-02-01 22:12:18 UTC (rev 473)
+@@ -118,6 +118,7 @@
+ 			" SMBus slave 0x%02X(0x%02X) found...\n", j, j/2);
+ 		}
+ skip:
++		;
+ 	}
+ 	method->Close();
+ 	smb_slave = save;
+
+
+
+From raarts at sheep.berlios.de  Fri Feb 18 14:20:47 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Fri, 18 Feb 2005 14:20:47 +0100
+Subject: [Upwatch-commits] r474 - in upwatch/trunk: . uw_send
+Message-ID: <200502181320.j1IDKl0l032267@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-02-18 14:20:46 +0100 (Fri, 18 Feb 2005)
+New Revision: 474
+
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/Makefile.am.common
+   upwatch/trunk/configure.ac
+   upwatch/trunk/uw_send/Makefile.am
+   upwatch/trunk/uw_send/run.c
+Log:
+
+The State Thread library we use has no x86_64 arch support.
+To support these platforms as upwatch clients I removed
+multiple thread support from uw_send, and made some
+adjustments to the build scripts. So now we can at
+least support 64 bits on the clients..
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/Makefile.am	2005-02-18 13:20:46 UTC (rev 474)
+@@ -68,7 +68,7 @@
+ if ENABLE_SERVER
+ SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} compat util scripts config common
+ else
+-SUBDIRS = upwatch st-1.4 ${XMBMON} libstatgrab ${PROGNAMES} util config common
++SUBDIRS = upwatch ${XMBMON} libstatgrab ${PROGNAMES} util scripts config common 
+ endif
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+
+Modified: upwatch/trunk/Makefile.am.common
+===================================================================
+--- upwatch/trunk/Makefile.am.common	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/Makefile.am.common	2005-02-18 13:20:46 UTC (rev 474)
+@@ -56,6 +56,6 @@
+ %.spec-requires %.spec-buildrequires %.spec-files: %.def
+ 	autogen -b $(<:%.def=%) $(AGDEFINES) $(GENINCL) -T $(SPECTPL) $<
+ 
+-CLEANFILES = $(program:%=%.c) $(program:%=%.h) $(program:%=%.1) Makefile.in \
++CLEANFILES = $(program:%=%.c) $(program:%=%.h) $(program:%=%.1) \
+   $(PROBFILES) $(SPECFILES) $(INITFILES)
+ 
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/configure.ac	2005-02-18 13:20:46 UTC (rev 474)
+@@ -215,11 +215,19 @@
+ then
+   LIBOPTS=/usr/lib/libopts.a
+ fi
++if test -f /usr/lib64/libopts.a
++then
++  LIBOPTS=/usr/lib64/libopts.a
++fi
+ 
+ if test -f /usr/local/lib/libopts.a
+ then
+   LIBOPTS=/usr/local/lib/libopts.a
+ fi
++if test -f /usr/local/lib64/libopts.a
++then
++  LIBOPTS=/usr/local/lib64/libopts.a
++fi
+ AC_SUBST(LIBOPTS)
+ 
+ ################## MYSQL
+@@ -380,6 +388,16 @@
+ AC_SUBST(LIBXML2_CFLAGS)
+ AC_SUBST(LIBXML2_LIBS)
+ 
++# STATE THREADS
++AC_CHECK_LIB(st, st_init, HAS_ST=yes, HAS_ST=no)
++if test ${HAS_ST} = yes ; then
++  LIBSTLIBS=-lst
++else
++  AC_MSG_ERROR([Sorry, we really need libst to continue])
++fi
++AC_SUBST(LIBST_CFLAGS)
++AC_SUBST(LIBST_LIBS)
++
+ # THREADS
+ AC_CHECK_LIB(pthread, pthread_create, HAS_PTHREADS=yes, HAS_PTHREADS=no)
+ if test ${HAS_PTHREADS} = yes ; then
+@@ -470,9 +488,9 @@
+ 	else
+ 		AC_MSG_ERROR([You really need libesmtp to compile upwatch server])
+ 	fi
+-	AM_CONDITIONAL(HAVE_LIBESMTP, test $HAVE_LIBESMTP -eq 1)
+ 	AC_SUBST(LIBESMTP_LIBS)
+ fi
++AM_CONDITIONAL(HAVE_LIBESMTP, test "$HAVE_LIBESMTP" = "1")
+ 
+ # readline
+ AC_CHECK_LIB([readline], [readline], [HAVE_LIBREADLINE=1], [HAVE_LIBREADLINE=0], -lncurses)
+@@ -584,14 +602,19 @@
+ AC_CONFIG_FILES([doc/Makefile])
+ AC_CONFIG_FILES([config/Makefile])
+ AC_CONFIG_FILES([common/Makefile])
+-AC_CONFIG_FILES([st-1.4/Makefile])
+ AC_CONFIG_FILES([upwatch/Makefile])
+ AC_CONFIG_FILES([util/Makefile])
+ AC_CONFIG_FILES([uw_send/Makefile])
+ AC_CONFIG_FILES([uw_sysstat/Makefile])
+ AC_CONFIG_FILES([uw_sysstat/os/Makefile])
+ AC_CONFIG_FILES([uw_null/Makefile])
++AC_CONFIG_FILES([scripts/Makefile])
+ 
++if test "$enable_server" = "yes" -o "$enable_monitors" = "yes"
++then
++AC_CONFIG_FILES([st-1.4/Makefile])
++fi
++
+ # server 
+ if test "$enable_server" = "yes"
+ then
+@@ -602,7 +625,6 @@
+ AC_CONFIG_FILES([uw_route/Makefile])
+ AC_CONFIG_FILES([uw_process/Makefile])
+ AC_CONFIG_FILES([uw_syncprobes/Makefile])
+-AC_CONFIG_FILES([scripts/Makefile])
+ AC_CONFIG_FILES([compat/Makefile])
+ AC_CONFIG_FILES([compat/sometests/Makefile])
+ AC_CONFIG_FILES([compat/sometests/setproctitle/Makefile])
+
+Modified: upwatch/trunk/uw_send/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_send/Makefile.am	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/uw_send/Makefile.am	2005-02-18 13:20:46 UTC (rev 474)
+@@ -1,6 +1,5 @@
+ include $(top_srcdir)/Makefile.am.path
+ 
+-AM_CFLAGS += -I$(INCL_ST) -DUSE_ST
+ program = uw_send
+ sbin_PROGRAMS = $(program)
+ man_MANS = uw_send.1
+@@ -9,7 +8,7 @@
+ 
+ uw_send_SOURCES = run.c uw_send.c uw_send.h uw_send.def $(SPECFILES) $(INITFILES)
+ uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ $(AM_CFLAGS)
+-uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @LIBGLIB2_LIBS@
++uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch
+
+Modified: upwatch/trunk/uw_send/run.c
+===================================================================
+--- upwatch/trunk/uw_send/run.c	2005-02-01 22:12:18 UTC (rev 473)
++++ upwatch/trunk/uw_send/run.c	2005-02-18 13:20:46 UTC (rev 474)
+@@ -8,7 +8,21 @@
+ #include <netinet/in.h>
+ 
+ #include <generic.h>
++#ifdef USE_ST
+ #include <st.h>
++#else
++int st_read(int fd, void *buf, size_t size, int timeout)
++{
++  return(read(fd, buf, size));
++}
++
++int st_write(int fd, void *buf, size_t size, int timeout)
++{
++  return(write(fd, buf, size));
++}
++#define st_netfd_fileno 
++#define st_netfd_t int
++#endif
+ #include "uw_send.h"
+ 
+ struct q_info {
+@@ -150,6 +164,7 @@
+     td = g_malloc0(sizeof(struct thr_data));
+     td->q = q;
+     td->filename = strdup(buffer);
++#ifdef USE_ST
+     if (st_thread_create(push, td, 0, 0) == NULL) { 
+       LOG(LOG_WARNING, "couldn't create thread");
+       st_sleep(1);
+@@ -160,30 +175,43 @@
+     while (q->thread_count >= q->maxthreads) {
+       st_usleep(10000); /* 10 ms */
+     }
++#else
++    push(td);
++#endif
+   }
+   g_dir_close(dir);
++#ifdef USE_ST
+   thread_count--;
++#endif
+   return NULL;
+ }
+ 
+ static void create_q_threads(gpointer key, gpointer value, gpointer user_data)
+ {
++#ifdef USE_ST
+   if (st_thread_create(read_queue, value, 0, 0) == NULL) { 
+     LOG(LOG_WARNING, "couldn't create queue thread for %s", (char *)key);
+   } else {
+     if (debug > 3) { LOG(LOG_DEBUG, "created new thread"); }
+     thread_count++;
+   }
++#else
++  read_queue(value);
++#endif
+ }
+ 
+ int run(void)
+ {
++#ifdef USE_ST
+   st_usleep(1); //force context switch so timers will work
++#endif
+   g_hash_table_foreach(hash, create_q_threads, NULL);
++#ifdef USE_ST
+   if (debug > 3) { LOG(LOG_DEBUG, "waiting for all threads to finish"); }
+   while (thread_count) {
+     st_usleep(10000); /* 10 ms */
+   }
++#endif
+   if (HAVE_OPT(HANGUPSCRIPT) && online) {
+     int status;
+ 
+@@ -246,6 +274,7 @@
+     goto quit;
+   }
+   uw_setproctitle("connecting to %s:%d", q->host, q->port);
++#ifdef USE_ST
+   if ((rmt_nfd = st_netfd_open_socket(sock)) == NULL) {
+     LOG(LOG_ERR, "st_netfd_open_socket: %m", strerror(errno));
+     close(sock);
+@@ -259,18 +288,33 @@
+     q->fatal = 1;
+     goto quit;
+   }
++#else
++  rmt_nfd = sock;
++  if (connect(rmt_nfd, (struct sockaddr *)&server, sizeof(server)) < 0) {
++    LOG(LOG_ERR, "%s:%d: %m", q->host, q->port, strerror(errno));
++    close(rmt_nfd);
++    q->fatal = 1;
++    goto quit;
++  }
++#endif
+ 
+   if (pushto(rmt_nfd, td)) {
+     LOG(LOG_INFO, "uploaded %s", td->filename); 
+     unlink(td->filename);
+   }
++#ifdef USE_ST
+   st_netfd_close(rmt_nfd);
++#else
++  close(rmt_nfd);
++#endif
+ 
+ quit:
+   free(td->filename);
+   free(td);
++#ifdef USE_ST
+   q->thread_count--;
+   thread_count--;
++#endif
+   return NULL;
+ }
+ 
+@@ -306,7 +350,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading login request string"); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+@@ -324,7 +368,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout writing %s", buffer); 
+     } else { 
+-      LOG(LOG_WARNING, "st_write: %m"); 
++      LOG(LOG_WARNING, "write: %m"); 
+     }
+     return 0;
+   }
+@@ -336,7 +380,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading OK enter password"); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+@@ -354,7 +398,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout writing %s", buffer); 
+     } else { 
+-      LOG(LOG_WARNING, "st_write: %m"); 
++      LOG(LOG_WARNING, "write: %m"); 
+     }
+     return 0;
+   }
+@@ -366,7 +410,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading enter command"); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+@@ -384,7 +428,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout writing %s", buffer); 
+     } else { 
+-      LOG(LOG_WARNING, "st_write: %m"); 
++      LOG(LOG_WARNING, "write: %m"); 
+     }
+     return 0;
+   }
+@@ -396,7 +440,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading DATA response"); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+@@ -420,7 +464,7 @@
+       if (errno == ETIME) { 
+         LOG(LOG_WARNING, "timeout writing %s", buffer); 
+       } else { 
+-        LOG(LOG_WARNING, "st_write: %m"); 
++        LOG(LOG_WARNING, "write: %m"); 
+       }
+       fclose(in);
+       return 0;
+@@ -447,7 +491,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading enter command"); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+@@ -465,7 +509,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout writing %s", buffer); 
+     } else { 
+-      LOG(LOG_WARNING, "st_write: %m"); 
++      LOG(LOG_WARNING, "write: %m"); 
+     }
+     return 0;
+   }
+@@ -477,7 +521,7 @@
+     if (errno == ETIME) { 
+       LOG(LOG_WARNING, "timeout reading QUIT response", buffer); 
+     } else { 
+-      LOG(LOG_WARNING, "st_read: %m"); 
++      LOG(LOG_WARNING, "read: %m"); 
+     }
+     return 0;
+   }
+
+
+
+From raarts at sheep.berlios.de  Fri Feb 18 14:22:59 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Fri, 18 Feb 2005 14:22:59 +0100
+Subject: [Upwatch-commits] r475 - upwatch/trunk
+Message-ID: <200502181322.j1IDMxE5032396@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-02-18 14:22:58 +0100 (Fri, 18 Feb 2005)
+New Revision: 475
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+Oops, removed libst requirement
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-02-18 13:20:46 UTC (rev 474)
++++ upwatch/trunk/configure.ac	2005-02-18 13:22:58 UTC (rev 475)
+@@ -389,14 +389,14 @@
+ AC_SUBST(LIBXML2_LIBS)
+ 
+ # STATE THREADS
+-AC_CHECK_LIB(st, st_init, HAS_ST=yes, HAS_ST=no)
+-if test ${HAS_ST} = yes ; then
+-  LIBSTLIBS=-lst
+-else
+-  AC_MSG_ERROR([Sorry, we really need libst to continue])
+-fi
+-AC_SUBST(LIBST_CFLAGS)
+-AC_SUBST(LIBST_LIBS)
++#AC_CHECK_LIB(st, st_init, HAS_ST=yes, HAS_ST=no)
++#if test ${HAS_ST} = yes ; then
++#  LIBSTLIBS=-lst
++#else
++#  AC_MSG_ERROR([Sorry, we really need libst to continue])
++#fi
++#AC_SUBST(LIBST_CFLAGS)
++#AC_SUBST(LIBST_LIBS)
+ 
+ # THREADS
+ AC_CHECK_LIB(pthread, pthread_create, HAS_PTHREADS=yes, HAS_PTHREADS=no)
+
+
+
+From raarts at sheep.berlios.de  Fri Feb 18 16:56:09 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Fri, 18 Feb 2005 16:56:09 +0100
+Subject: [Upwatch-commits] r476 - in upwatch/trunk/uw_sysstat: . uw_sysstat.d uw_sysstat.d/quagga uw_sysstat.d/syslog
+Message-ID: <200502181556.j1IFu9pA009310@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-02-18 16:56:08 +0100 (Fri, 18 Feb 2005)
+New Revision: 476
+
+Added:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Added supported for monitoring quagga logfiles
+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/bgpd	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1 @@
++green [LOGDATE] BGP: %NOTIFICATION: received from neighbor [IPADDR] [NUM]/[NUM] \(Cease\) [NUM] bytes
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/general	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,5 @@
++green \ssucceeded
++green \sstarted
++green \sstarting
++
++red ERROR
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,8 @@
++# macros for regex replacements
++# choose your macronames carefully. regular expressions should never
++# match a macroname!!
++# entries are matched in the order specified
++LOGDATE \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d
++IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++PID 	\[\d+\]
++NUM     [-+]?\d+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,7 @@
++# macros for log2regex 
++# they are very much like the ones in the 'macros' file, but
++# specifically designed to extract rules from existing logfiles
++LOGDATE [0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]
++IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++PID 	\[[0-9]+\]
++NUM	[-+]?(0x)?\d+
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/zebra	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,5 @@
++green [LOGDATE] ZEBRA: SMUX connection closed: [NUM]
++green [LOGDATE] ZEBRA: Terminating on signal
++green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
++green [LOGDATE] ZEBRA: Terminating on signal
++green [LOGDATE] ZEBRA: Zebra [NUM]\.[NUM]\.[NUM] starting: vty@[NUM]
+
+Added: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/watchquagga	2005-02-18 15:56:08 UTC (rev 476)
+@@ -0,0 +1,14 @@
++green [LOGDATE] watchquagga[PID]: bgpd: slow echo response finally received after [NUM]\.[NUM] seconds
++green [LOGDATE] watchquagga[PID]: bgpd state -> up : echo response received after [NUM]\.[NUM] seconds
++green [LOGDATE] watchquagga[PID]: Terminating on signal
++green [LOGDATE] watchquagga: watchquagga shutdown succeeded
++green [LOGDATE] watchquagga: watchquagga startup succeeded
++green [LOGDATE] watchquagga[PID]: watchquagga [NUM]\.[NUM]\.[NUM] watching \[zebra bgpd\], mode \[monitor\]
++green [LOGDATE] watchquagga[PID]: bgpd state -> up : connect succeeded
++green [LOGDATE] watchquagga[PID]: zebra state -> up : connect succeeded
++green [LOGDATE] watchquagga[PID]: Terminating on signal
++green [LOGDATE] watchquagga: watchquagga shutdown succeeded
++green [LOGDATE] watchquagga[PID]: watchquagga [NUM]\.[NUM]\.[NUM] watching \[zebra bgpd\], mode \[monitor\]
++green [LOGDATE] watchquagga: watchquagga startup succeeded
++green [LOGDATE] watchquagga[PID]: zebra state -> up : connect succeeded
++green [LOGDATE] watchquagga[PID]: bgpd state -> up : connect succeeded
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2005-02-18 13:22:58 UTC (rev 475)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2005-02-18 15:56:08 UTC (rev 476)
+@@ -29,6 +29,8 @@
+ spec-files = `for i in \`find uw_sysstat.d/mysql -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ spec-files = `echo "%dir" $confdir/uw_sysstat.d/upwatch`;
+ spec-files = `for i in \`find uw_sysstat.d/upwatch -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
++spec-files = `echo "%dir" $confdir/uw_sysstat.d/quagga`;
++spec-files = `for i in \`find uw_sysstat.d/quagga -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ 
+ // describe commandline flags
+ flag = {
+
+
+
+From raarts at sheep.berlios.de  Sat Feb 19 13:47:47 2005
+From: raarts at sheep.berlios.de (Ron Arts at BerliOS)
+Date: Sat, 19 Feb 2005 13:47:47 +0100
+Subject: [Upwatch-commits] r477 - in upwatch/trunk: . config
+Message-ID: <200502191247.j1JCllRH008963@sheep.berlios.de>
+
+Author: raarts
+Date: 2005-02-19 13:47:46 +0100 (Sat, 19 Feb 2005)
+New Revision: 477
+
+Added:
+   upwatch/trunk/config/upwatch-common.mysql
+Removed:
+   upwatch/trunk/config/upwatch-probe.mysql
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/config/Makefile.am
+Log:
+Renamed upwatch-probe to upwatch-common in preparation
+for importing the database needed for the web functions
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/Makefile.am	2005-02-19 12:47:46 UTC (rev 477)
+@@ -90,10 +90,10 @@
+ 	autogen -b upwatch -Dconfargs="$(CONFARGS)" upwatch-spec.def
+ 	rm -f force
+ 
+-upwatch-base.mysql: config/upwatch-realm.mysql config/upwatch-probe.mysql uw_*/probe.def_mysql
++upwatch-base.mysql: config/upwatch-realm.mysql config/upwatch-common.mysql uw_*/probe.def_mysql
+ 	cat $+ > upwatch-base.mysql
+ 
+-upwatch-full.mysql: config/upwatch-full.mysql config/upwatch-probe.mysql uw_*/probe.def_mysql uw_*/probe.raw_mysql
++upwatch-full.mysql: config/upwatch-full.mysql config/upwatch-common.mysql uw_*/probe.def_mysql uw_*/probe.raw_mysql
+ 	cat $+ > upwatch-full.mysql
+ 
+ force:
+
+Modified: upwatch/trunk/config/Makefile.am
+===================================================================
+--- upwatch/trunk/config/Makefile.am	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/Makefile.am	2005-02-19 12:47:46 UTC (rev 477)
+@@ -10,7 +10,7 @@
+ 	echo  >> result.dtd
+ 	cat ../uw_*/probe.dtd  >> result.dtd
+ 
+-EXTRA_DIST = upwatch.conf upwatch-probe.mysql upwatch-realm.mysql upwatch-full.mysql result.dtd-base \
++EXTRA_DIST = upwatch.conf upwatch-common.mysql upwatch-realm.mysql upwatch-full.mysql result.dtd-base \
+   logrotate sysconfig cron.daily upwatch.redhat upwatch.suse
+ 
+ install-data-local:
+
+Copied: upwatch/trunk/config/upwatch-common.mysql (from rev 476, upwatch/trunk/config/upwatch-probe.mysql)
+===================================================================
+--- upwatch/trunk/config/upwatch-probe.mysql	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/upwatch-common.mysql	2005-02-19 12:47:46 UTC (rev 477)
+@@ -0,0 +1,26 @@
++
++
++--
++-- Table structure for table 'probe'
++--
++
++CREATE TABLE probe (
++  id int unsigned NOT NULL auto_increment,
++  name varchar(24) NOT NULL default '',
++  description varchar(128) NOT NULL default '',
++  expiry enum('yes','no') NOT NULL default 'yes',
++  addbyhand enum('yes','no') NOT NULL default 'yes',
++  fuse enum('yes','no') NOT NULL default 'no',
++  addbycust enum('yes','no') NOT NULL default 'no',
++  lagwarn enum('yes','no') NOT NULL default 'no',
++  maxlag int unsigned NOT NULL default '300',
++  lastseen int unsigned NOT NULL default '0',
++  class varchar(16) NOT NULL default '',
++  graphgroup varchar(16) NOT NULL default '',
++  graphtypes varchar(255) NOT NULL default 'default',
++  comment text NOT NULL,
++  PRIMARY KEY  (id)
++) TYPE=MyISAM;
++
++INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
++
+
+Deleted: upwatch/trunk/config/upwatch-probe.mysql
+===================================================================
+--- upwatch/trunk/config/upwatch-probe.mysql	2005-02-18 15:56:08 UTC (rev 476)
++++ upwatch/trunk/config/upwatch-probe.mysql	2005-02-19 12:47:46 UTC (rev 477)
+@@ -1,24 +0,0 @@
+---
+--- Table structure for table 'probe'
+---
+-
+-CREATE TABLE probe (
+-  id int unsigned NOT NULL auto_increment,
+-  name varchar(24) NOT NULL default '',
+-  description varchar(128) NOT NULL default '',
+-  expiry enum('yes','no') NOT NULL default 'yes',
+-  addbyhand enum('yes','no') NOT NULL default 'yes',
+-  fuse enum('yes','no') NOT NULL default 'no',
+-  addbycust enum('yes','no') NOT NULL default 'no',
+-  lagwarn enum('yes','no') NOT NULL default 'no',
+-  maxlag int unsigned NOT NULL default '300',
+-  lastseen int unsigned NOT NULL default '0',
+-  class varchar(16) NOT NULL default '',
+-  graphgroup varchar(16) NOT NULL default '',
+-  graphtypes varchar(255) NOT NULL default 'default',
+-  comment text NOT NULL,
+-  PRIMARY KEY  (id)
+-) TYPE=MyISAM;
+-
+-INSERT INTO probe set id = '1', name = 'empty', addbyhand = 'no', addbycust = 'no', comment = 'do NOT delete!';
+-
+
+
+

@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r540%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20mysql%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603311204.k2VC4ZuA016299%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000070.html">
+   <LINK REL="Next"  HREF="000072.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r540%20-%20in%20upwatch/trunk/uw_sysstat/uw_sysstat.d%3A%20maillog%20mysql%20quagga%20syslog%20upwatch&In-Reply-To=%3C200603311204.k2VC4ZuA016299%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r540 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog mysql quagga syslog upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Fri Mar 31 14:04:35 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000070.html">[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+        <LI>Next message: <A HREF="000072.html">[Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-03-31 14:04:23 +0200 (Fri, 31 Mar 2006)
+New Revision: 540
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt
+Log:
+Fix the IPADDR macro so it matches both IPv4 and IPv6 addresses.
+
+Please, don't look at the regular expression, you will get dizzy otherwise.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,7 +6,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ HOSTNAM [-\da-z]+
+ PATH	/?[-_\.[:alnum:]]?(/[-_\.[:alnum:]]+)*/?
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/maillog/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ USER    root
+ USER=   user=[-\.\$_0-9a-z]+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,6 +6,6 @@
+ PATH    (/[-\._[:alnum:]]+){2,}([/]?)
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/mysql/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -4,6 +4,6 @@
+ LOGDATE \d\d\d\d\d\d \d\d:\d\d:\d\d
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -3,6 +3,6 @@
+ # match a macroname!!
+ # entries are matched in the order specified
+ LOGDATE \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PID 	\[\d+\]
+ NUM     [-+]?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/quagga/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -2,6 +2,6 @@
+ # they are very much like the ones in the 'macros' file, but
+ # specifically designed to extract rules from existing logfiles
+ LOGDATE [0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PID 	\[[0-9]+\]
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -6,7 +6,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ EMAIL   [-\.\$\w]+@[a-z\d][-a-z\d]*(\.[a-z\d][-a-z\d]+)*\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z])
+ HOSTNAME ([a-z\d][-a-z\d]*)(\.[a-z\d][-a-z\d]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+-IPADDR (25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ HOSTNAM [-\da-z]+
+ MACADDR ([a-f\d][a-f\d])(:[a-f\d][a-f\d]){5,}
+ PATH	/?[-_\.[:alnum:]]?(/[-_\.[:alnum:]]+)*/?
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ MACADDR ([a-f0-9][a-f0-9])(:[a-f0-9][a-f0-9]){5,}
+ TCPFLAG (SYN|ACK|PSH|FIN|RST)(\ (SYN|ACK|PSH|FIN|RST))*
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/macros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ LOGDATE [A-Za-z]{3} [\d]{1,2} \d\d:\d\d:\d\d [-\.\/\dA-Za-z]+
+ TABLE   \w+/\w+
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ WORD	[-\.\dA-Za-z_]+
+ NUM	[-+]?(0x)?\d+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt	2006-03-31 09:53:48 UTC (rev 539)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch/rmacros.txt	2006-03-31 12:04:23 UTC (rev 540)
+@@ -5,7 +5,7 @@
+ SMONTH  (Mon|Tue|Wed|Thu|Fri|Sat|Sun)
+ EMAIL   [-\.\$_0-9a-z]+@([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))?
+ HOSTNAME ([a-z0-9][-a-z0-9]*)(\.[a-z0-9][-a-z0-9]*)*(\.(arpa|com|edu|biz|org|gov|int|info|mil|net|name|museum|coop|aero|[a-z][a-z]))
+-IPADDR	(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}
++IPADDR ((([0-9a-fA-F]+:){7}[0-9a-fA-F]+)|(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?::(([0-9a-fA-F]+:)*[0-9a-fA-F]+)?)|((25[0-5]|2[0-4][\d]|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})	
+ PATH	(/[-\._[:alnum:]]+){2,}([/]?)
+ MACADDR ([a-f0-9][a-f0-9])(:[a-f0-9][a-f0-9]){5,}
+ TCPFLAG (SYN|ACK|PSH|FIN|RST)(\ (SYN|ACK|PSH|FIN|RST))*
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000070.html">[Upwatch-commits] r539 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+	<LI>Next message: <A HREF="000072.html">[Upwatch-commits] r541 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

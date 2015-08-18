@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r687 - upwatch/trunk/upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-November/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r687%20-%20upwatch/trunk/upwatch&In-Reply-To=%3C200711261022.lAQAMXAA014238%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000223.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r687 - upwatch/trunk/upwatch</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r687%20-%20upwatch/trunk/upwatch&In-Reply-To=%3C200711261022.lAQAMXAA014238%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r687 - upwatch/trunk/upwatch">raarts at mail.berlios.de
+       </A><BR>
+    <I>Mon Nov 26 11:22:33 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000223.html">[Upwatch-commits] r688 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-11-26 11:22:33 +0100 (Mon, 26 Nov 2007)
+New Revision: 687
+
+Modified:
+   upwatch/trunk/upwatch/pr_hwstat.c
+Log:
+Fix bug in sms handling for hwstat probe.
+
+
+Modified: upwatch/trunk/upwatch/pr_hwstat.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_hwstat.c	2007-09-19 20:07:21 UTC (rev 686)
++++ upwatch/trunk/upwatch/pr_hwstat.c	2007-11-26 10:22:33 UTC (rev 687)
+@@ -157,7 +157,7 @@
+     if (row[1]) def-&gt;contact  = atoi(row[1]);
+     strcpy(def-&gt;hide, row[2] ? row[2] : &quot;no&quot;);
+     strcpy(def-&gt;email, row[3] ? row[3] : &quot;&quot;);
+-    strcpy(def-&gt;email, row[4] ? row[4] : &quot;&quot;);
++    strcpy(def-&gt;sms, row[4] ? row[4] : &quot;&quot;);
+     if (row[5]) def-&gt;delay = atoi(row[5]);
+     if (row[6]) def-&gt;temp1_yellow = atoi(row[6]);
+     if (row[7]) def-&gt;temp1_red = atoi(row[7]);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000223.html">[Upwatch-commits] r688 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

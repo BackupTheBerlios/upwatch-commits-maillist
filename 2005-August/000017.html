@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r486 - upwatch/trunk/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r486%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200508171149.j7HBnHSZ028120%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000016.html">
+   <LINK REL="Next"  HREF="000018.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r486 - upwatch/trunk/uw_process</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r486%20-%20upwatch/trunk/uw_process&In-Reply-To=%3C200508171149.j7HBnHSZ028120%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r486 - upwatch/trunk/uw_process">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Aug 17 13:49:17 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000016.html">[Upwatch-commits] r485 - in upwatch/trunk: . upwatch
+</A></li>
+        <LI>Next message: <A HREF="000018.html">[Upwatch-commits] r487 - in upwatch/trunk: . compat/bb/bbhimport compat/sometests/setproctitle upwatch util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_investigate uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_notify uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#17">[ date ]</a>
+              <a href="thread.html#17">[ thread ]</a>
+              <a href="subject.html#17">[ subject ]</a>
+              <a href="author.html#17">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-08-17 13:49:02 +0200 (Wed, 17 Aug 2005)
+New Revision: 486
+
+Modified:
+   upwatch/trunk/uw_process/run.c
+Log:
+Compile on GCC 4
+
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2005-08-17 09:29:08 UTC (rev 485)
++++ upwatch/trunk/uw_process/run.c	2005-08-17 11:49:02 UTC (rev 486)
+@@ -673,7 +673,7 @@
+   if (debug &gt; 3) { LOG(LOG_DEBUG, &quot;run()&quot;); }
+ 
+   if (HAVE_OPT(SUMMARIZE)) {
+-static int resummarize(void);
++    int resummarize(void);
+     return(resummarize()); // --summarize
+   }
+ 
+@@ -690,7 +690,7 @@
+   return(count);
+ }
+ 
+-static int resummarize(void)
++int resummarize(void)
+ {
+   gint idx, found;
+   trx t;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000016.html">[Upwatch-commits] r485 - in upwatch/trunk: . upwatch
+</A></li>
+	<LI>Next message: <A HREF="000018.html">[Upwatch-commits] r487 - in upwatch/trunk: . compat/bb/bbhimport compat/sometests/setproctitle upwatch util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_investigate uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_notify uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#17">[ date ]</a>
+              <a href="thread.html#17">[ thread ]</a>
+              <a href="subject.html#17">[ subject ]</a>
+              <a href="author.html#17">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,417 @@
+From raarts at mail.berlios.de  Fri Nov 20 10:03:04 2009
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Fri, 20 Nov 2009 10:03:04 +0100
+Subject: [Upwatch-commits] r694 - upwatch/trunk/uw_sysstat
+Message-ID: <200911200903.nAK934xD004457@sheep.berlios.de>
+
+Author: raarts
+Date: 2009-11-20 10:03:04 +0100 (Fri, 20 Nov 2009)
+New Revision: 694
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Add extra option --loadcheck_lock to uw_sysstat. When this lockfile exists
+and is not older than two hours, skip the load checking. The default name for this
+lockfile is /tmp/backup.lock.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2008-02-20 19:10:05 UTC (rev 693)
++++ upwatch/trunk/uw_sysstat/run.c	2009-11-20 09:03:04 UTC (rev 694)
+@@ -82,22 +82,28 @@
+ 
+ int get_stats(void)
+ {
++  struct stat fst;
++
+   st.cpu = sg_get_cpu_percents();
+   if (!st.cpu) { LOG(LOG_INFO, "could not sg_get_cpu_stats"); }
+   st.mem = sg_get_mem_stats();
+   if (!st.mem) { LOG(LOG_INFO, "could not sg_get_mem_stats"); }
+   st.swap = sg_get_swap_stats();
+   if (!st.swap) { LOG(LOG_INFO, "could not get_swap_stats"); }
+-  st.load = sg_get_load_stats();
+-  if (!st.load) { LOG(LOG_INFO, "could not get_load_stats"); }
++
++  if (stat(OPT_ARG(LOADCHECK_LOCK), &fst) < 0 || (time(NULL) - fst.st_mtime) > 7200) {
++    st.load = sg_get_load_stats();
++    if (!st.load) { LOG(LOG_INFO, "could not get_load_stats"); }
++    st.diskio = sg_get_disk_io_stats_diff(&(st.diskio_entries));
++    if (!st.diskio) { LOG(LOG_INFO, "could not get_diskio_stats_diff"); }
++  }
++
+   st.process = sg_get_process_stats(&st.process_entries);
+   if (!st.process) { LOG(LOG_INFO, "could not get_process_stats"); }
+   st.paging = sg_get_page_stats_diff();
+   if (!st.paging) { LOG(LOG_INFO, "could not get_page_stats_diff"); }
+   st.network = sg_get_network_io_stats_diff(&(st.network_entries));
+   if (!st.network) { LOG(LOG_INFO, "could not get_network_stats_diff"); }
+-  st.diskio = sg_get_disk_io_stats_diff(&(st.diskio_entries));
+-  if (!st.diskio) { LOG(LOG_INFO, "could not get_diskio_stats_diff"); }
+   st.disk = sg_get_fs_stats(&(st.disk_entries));
+   if (!st.disk) { LOG(LOG_INFO, "could not get_disk_stats"); }
+   st.hostinfo = sg_get_host_info();
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2008-02-20 19:10:05 UTC (rev 693)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2009-11-20 09:03:04 UTC (rev 694)
+@@ -208,6 +208,15 @@
+ 'This command is used to run a `top` in batch mode';
+ };
+ 
++flag = {
++    name      = loadcheck_lock;
++    arg_type  = string;   /* option argument indication  */
++    arg_default = "/tmp/backup.lock";
++    descrip   = "inhibit loadchecking lockfile";
++    doc       =
++'When this lockfile is present and the file is not older than two hours - do not check for high load levels';
++};
++
+ // describe commandline flags
+ flag = {
+     name      = spooldir;
+
+
+
+From raarts at mail.berlios.de  Fri Nov 20 10:21:19 2009
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Fri, 20 Nov 2009 10:21:19 +0100
+Subject: [Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql
+	uw_postgresql uw_process uw_snmpget
+Message-ID: <200911200921.nAK9LJEs005667@sheep.berlios.de>
+
+Author: raarts
+Date: 2009-11-20 10:21:18 +0100 (Fri, 20 Nov 2009)
+New Revision: 695
+
+Modified:
+   upwatch/trunk/config/upwatch-full.mysql
+   upwatch/trunk/uw_mysql/probe.def
+   upwatch/trunk/uw_mysql/run.c
+   upwatch/trunk/uw_postgresql/probe.def
+   upwatch/trunk/uw_postgresql/run.c
+   upwatch/trunk/uw_process/notify.c
+   upwatch/trunk/uw_snmpget/probe.def
+   upwatch/trunk/uw_snmpget/run.c
+Log:
+Added 'port' variable to mysql, snmpget and postgresql probes.
+Need to be hand-added to the database!
+
+
+Modified: upwatch/trunk/config/upwatch-full.mysql
+===================================================================
+--- upwatch/trunk/config/upwatch-full.mysql	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/config/upwatch-full.mysql	2009-11-20 09:21:18 UTC (rev 695)
+@@ -28,11 +28,15 @@
+   prv_color smallint unsigned NOT NULL default '200',
+   color smallint unsigned NOT NULL default '200',
+   message text NOT NULL default '',
+-  PRIMARY KEY  (id),
+-  UNIQUE KEY probtime (probe,stattime),
+-  UNIQUE KEY probclstat (probe,class,stattime),
+-  KEY stattime (stattime),
+-  KEY contact (contact)
++  PRIMARY KEY  (`id`),
++  UNIQUE KEY `probtime` (`probe`,`stattime`),
++  UNIQUE KEY `probclstat` (`probe`,`class`,`stattime`),
++  KEY `stattime` (`stattime`),
++  KEY `contact` (`contact`),
++  KEY `statprobcl` (`stattime`,`probe`,`class`),
++  KEY `probclstatnot` (`probe`,`class`,`stattime`,`notified`),
++  KEY `contacttime` (`contact`,`stattime`),
++  KEY `server` (`server`)
+ ) TYPE=MyISAM;
+ 
+ INSERT INTO pr_hist set id = '1', message = 'do NOT delete!';
+
+Modified: upwatch/trunk/uw_mysql/probe.def
+===================================================================
+--- upwatch/trunk/uw_mysql/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_mysql/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -32,6 +32,14 @@
+     descrip = "target ip address";
+   };
+ 
++  def = {
++    name = "port";
++    type = "int";
++    null = false;
++    default = "3306";
++    descrip = "port to connect to";
++  };
++
+   attribute = {
+     name = "date";
+     required = true;
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_mysql/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -106,7 +106,7 @@
+                 "       pr_mysql_def.ipaddress, pr_mysql_def.dbname, "
+                 "       pr_mysql_def.dbuser, pr_mysql_def.dbpasswd,"
+                 "       pr_mysql_def.query, "
+-                "       pr_mysql_def.yellow,  pr_mysql_def.red "
++                "       pr_mysql_def.yellow,  pr_mysql_def.red, pr_mysql_def.port "
+                 "FROM   pr_mysql_def, pr_realm "
+                 "WHERE  pr_mysql_def.id > 1 and pr_mysql_def.disable <> 'yes'"
+                 "       and pr_mysql_def.pgroup = '%d' and pr_realm.id = pr_mysql_def.domid",
+@@ -146,6 +146,7 @@
+     probe->query = strdup(row[8]);
+     probe->yellow = atof(row[9]);
+     probe->red = atof(row[10]);
++    probe->port = atoi(row[11]);
+     if (probe->msg) g_free(probe->msg);
+     probe->msg = NULL;
+     probe->seen = 1;
+@@ -212,6 +213,7 @@
+   }
+   sprintf(buffer, "%d", probe->probeid);      xmlSetProp(mysql, "id", buffer);
+   sprintf(buffer, "%s", probe->ipaddress);    xmlSetProp(mysql, "ipaddress", buffer);
++  sprintf(buffer, "%d", probe->port);         xmlSetProp(mysql, "port", buffer);
+   sprintf(buffer, "%d", (int) now);           xmlSetProp(mysql, "date", buffer);
+   sprintf(buffer, "%d", ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60)); 
+     xmlSetProp(mysql, "expires", buffer);
+@@ -245,6 +247,7 @@
+ void probe(gpointer data, gpointer user_data) 
+ { 
+   char *dbhost, *dbuser, *dbpasswd, *dbname;
++  int dbport;
+   struct probedef *probe = (struct probedef *)data;
+   MYSQL *mysql = mysql_init(NULL);
+   MYSQL_RES *result;
+@@ -252,13 +255,14 @@
+   unsigned int option;
+ 
+   dbhost = probe->ipaddress;
++  dbport = probe->port;
+   dbname = probe->dbname;
+   dbuser = probe->dbuser;
+   dbpasswd = probe->dbpasswd;
+ 
+   option = 50; mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *) &option);
+   gettimeofday(&start, NULL);
+-  if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
++  if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, dbport, NULL, 0)) {
+     probe->msg = strdup(mysql_error(mysql));
+     return;
+   }
+
+Modified: upwatch/trunk/uw_postgresql/probe.def
+===================================================================
+--- upwatch/trunk/uw_postgresql/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_postgresql/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -27,6 +27,14 @@
+     descrip = "target ip address";
+   };
+ 
++  def = {
++    name = "port";
++    type = "int";
++    null = false;
++    default = "5432";
++    descrip = "port to connect to";
++  };
++  
+   attribute = {
+     name = "realm";
+     required = true;
+
+Modified: upwatch/trunk/uw_postgresql/run.c
+===================================================================
+--- upwatch/trunk/uw_postgresql/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_postgresql/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -108,7 +108,7 @@
+                 "       pr_postgresql_def.ipaddress, pr_postgresql_def.dbname, "
+                 "       pr_postgresql_def.dbuser, pr_postgresql_def.dbpasswd,"
+                 "       pr_postgresql_def.query, "
+-                "       pr_postgresql_def.yellow,  pr_postgresql_def.red "
++                "       pr_postgresql_def.yellow,  pr_postgresql_def.red, pr_postgresql_def.port "
+                 "FROM   pr_postgresql_def, pr_realm "
+                 "WHERE  pr_postgresql_def.id > 1 and pr_postgresql_def.disable <> 'yes'"
+                 "       and pr_postgresql_def.pgroup = '%d' and pr_realm.id = pr_postgresql_def.domid",
+@@ -148,6 +148,7 @@
+     probe->query = strdup(row[8]);
+     probe->yellow = atof(row[9]);
+     probe->red = atof(row[10]);
++    probe->port = atoi(row[11]);
+     if (probe->msg) g_free(probe->msg);
+     probe->msg = NULL;
+     probe->seen = 1;
+@@ -214,6 +215,7 @@
+   }
+   sprintf(buffer, "%d", probe->probeid);      xmlSetProp(postgresql, "id", buffer);
+   sprintf(buffer, "%s", probe->ipaddress);    xmlSetProp(postgresql, "ipaddress", buffer);
++  sprintf(buffer, "%d", probe->port);         xmlSetProp(postgresql, "port", buffer);
+   sprintf(buffer, "%d", (int) now);           xmlSetProp(postgresql, "date", buffer);
+   sprintf(buffer, "%d", ((int)now)+((unsigned)OPT_VALUE_EXPIRES*60));
+     xmlSetProp(postgresql, "expires", buffer);
+@@ -249,6 +251,7 @@
+ void probe(gpointer data, gpointer user_data) 
+ { 
+   char *dbhost, *dbuser, *dbpasswd, *dbname;
++  char dbport[12];
+   struct probedef *probe = (struct probedef *)data;
+   PGconn *conn;
+   PGresult *res;
+@@ -260,13 +263,14 @@
+   }
+     
+   dbhost = probe->ipaddress;
++  sprintf(dbport, "%d", probe->port);
+   dbname = probe->dbname;
+   dbuser = probe->dbuser;
+   dbpasswd = probe->dbpasswd;
+ 
+   gettimeofday(&start, NULL);
+ 
+-  conn = PQsetdbLogin(dbhost, NULL, NULL, NULL, dbname, dbuser, dbpasswd);
++  conn = PQsetdbLogin(dbhost, dbport, NULL, NULL, dbname, dbuser, dbpasswd);
+   if (PQstatus(conn) == CONNECTION_BAD) {
+     probe->msg = strdup(PQerrorMessage(conn));
+     goto err_exit;
+
+Modified: upwatch/trunk/uw_process/notify.c
+===================================================================
+--- upwatch/trunk/uw_process/notify.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_process/notify.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -318,7 +318,7 @@
+   snprintf(body, sizeof(body), "Dear customer,\n\n"
+                 "Moments ago, at %s"
+                 "the status of probe %s\n"
+-                "at server %s\n"
++                "at server %s (id %d, realm %s)\n"
+                 "has changed from %s to %s\n"
+                 "%s:\n%s\n"
+                 "%s"
+@@ -327,7 +327,7 @@
+                 "%s\n", 
+                    ctime((time_t *)&t->res->stattime), 
+                    t->probe->module_name,
+-                   servername, 
++                   servername, t->def->server, t->res->realm,
+                    color2string(t->res->prevhistcolor), color2string(t->res->color),
+                    body_probe_def[0] ? "\nProbe details" : "", body_probe_def,
+                    msg,
+
+Modified: upwatch/trunk/uw_snmpget/probe.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/probe.def	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_snmpget/probe.def	2009-11-20 09:21:18 UTC (rev 695)
+@@ -33,6 +33,14 @@
+     descrip = "target ip address";
+   };
+ 
++  def = {
++    name = "port";
++    type = "int";
++    null = false;
++    default = "161";
++    descrip = "port to connect to";
++  };
++
+   attribute = {
+     name = "date";
+     required = true;
+
+Modified: upwatch/trunk/uw_snmpget/run.c
+===================================================================
+--- upwatch/trunk/uw_snmpget/run.c	2009-11-20 09:03:04 UTC (rev 694)
++++ upwatch/trunk/uw_snmpget/run.c	2009-11-20 09:21:18 UTC (rev 695)
+@@ -112,7 +112,7 @@
+   sprintf(qry,  "SELECT pr_snmpget_def.id, pr_snmpget_def.domid, pr_snmpget_def.tblid, pr_realm.name, "
+                 "       pr_snmpget_def.ipaddress, pr_snmpget_def.community, "
+                 "       pr_snmpget_def.OID, pr_snmpget_def.mode, pr_snmpget_def.multiplier, "
+-                "       pr_snmpget_def.yellow,  pr_snmpget_def.red "
++                "       pr_snmpget_def.yellow,  pr_snmpget_def.red, pr_snmpget_def.port "
+                 "FROM   pr_snmpget_def, pr_realm "
+                 "WHERE  pr_snmpget_def.id > 1 and pr_snmpget_def.disable <> 'yes'"
+                 "       and pr_snmpget_def.pgroup = '%d' and pr_realm.id = pr_snmpget_def.domid",
+@@ -151,6 +151,7 @@
+     probe->multiplier = atof(row[8]);
+     probe->yellow = atof(row[9]);
+     probe->red = atof(row[10]);
++    probe->port = atoi(row[11]);
+     if (probe->msg) g_free(probe->msg);
+     probe->msg = NULL;
+     probe->seen = 1;
+@@ -253,6 +254,7 @@
+   snmp_sess_init(&sess);			/* initialize session */
+   sess.version = SNMP_VERSION_1;
+   sess.peername = probe->ipaddress;
++  sess.remote_port = probe->port;
+   sess.community = probe->community;
+   sess.community_len = strlen(sess.community);
+   sess.callback = asynch_response;		/* default callback */
+@@ -332,6 +334,7 @@
+   }
+   sprintf(buffer, "%d", probe->probeid);      xmlSetProp(snmpget, "id", buffer);
+   sprintf(buffer, "%s", probe->ipaddress);    xmlSetProp(snmpget, "ipaddress", buffer);
++  sprintf(buffer, "%d", probe->port);         xmlSetProp(snmpget, "port", buffer);
+   sprintf(buffer, "%d", (int) now);           xmlSetProp(snmpget, "date", buffer);
+   sprintf(buffer, "%d", ((int)now)+((int)OPT_VALUE_EXPIRES*60));   xmlSetProp(snmpget, "expires", buffer);
+   sprintf(buffer, "%d", color);               xmlSetProp(snmpget, "color", buffer);
+
+
+
+From raarts at mail.berlios.de  Fri Nov 20 14:48:08 2009
+From: raarts at mail.berlios.de (raarts at BerliOS)
+Date: Fri, 20 Nov 2009 14:48:08 +0100
+Subject: [Upwatch-commits] r696 - upwatch/trunk/uw_sysstat
+Message-ID: <200911201348.nAKDm8RD011760@sheep.berlios.de>
+
+Author: raarts
+Date: 2009-11-20 14:48:07 +0100 (Fri, 20 Nov 2009)
+New Revision: 696
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Fix the skip-loadavgcheck-on-lockfile check. Log a message whenever this happens.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2009-11-20 09:21:18 UTC (rev 695)
++++ upwatch/trunk/uw_sysstat/run.c	2009-11-20 13:48:07 UTC (rev 696)
+@@ -84,6 +84,7 @@
+ {
+   struct stat fst;
+ 
++  memset(&st, 0, sizeof(st));
+   st.cpu = sg_get_cpu_percents();
+   if (!st.cpu) { LOG(LOG_INFO, "could not sg_get_cpu_stats"); }
+   st.mem = sg_get_mem_stats();
+@@ -91,11 +92,12 @@
+   st.swap = sg_get_swap_stats();
+   if (!st.swap) { LOG(LOG_INFO, "could not get_swap_stats"); }
+ 
++  memset(&fst, 0, sizeof(fst));
+   if (stat(OPT_ARG(LOADCHECK_LOCK), &fst) < 0 || (time(NULL) - fst.st_mtime) > 7200) {
+     st.load = sg_get_load_stats();
+     if (!st.load) { LOG(LOG_INFO, "could not get_load_stats"); }
+-    st.diskio = sg_get_disk_io_stats_diff(&(st.diskio_entries));
+-    if (!st.diskio) { LOG(LOG_INFO, "could not get_diskio_stats_diff"); }
++  } else {
++    LOG(LOG_INFO, "skipping loadavg check, because a recent %s exists", OPT_ARG(LOADCHECK_LOCK));
+   }
+ 
+   st.process = sg_get_process_stats(&st.process_entries);
+@@ -104,6 +106,8 @@
+   if (!st.paging) { LOG(LOG_INFO, "could not get_page_stats_diff"); }
+   st.network = sg_get_network_io_stats_diff(&(st.network_entries));
+   if (!st.network) { LOG(LOG_INFO, "could not get_network_stats_diff"); }
++  st.diskio = sg_get_disk_io_stats_diff(&(st.diskio_entries));
++  if (!st.diskio) { LOG(LOG_INFO, "could not get_diskio_stats_diff"); }
+   st.disk = sg_get_fs_stats(&(st.disk_entries));
+   if (!st.disk) { LOG(LOG_INFO, "could not get_disk_stats"); }
+   st.hostinfo = sg_get_host_info();
+
+
+

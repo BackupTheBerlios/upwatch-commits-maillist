@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r666 - upwatch/libdbi/uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r666%20-%20upwatch/libdbi/uw_process&In-Reply-To=%3C200701272049.l0RKnpYk024830%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000201.html">
+   <LINK REL="Next"  HREF="000202.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r666 - upwatch/libdbi/uw_process</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r666%20-%20upwatch/libdbi/uw_process&In-Reply-To=%3C200701272049.l0RKnpYk024830%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r666 - upwatch/libdbi/uw_process">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sat Jan 27 21:49:52 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000201.html">[Upwatch-commits] r665 - in upwatch/libdbi: . cfg common	compat/bb/bbhimport doc upwatch util uw_accept uw_acceptbb	uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql	uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql	uw_process uw_purple uw_route uw_send uw_setip uw_smtp	uw_snmpget uw_syncprobes uw_sysstat uw_sysstat/uw_sysstat.d/maillog	uw_sysstat/uw_sysstat.d/syslog uw_tcpconnect
+</A></li>
+        <LI>Next message: <A HREF="000202.html">[Upwatch-commits] r667 - upwatch/libdbi/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-27 21:49:51 +0100 (Sat, 27 Jan 2007)
+New Revision: 666
+
+Modified:
+   upwatch/libdbi/uw_process/uw_process.def
+Log:
+Remove ignored parameter realm from uw_process.def since it is already ignored via a realm_ign include.
+Fixes build with autogen 5.8.8
+
+
+Modified: upwatch/libdbi/uw_process/uw_process.def
+===================================================================
+--- upwatch/libdbi/uw_process/uw_process.def	2007-01-27 20:21:41 UTC (rev 665)
++++ upwatch/libdbi/uw_process/uw_process.def	2007-01-27 20:49:51 UTC (rev 666)
+@@ -81,15 +81,6 @@
+ };
+ 
+ flag = {
+-    name      = realm;
+-    value     = R;
+-    arg_type  = string;
+-    descrip   = &quot;ignored&quot;;
+-    doc       =
+-'uw_process ignores this parameter when it encounters it in fir example upwatch.conf';
+-};
+-
+-flag = {
+     name      = failures;
+     value     = f;
+     arg_type  = string;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000201.html">[Upwatch-commits] r665 - in upwatch/libdbi: . cfg common	compat/bb/bbhimport doc upwatch util uw_accept uw_acceptbb	uw_dns uw_httpget uw_imap uw_iptraf uw_mssql uw_mysql	uw_mysqlstats uw_null uw_ping uw_pop3 uw_postgresql	uw_process uw_purple uw_route uw_send uw_setip uw_smtp	uw_snmpget uw_syncprobes uw_sysstat uw_sysstat/uw_sysstat.d/maillog	uw_sysstat/uw_sysstat.d/syslog uw_tcpconnect
+</A></li>
+	<LI>Next message: <A HREF="000202.html">[Upwatch-commits] r667 - upwatch/libdbi/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r699 - upwatch/trunk/common
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2011-December/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r699%20-%20upwatch/trunk/common&In-Reply-To=%3C20111226195919.034C44812D7%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000233.html">
+   <LINK REL="Next"  HREF="000235.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r699 - upwatch/trunk/common</H1>
+    <B>raarts at mail.berlios.de</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r699%20-%20upwatch/trunk/common&In-Reply-To=%3C20111226195919.034C44812D7%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r699 - upwatch/trunk/common">raarts at mail.berlios.de
+       </A><BR>
+    <I>Mon Dec 26 20:59:18 CET 2011</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000233.html">[Upwatch-commits] r698 - in upwatch/trunk: . config
+</A></li>
+        <LI>Next message: <A HREF="000235.html">[Upwatch-commits] r700 - upwatch/trunk/upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#234">[ date ]</a>
+              <a href="thread.html#234">[ thread ]</a>
+              <a href="subject.html#234">[ subject ]</a>
+              <a href="author.html#234">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2011-12-26 20:59:18 +0100 (Mon, 26 Dec 2011)
+New Revision: 699
+
+Modified:
+   upwatch/trunk/common/probe.tpl
+Log:
+Discovered how to add comments to autogen template files.
+
+
+Modified: upwatch/trunk/common/probe.tpl
+===================================================================
+--- upwatch/trunk/common/probe.tpl	2011-12-26 18:11:29 UTC (rev 698)
++++ upwatch/trunk/common/probe.tpl	2011-12-26 19:59:18 UTC (rev 699)
+@@ -1,6 +1,6 @@
+ [+ AutoGen5 template def_mysql raw_mysql def_pgsql raw_pgsql def_h res_h enum xml dtd dtd-inc +]
+ [+ CASE (suffix) +][+
+-   == def_mysql +]--
++   == def_mysql +][+# =========== GENERATE DATABASE DEFINITION FOR THIS PROBE IN MYSQL FORMAT ========== +]--
+ [+(dne &quot;-- &quot;)+]
+ [+ FOR probe +]
+ --
+@@ -112,7 +112,7 @@
+ INSERT into probe set id = '[+id+]', name = '[+name+]', description = '[+descrip+]', [+
+  if (exist? &quot;expiry&quot;) +]expiry = '[+expiry+]', [+ endif +]addbyhand = '[+addbyhand+]', [+
+  if (exist? &quot;fuse&quot;) +]fuse = '[+fuse+]', [+ endif +]class = '[+class+]', graphgroup = '[+graphgroup+]', graphtypes = '[+graphtypes+]', comment = '[+comment+]';[+ ENDFOR probe +][+
+-   == def_pgsql +]--
++   == def_pgsql +][+# ============ GENERATE DATABASE DEFINITION FOR THIS PROBE IN POSTGRESQL FORMAT ===========  +]--
+ [+(dne &quot;-- &quot;)+]
+ [+ FOR probe +]
+ --
+@@ -232,7 +232,7 @@
+ +]) values ('[+id+]', '[+name+]', '[+descrip+]', '[+addbyhand+]', '[+class+]', '[+graphgroup+]', '[+graphtypes+]', '[+comment+]' [+
+  if (exist? &quot;expiry&quot;) +], '[+expiry+]'[+ endif +][+
+  if (exist? &quot;fuse&quot;) +], '[+fuse+]'[+ endif +]);[+ ENDFOR probe +][+
+-   == raw_mysql +]--
++   == raw_mysql +][+# ============ GENERATE DATABASE RESULT TABLES FOR THIS PROBE IN MYSQL FORMAT ============= +]--
+ [+(dne &quot;-- &quot;)+]
+ [+ FOR probe +]
+ [+ IF (count &quot;result&quot;) +]
+@@ -345,7 +345,7 @@
+ [+ ENDFOR period +]
+ [+ ENDIF  result +]
+ [+ ENDFOR probe +][+
+-   == raw_pgsql +]--
++   == raw_pgsql +][+# ============ GENERATE DATABASE RESULT TABLES FOR THIS PROBE IN POSTGRESQL FORMAT ============ +]--
+ [+(dne &quot;-- &quot;)+]
+ [+ FOR probe +]
+ [+ IF (count &quot;result&quot;) +]
+@@ -460,8 +460,7 @@
+ [+ ENDFOR period +]
+ [+ ENDIF  result +]
+ [+ ENDFOR probe +]
+-[+ == def_h
+-+]/*
++[+ == def_h +][+# ================ GENERATE DEFINITION FOR THIS PROBE IN C HEADER FORMAT =================== +]/*
+ [+(dne &quot; * &quot;)+]
+  */
+ /* probe specific part of C struct for [+table+] definition */
+@@ -488,8 +487,7 @@
+ IF unsigned +]unsigned [+
+ ENDIF+]
+   int [+name+];		/* [+descrip+] */[+ ESAC type +][+ ENDFOR def+][+ENDFOR probe+]
+-[+ == res_h
+-+]/*
++[+ == res_h +][+# ================== GENERATE RESULT FOR THIS PROBE IN C HEADER FORMAT ================== +]/*
+ [+(dne &quot; * &quot;)+]
+  */
+ /* probe specific part of C struct for [+table+] results */
+@@ -516,9 +514,9 @@
+ ENDIF+]int [+name+];    /* [+descrip+] */[+ ESAC type +][+ ENDFOR result+][+ ENDFOR probe +]
+ [+ == enum +][+ FOR probe 
+ +]PROBE_[+name+] = [+id+],
+-[+ ENDFOR probe +]
+-[+ == dtd-inc
+-+][+ FOR probe +][+ FOR element +]&lt;!ELEMENT [+name+] (#PCDATA)&gt;		&lt;!-- [+descrip+] --&gt;
++[+ ENDFOR probe +][+ 
++  == dtd-inc +][+# ================== GENERATE XML DTD FOR THIS PROBE ================== +][+ 
++FOR probe +][+ FOR element +]&lt;!ELEMENT [+name+] (#PCDATA)&gt;		&lt;!-- [+descrip+] --&gt;
+ [+ ENDFOR element +][+ FOR result +][+
+ IF (not (exist? &quot;noelement&quot;)) +]&lt;!ELEMENT [+name+] (#PCDATA)&gt;		&lt;!-- [+descrip+] --&gt;
+ [+ ENDIF element +][+ ENDFOR result +][+ ENDFOR probe +][+ == dtd
+@@ -531,7 +529,8 @@
+ +][+IF required+] #REQUIRED[+ENDIF required+]
+ [+ ENDFOR attribute +]&gt;
+ 
+-[+ ENDFOR probe +][+ == xml
++[+ ENDFOR probe +][+ 
++  == xml +][+# ====================== GENERATE XML DOCUMENTATION FOR THIS PROBE ========================
+ +]&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+ [+ FOR probe +]
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000233.html">[Upwatch-commits] r698 - in upwatch/trunk: . config
+</A></li>
+	<LI>Next message: <A HREF="000235.html">[Upwatch-commits] r700 - upwatch/trunk/upwatch
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#234">[ date ]</a>
+              <a href="thread.html#234">[ thread ]</a>
+              <a href="subject.html#234">[ subject ]</a>
+              <a href="author.html#234">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

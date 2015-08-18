@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r636 - upwatch/trunk/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r636%20-%20upwatch/trunk/util&In-Reply-To=%3C200608070946.k779kau4029165%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000171.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r636 - upwatch/trunk/util</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r636%20-%20upwatch/trunk/util&In-Reply-To=%3C200608070946.k779kau4029165%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r636 - upwatch/trunk/util">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Mon Aug  7 11:46:36 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000171.html">[Upwatch-commits] r637 -	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#170">[ date ]</a>
+              <a href="thread.html#170">[ thread ]</a>
+              <a href="subject.html#170">[ subject ]</a>
+              <a href="author.html#170">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-07 11:46:35 +0200 (Mon, 07 Aug 2006)
+New Revision: 636
+
+Modified:
+   upwatch/trunk/util/chklog.c
+Log:
+Fix chklog, I killed a warning the wrong way.
+
+
+
+Modified: upwatch/trunk/util/chklog.c
+===================================================================
+--- upwatch/trunk/util/chklog.c	2006-07-27 13:46:34 UTC (rev 635)
++++ upwatch/trunk/util/chklog.c	2006-08-07 09:46:35 UTC (rev 636)
+@@ -33,7 +33,7 @@
+ 
+   setvbuf(stdout, (char *)NULL, _IOLBF, 0); // make stdout linebuffered
+ 
+-  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) &amp;OPT_ARG(TYPE));
++  logregex_refresh_type(&quot;/etc/upwatch.d/uw_sysstat.d&quot;, (char *) OPT_ARG(TYPE));
+ 
+   if (strcmp(*argv, &quot;-&quot;) == 0) {
+     in = stdin;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000171.html">[Upwatch-commits] r637 -	upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#170">[ date ]</a>
+              <a href="thread.html#170">[ thread ]</a>
+              <a href="subject.html#170">[ subject ]</a>
+              <a href="author.html#170">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

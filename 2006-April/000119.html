@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r588 - in upwatch/trunk: upwatch uw_dns uw_httpget uw_imap uw_purple uw_route uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r588%20-%20in%20upwatch/trunk%3A%20upwatch%20uw_dns%20uw_httpget%20uw_imap%20uw_purple%20uw_route%20uw_sysstat&In-Reply-To=%3C200604161342.k3GDgmQJ016505%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000118.html">
+   <LINK REL="Next"  HREF="000120.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r588 - in upwatch/trunk: upwatch uw_dns uw_httpget uw_imap uw_purple uw_route uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r588%20-%20in%20upwatch/trunk%3A%20upwatch%20uw_dns%20uw_httpget%20uw_imap%20uw_purple%20uw_route%20uw_sysstat&In-Reply-To=%3C200604161342.k3GDgmQJ016505%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r588 - in upwatch/trunk: upwatch uw_dns uw_httpget uw_imap uw_purple uw_route uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Sun Apr 16 15:42:48 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000118.html">[Upwatch-commits] r587 - in upwatch/trunk: common upwatch
+</A></li>
+        <LI>Next message: <A HREF="000120.html">[Upwatch-commits] r589 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#119">[ date ]</a>
+              <a href="thread.html#119">[ thread ]</a>
+              <a href="subject.html#119">[ subject ]</a>
+              <a href="author.html#119">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-16 15:42:36 +0200 (Sun, 16 Apr 2006)
+New Revision: 588
+
+Modified:
+   upwatch/trunk/upwatch/spool.c
+   upwatch/trunk/upwatch/spool.h
+   upwatch/trunk/uw_dns/run.c
+   upwatch/trunk/uw_httpget/run.c
+   upwatch/trunk/uw_imap/run.c
+   upwatch/trunk/uw_purple/run.c
+   upwatch/trunk/uw_route/run.c
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Another wrong compiler warning fix I did not notice in my first tests. Fix spooling again. This was basically the same mistake as the logging bug
+
+Modified: upwatch/trunk/upwatch/spool.c
+===================================================================
+--- upwatch/trunk/upwatch/spool.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/upwatch/spool.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -30,7 +30,7 @@
+ static void alarm_handler(int sig); 
+ static void set_handler(int sig, void (*h)());
+  
+-int spool_result(char *basedir, char *target, xmlDocPtr doc, char **targetname)
++int spool_result(const char *basedir, const char *target, xmlDocPtr doc, char **targetname)
+ {
+   struct stat filestat;
+   int count;
+
+Modified: upwatch/trunk/upwatch/spool.h
+===================================================================
+--- upwatch/trunk/upwatch/spool.h	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/upwatch/spool.h	2006-04-16 13:42:36 UTC (rev 588)
+@@ -5,4 +5,4 @@
+ char *spool_tmpfilename(void *sp_info);
+ char *spool_targfilename(void *sp_info);
+ 
+-int spool_result(char *basedir, char *target, xmlDocPtr doc, char **targetname);
++int spool_result(const char *basedir, const char *target, xmlDocPtr doc, char **targetname);
+
+Modified: upwatch/trunk/uw_dns/run.c
+===================================================================
+--- upwatch/trunk/uw_dns/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_dns/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -279,7 +279,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+     if (strcmp(output[i], &quot;uw_test&quot;) == 0) 
+-      spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++      spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_httpget/run.c
+===================================================================
+--- upwatch/trunk/uw_httpget/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_httpget/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -269,7 +269,7 @@
+   g_hash_table_foreach(cache, write_probe, doc);
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+-    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++    spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_imap/run.c
+===================================================================
+--- upwatch/trunk/uw_imap/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_imap/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -235,7 +235,7 @@
+   g_hash_table_foreach(cache, write_probe, doc);
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   for (i=0; i &lt; ct; i++) {
+-    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++    spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+   }
+   xmlFreeDoc(doc);
+ }
+
+Modified: upwatch/trunk/uw_purple/run.c
+===================================================================
+--- upwatch/trunk/uw_purple/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_purple/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -74,7 +74,7 @@
+   }
+   if (count) {
+     xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+-    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(OUTPUT), doc, NULL);
++    spool_result(OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(OUTPUT), doc, NULL);
+     LOG(LOG_INFO, &quot;%s: purpled %u probes&quot;, dbspec-&gt;realm, count);
+   }
+ 
+
+Modified: upwatch/trunk/uw_route/run.c
+===================================================================
+--- upwatch/trunk/uw_route/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_route/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -183,7 +183,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+   if (HAVE_OPT(COPY) &amp;&amp; strcmp(OPT_ARG(COPY), &quot;none&quot;)) {
+     char *name = filebase;
+-    if (spool_result((char *) &amp;OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(COPY), doc, &amp;name)) {
++    if (spool_result(OPT_ARG(SPOOLDIR), OPT_ARG(COPY), doc, &amp;name)) {
+       free(name);
+     }
+   }
+@@ -289,7 +289,7 @@
+       // ensure they have unique filenames, or clashes are inevitable
+       // in a queue further on in the process.
+       sprintf(buffer, &quot;%s-%u&quot;, filebase, i);
+-      if (spool_result((char *) &amp;OPT_ARG(SPOOLDIR), route[i].queue, route[i].doc, &amp;name)) {
++      if (spool_result(OPT_ARG(SPOOLDIR), route[i].queue, route[i].doc, &amp;name)) {
+         free(name); // the returned name
+       }
+       xmlFreeDoc(route[i].doc);
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-04-16 12:53:50 UTC (rev 587)
++++ upwatch/trunk/uw_sysstat/run.c	2006-04-16 13:42:36 UTC (rev 588)
+@@ -637,10 +637,10 @@
+     // if status changed, it needs to be sent immediately. So drop into
+     // the high priority queue. Else just drop in the normal queue where
+     // uw_send in batched mode will pick it up later
+-    spool_result((char *) &amp;OPT_ARG(SPOOLDIR), (char *) &amp;OPT_ARG(HPQUEUE), doc, NULL);
++    spool_result(OPT_ARG(SPOOLDIR), OPT_ARG(HPQUEUE), doc, NULL);
+   } else {
+     for (i=0; i &lt; ct; i++) {
+-      spool_result((char *) &amp;OPT_ARG(SPOOLDIR), output[i], doc, NULL);
++      spool_result(OPT_ARG(SPOOLDIR), output[i], doc, NULL);
+     }
+   }
+   prv_highest_color = highest_color; // remember for next time
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000118.html">[Upwatch-commits] r587 - in upwatch/trunk: common upwatch
+</A></li>
+	<LI>Next message: <A HREF="000120.html">[Upwatch-commits] r589 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#119">[ date ]</a>
+              <a href="thread.html#119">[ thread ]</a>
+              <a href="subject.html#119">[ subject ]</a>
+              <a href="author.html#119">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

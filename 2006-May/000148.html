@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r614 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r614%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200605152224.k4FMOp3J015149%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000147.html">
+   <LINK REL="Next"  HREF="000149.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r614 - upwatch/trunk/uw_sysstat</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r614%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200605152224.k4FMOp3J015149%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r614 - upwatch/trunk/uw_sysstat">wijnand at berlios.de
+       </A><BR>
+    <I>Tue May 16 00:24:51 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000147.html">[Upwatch-commits] r613 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+</A></li>
+        <LI>Next message: <A HREF="000149.html">[Upwatch-commits] r615 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#148">[ date ]</a>
+              <a href="thread.html#148">[ thread ]</a>
+              <a href="subject.html#148">[ subject ]</a>
+              <a href="author.html#148">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-05-16 00:24:50 +0200 (Tue, 16 May 2006)
+New Revision: 614
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+When using OpenBSD, don't use the crappy xmbmon but use the platforms native sensors framework via sysctl(3).
+This can be beautified but it works solid for now and I am very happy with it.
+
+More information about the sensors framework: <A HREF="http://openbsd.org/papers/bsdcan06-biosensors.pdf">http://openbsd.org/papers/bsdcan06-biosensors.pdf</A>
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-05-15 18:36:04 UTC (rev 613)
++++ upwatch/trunk/uw_sysstat/run.c	2006-05-15 22:24:50 UTC (rev 614)
+@@ -22,6 +22,11 @@
+ #if USE_XMBMON
+ #include &quot;mbmon.h&quot;
+ #endif
++#ifdef __OpenBSD__
++#include &lt;sys/param.h&gt;
++#include &lt;sys/sysctl.h&gt;
++#include &lt;sys/sensors.h&gt;
++#endif
+ 
+ char ipaddress[24];
+ 
+@@ -54,7 +59,7 @@
+ } stats_t;
+ stats_t st;
+ 
+-#if USE_XMBMON
++#if USE_XMBMON|| defined (__OpenBSD__)
+ typedef struct {
+   float temp1;
+   float temp2;
+@@ -113,7 +118,57 @@
+   //       hw.vc0, hw.vc1, hw.v33, hw.v50p, hw.v12p, hw.v12n, hw.v50n);
+ }
+ #endif
++#ifdef __OpenBSD__
++void get_hwstats(void)
++{
++  int i;
++  struct sensor s; 
++  size_t slen = sizeof(s); 
++  float value;
++  for (i=0;i&lt;256;i++)
++  {
++    int mib[] = { CTL_HW, HW_SENSORS, i }; 
++    if ( sysctl(mib, sizeof(mib)/sizeof(mib[0]), &amp;s, &amp;slen, NULL, 0) == -1 ) continue;
++    if (s.flags &amp; SENSOR_FINVALID) continue;
+ 
++    /* Ok, we have a valid sensor now, now check the type */
++    switch (s.type) {
++      case SENSOR_TEMP:
++              if ( debug &gt; 5 ) printf(&quot;Sensor %d is a temparature sensor\n&quot;, s.num);
++              value = (s.value - 273150000) / 1000000.0;
++              if(strcmp(s.desc,&quot;Temp1&quot;)==0)  hw.temp1 = value; 
++              if(strcmp(s.desc,&quot;Temp2&quot;)==0)  hw.temp2 = value;
++              if(strcmp(s.desc,&quot;Temp3&quot;)==0)  hw.temp3 = value;
++              break;
++      case SENSOR_FANRPM:
++              if ( debug &gt; 4 ) printf(&quot;Sensor %d is a fan speed sensor\n&quot;, s.num);
++              if(strcmp(s.desc,&quot;Fan1&quot;)==0)  hw.rot1 = (int) s.value;
++              if(strcmp(s.desc,&quot;Fan2&quot;)==0)  hw.rot2 = (int) s.value;
++              if(strcmp(s.desc,&quot;Fan3&quot;)==0)  hw.rot3 = (int) s.value;
++              break;
++      case SENSOR_VOLTS_DC:
++              if ( debug &gt; 5 ) printf(&quot;Sensor %d is a voltage sensor\n&quot;, s.num);
++              value = s.value / 1000000.0;
++              if(strcmp(s.desc,&quot;VCore A&quot;)==0)  hw.vc0 = value;
++              if(strcmp(s.desc,&quot;VCore B&quot;)==0)  hw.vc1 = value;
++              if(strcmp(s.desc,&quot;+3.3V&quot;)==0)  hw.v33 = value;
++              if(strcmp(s.desc,&quot;+5V&quot;)==0)  hw.v50p = value;
++              if(strcmp(s.desc,&quot;+12V&quot;)==0)  hw.v12p = value;
++              if(strcmp(s.desc,&quot;-12V&quot;)==0)  hw.v12n = value;
++              if(strcmp(s.desc,&quot;-5V&quot;)==0)  hw.v50n = value;
++              break;
++      default:
++              if ( debug &gt; 5 ) printf(&quot;Sensor hw.sensors.%d is of a unknown type! It describes itselve as: %s\n&quot;, s.num, s.desc);
++              break;
++    }
++  }
++  if ( debug &gt; 4 ) printf(&quot;Temp = %4.1f, %4.1f, %4.1f;&quot;,hw.temp1, hw.temp2, hw.temp3);
++  if ( debug &gt; 4 ) printf(&quot;Rot = %4d, %4d, %4d\n&quot;, hw.rot1, hw.rot2, hw.rot3);
++  if ( debug &gt; 4 ) printf(&quot;Vcore = %4.2f, %4.2f\nVolt = %4.2f, %4.2f, %5.2f, %6.2f, %5.2f\n&quot;, 
++         hw.vc0, hw.vc1, hw.v33, hw.v50p, hw.v12p, hw.v12n, hw.v50n);
++}
++#endif
++
+ #if HAVE_LIBPCRE
+ #define STATFILE &quot;/var/run/upwatch/uw_sysstat.stat&quot;
+ int check_log(GString *string, int idx)
+@@ -330,7 +385,7 @@
+   return node;
+ }
+ 
+-#if USE_XMBMON
++#if USE_XMBMON || defined (__OpenBSD__)
+ void add_hwstat(xmlNodePtr node)
+ {
+   char buffer[24];
+@@ -613,8 +668,8 @@
+   add_sysstat_info(node);
+   color = xmlGetPropInt(node, &quot;color&quot;);
+   if (color &gt; highest_color) highest_color = color;
+-#if USE_XMBMON
+-  if (OPT_VALUE_HWSTATS) {
++#if USE_XMBMON|| defined (__OpenBSD__)
++  if (OPT_VALUE_HWSTATS || __OpenBSD__) { /* FIXME, should be optional for OpenBSD users too (should it?)*/
+     // do the hwstat
+     get_hwstats();
+     node = newnode(doc, &quot;hwstat&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000147.html">[Upwatch-commits] r613 - in upwatch/trunk/uw_sysstat/uw_sysstat.d: maillog quagga syslog
+</A></li>
+	<LI>Next message: <A HREF="000149.html">[Upwatch-commits] r615 - upwatch/trunk/uw_sysstat
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#148">[ date ]</a>
+              <a href="thread.html#148">[ thread ]</a>
+              <a href="subject.html#148">[ subject ]</a>
+              <a href="author.html#148">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

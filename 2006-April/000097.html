@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r566 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r566%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200604121342.k3CDgoHC030677%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000096.html">
+   <LINK REL="Next"  HREF="000098.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r566 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r566%20-%20upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog&In-Reply-To=%3C200604121342.k3CDgoHC030677%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r566 - upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Apr 12 15:42:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000096.html">[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+        <LI>Next message: <A HREF="000098.html">[Upwatch-commits] r567 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-04-12 15:42:32 +0200 (Wed, 12 Apr 2006)
+New Revision: 566
+
+Modified:
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+   upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+Log:
+Regex sync + green -&gt; ignore fixes.
+
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-11 16:19:02 UTC (rev 565)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/gdm	2006-04-12 13:42:32 UTC (rev 566)
+@@ -1,5 +1,5 @@
+ green [LOGDATE] gdm-binary[PID]: Couldn't authenticate user
+-green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
+-green [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
++ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [HOSTNAME]:[NUM]
++ignore [LOGDATE] gdm[PID]: gdm_slave_xioerror_handler: Fatal X error - Restarting [IPADDR]:[NUM]
+ green [LOGDATE] gdm[PID]: QUERY_VT request denied: Not authenticated
+ green [LOGDATE] gdm[PID]: QUERY_LOGOUT_ACTION request denied: Not authenticated
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-04-11 16:19:02 UTC (rev 565)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/openntpd	2006-04-12 13:42:32 UTC (rev 566)
+@@ -13,4 +13,5 @@
+ green [LOGDATE] ntpd[PID]: recvfrom [IPADDR]: Connection refused
+ green [LOGDATE] ntpd[PID]: reply from [IPADDR]: not synced, next query [NUM]s
+ green [LOGDATE] ntpd[PID]: sendto: Operation not permitted
++green [LOGDATE] ntpd[PID]: sendto: Connection refused
+ red [LOGDATE] ntpd[PID]: adjtime failed: Invalid argument
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-11 16:19:02 UTC (rev 565)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/smb	2006-04-12 13:42:32 UTC (rev 566)
+@@ -3,11 +3,14 @@
+ green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] client/smbmount.c:send_fs_socket\([NUM]\)
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/access.c:check_access\([NUM]\)
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:get_peer_addr\([NUM]\)
+-green [LOGDATE] smbd[PID]: read_socket_data: recv failure for [NUM]. Error = Connection reset by peer
+-green [LOGDATE] smbd[PID]: getpeername failed. Error was Transport endpoint is not connected
++ignore [LOGDATE] smbd[PID]: getpeername failed. Error was Transport endpoint is not connected
+ green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:read_socket_data\([NUM]\)
+-green [LOGDATE] smb_lookup: find .* failed, error=-512
++ignore [LOGDATE] smb_lookup: find .* failed, error=-512
+ green [LOGDATE] smb_add_request: request \[.*, .*\] timed out!
+ green [LOGDATE] mount.smbfs[PID]: tdb\([PATH]\): tdb_lock failed on list [NUM] ltype=[NUM] \(Bad file descriptor\)
+ green [LOGDATE] mount.smbfs[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] tdb/tdbutil.c:tdb_log\([NUM]\) 
+ green [LOGDATE] kernel: smb_proc_readX_data:
++ignore [LOGDATE] smbd[PID]: Error writing [NUM] bytes to client. [NUM]. \(Connection reset by peer\)
++green [LOGDATE] smbd[PID]: \[[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:send_smb\([NUM]\)
++ignore [LOGDATE] smbd[PID]: write_socket_data: write failure. Error = Connection reset by peer
++green [LOGDATE] smbd[PID]: [[NUM]/[NUM]/[NUM] [NUM]:[NUM]:[NUM], [NUM]\] lib/util_sock.c:write_socket_data\([NUM]\) 
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-04-11 16:19:02 UTC (rev 565)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.d/syslog/sshd	2006-04-12 13:42:32 UTC (rev 566)
+@@ -32,7 +32,7 @@
+ green [LOGDATE] sshd[PID]: fatal: Did not receive ident string\.
+ ignore [LOGDATE] sshd[PID]: fatal: Read error from remote host: Connection reset by peer
+ green [LOGDATE] sshd[PID]: fatal: Read from socket failed: Connection reset by peer
+-green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: Connection reset by peer
++ignore [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: Connection reset by peer
+ green [LOGDATE] sshd[PID]: fatal: Timeout before authentication for [IPADDR]
+ green [LOGDATE] sshd[PID]: Found matching DSA key: [MACADDR]
+ green [LOGDATE] sshd[PID]: Generating new [NUM] bit RSA key\.
+@@ -67,8 +67,8 @@
+ ignore [LOGDATE] sshd[PID]: syslogin_perform_logout: logout\(\) returned an error
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old modulus
+ green [LOGDATE] sshd[PID]: WARNING: [PATH] does not exist, using old prime
+-green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: No route to host
++ignore [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: No route to host
+ green [LOGDATE] sshd[PID]: input_userauth_request: invalid user [USER]
+ green [LOGDATE] sshd[PID]: Authentication refused: bad ownership or modes for file [PATH]
+ green [LOGDATE] sshd: sshd shutdown failed
+-green [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: Connection timed out
++ignore [LOGDATE] sshd[PID]: Read error from remote host [IPADDR]: Connection timed out
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000096.html">[Upwatch-commits] r565 - upwatch/trunk/uw_sysstat/uw_sysstat.d/upwatch
+</A></li>
+	<LI>Next message: <A HREF="000098.html">[Upwatch-commits] r567 - upwatch/trunk/uw_process
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

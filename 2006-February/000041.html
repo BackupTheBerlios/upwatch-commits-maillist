@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r510 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r510%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200602232159.k1NLxEEw006847%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000040.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r510 - upwatch/trunk/uw_sysstat</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r510%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200602232159.k1NLxEEw006847%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r510 - upwatch/trunk/uw_sysstat">raarts at berlios.de
+       </A><BR>
+    <I>Thu Feb 23 22:59:14 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000040.html">[Upwatch-commits] r509 - upwatch/trunk/uw_process
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2006-02-23 22:59:14 +0100 (Thu, 23 Feb 2006)
+New Revision: 510
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+(feature) Scanning the logs is pretty CPU intensive. We now
+increase niceness to +5 so we won't bother other processes
+too much.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-02-18 22:48:13 UTC (rev 509)
++++ upwatch/trunk/uw_sysstat/run.c	2006-02-23 21:59:14 UTC (rev 510)
+@@ -10,6 +10,8 @@
+ 
+ #include &lt;sys/types.h&gt;
+ #include &lt;sys/stat.h&gt;
++#include &lt;sys/time.h&gt;
++#include &lt;sys/resource.h&gt;
+ #include &lt;dirent.h&gt;
+ #include &lt;ctype.h&gt;
+ #include &lt;fcntl.h&gt;
+@@ -303,6 +305,8 @@
+   every = EVERY_SECOND;
+   xmlSetGenericErrorFunc(NULL, UpwatchXmlGenericErrorFunc);
+   sleep(2); // ensure we wait until the next minute
++
++  setpriority(PRIO_PROCESS, 0, 5); // we are not very important - be nice to other processes
+   return 1;
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000040.html">[Upwatch-commits] r509 - upwatch/trunk/uw_process
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

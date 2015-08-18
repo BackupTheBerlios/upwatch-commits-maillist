@@ -1,0 +1,494 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r505 - upwatch/trunk/upwatch
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r505%20-%20upwatch/trunk/upwatch&In-Reply-To=%3C200510222019.j9MKJ7RN027347%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000035.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r505 - upwatch/trunk/upwatch</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r505%20-%20upwatch/trunk/upwatch&In-Reply-To=%3C200510222019.j9MKJ7RN027347%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r505 - upwatch/trunk/upwatch">wijnand at berlios.de
+       </A><BR>
+    <I>Sat Oct 22 22:19:07 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000035.html">[Upwatch-commits] r504 - upwatch/trunk/upwatch
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-10-22 22:19:06 +0200 (Sat, 22 Oct 2005)
+New Revision: 505
+
+Modified:
+   upwatch/trunk/upwatch/pr_generic.c
+   upwatch/trunk/upwatch/pr_httpget.c
+   upwatch/trunk/upwatch/pr_hwstat.c
+   upwatch/trunk/upwatch/pr_iptraf.c
+   upwatch/trunk/upwatch/pr_mysqlstats.c
+   upwatch/trunk/upwatch/pr_ping.c
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/pr_snmpget.c
+   upwatch/trunk/upwatch/pr_sysstat.c
+   upwatch/trunk/upwatch/xml.c
+   upwatch/trunk/upwatch/xml.h
+Log:
+Used a better method for namespace checking, comparing
+pointer does not seem to future-resistant....
+
+Fix by raarts@
+
+
+Modified: upwatch/trunk/upwatch/pr_generic.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_generic.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_generic.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -23,11 +23,11 @@
+ {
+   struct ct_result *res = (struct ct_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;connect&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;connect&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;connect = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;total&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;total&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;total = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_httpget.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_httpget.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_httpget.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,19 +17,19 @@
+ {
+   struct httpget_result *res = (struct httpget_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;lookup&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;lookup&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;lookup = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;connect&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;connect&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;connect = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;pretransfer&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;pretransfer&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;pretransfer = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;total&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;total&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;total = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_hwstat.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_hwstat.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_hwstat.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,55 +17,55 @@
+ {
+   struct hwstat_result *res = (struct hwstat_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp1&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp1&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;temp1 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp2&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp2&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;temp2 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp3&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;temp3&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;temp3 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot1&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot1&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;rot1 = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot2&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot2&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;rot2 = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot3&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;rot3&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;rot3 = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;vc0&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;vc0&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;vc0 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;vc1&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;vc1&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;vc1 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v33&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v33&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;v33 = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v50p&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v50p&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;v50p = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v12p&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v12p&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;v12p = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v12n&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v12n&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;v12n = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v50n&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;v50n&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;v50n = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_iptraf.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_iptraf.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_iptraf.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -36,19 +36,19 @@
+ {
+   struct iptraf_result *res = (struct iptraf_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;incoming&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;incoming&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;incoming = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;in&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;in&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;incoming = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;outgoing&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;outgoing&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;outgoing = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;out&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;out&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;outgoing = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_mysqlstats.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_mysqlstats.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_mysqlstats.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,19 +17,19 @@
+ {
+   struct mysqlstats_result *res = (struct mysqlstats_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;selectq&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;selectq&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;selectq = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;insertq&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;insertq&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;insertq = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;updateq&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;updateq&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;updateq = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;deleteq&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;deleteq&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;deleteq = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_ping.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_ping.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_ping.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,19 +17,19 @@
+ {
+   struct ping_result *res = (struct ping_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;lowest&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;lowest&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;lowest = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;average&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;average&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;average = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;value&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;value&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;average = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;highest&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;highest&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;highest = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_process.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -35,7 +35,7 @@
+   int found = FALSE;
+ 
+   for (cur = cur-&gt;xmlChildrenNode; cur != NULL; cur = cur-&gt;next) {
+-    if ((!xmlStrcmp(cur-&gt;name, (const xmlChar *) name)) &amp;&amp; (cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(cur-&gt;name, (const xmlChar *) name)) &amp;&amp; (xmlNsEqual(cur-&gt;ns, t-&gt;ns))) {
+       xmlNodeSetContent(cur, value);
+       found = TRUE;
+       break;
+@@ -92,11 +92,11 @@
+     char *p;
+ 
+     if (xmlIsBlankNode(t-&gt;cur)) continue;
+-    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;color&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;color&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+       res-&gt;color = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+       continue;
+     }
+-    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;info&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;info&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+       p = xmlNodeListGetString(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+       if (p) { 
+         res-&gt;message = strdup(p); 
+@@ -104,11 +104,11 @@
+       }
+       continue;
+     }
+-    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;prevcolor&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;prevcolor&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+       res-&gt;prevcolor = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+       continue;
+     }
+-    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;host&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;host&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+       p = xmlNodeListGetString(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+       if (p) { 
+         res-&gt;hostname = strdup(p); 
+@@ -116,12 +116,12 @@
+       }
+       continue;
+     }
+-    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;host&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++    if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;host&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+       xmlNodePtr hname;
+ 
+       for (hname = t-&gt;cur-&gt;xmlChildrenNode; hname != NULL; hname = hname-&gt;next) {
+         if (xmlIsBlankNode(hname)) continue;
+-        if ((!xmlStrcmp(hname-&gt;name, (const xmlChar *) &quot;hostname&quot;)) &amp;&amp; (hname-&gt;ns == t-&gt;ns)) {
++        if ((!xmlStrcmp(hname-&gt;name, (const xmlChar *) &quot;hostname&quot;)) &amp;&amp; (xmlNsEqual(hname-&gt;ns, t-&gt;ns))) {
+           p = xmlNodeListGetString(t-&gt;doc, hname-&gt;xmlChildrenNode, 1);
+           if (p) {
+             res-&gt;hostname = strdup(p);
+@@ -129,7 +129,7 @@
+           }
+           continue;
+         }
+-        if ((!xmlStrcmp(hname-&gt;name, (const xmlChar *) &quot;ipaddress&quot;)) &amp;&amp; (hname-&gt;ns == t-&gt;ns)) {
++        if ((!xmlStrcmp(hname-&gt;name, (const xmlChar *) &quot;ipaddress&quot;)) &amp;&amp; (xmlNsEqual(hname-&gt;ns, t-&gt;ns))) {
+           p = xmlNodeListGetString(t-&gt;doc, hname-&gt;xmlChildrenNode, 1);
+           if (p) {
+             res-&gt;ipaddress = strdup(p);
+@@ -456,8 +456,9 @@
+       } else if (strcmp(t-&gt;cur-&gt;name, modules[i]-&gt;module_name)) {
+         continue;
+       } 
++      xmlReconciliateNs(t-&gt;doc, t-&gt;cur);
+ 
+-      if (t-&gt;cur-&gt;ns != t-&gt;ns) {
++      if (!xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns)) {
+         LOG(LOG_WARNING, &quot;%s: namespace %s != %s&quot;, t-&gt;cur-&gt;name, t-&gt;cur-&gt;ns, t-&gt;ns);
+         //continue;
+       }
+
+Modified: upwatch/trunk/upwatch/pr_snmpget.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_snmpget.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_snmpget.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,7 +17,7 @@
+ {
+   struct snmpget_result *res = (struct snmpget_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;value&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;value&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;value = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/pr_sysstat.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_sysstat.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/pr_sysstat.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -17,59 +17,59 @@
+ {
+   struct sysstat_result *res = (struct sysstat_result *)t-&gt;res;
+ 
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;loadavg&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;loadavg&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;loadavg = xmlNodeListGetFloat(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;user&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;user&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;user = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;system&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;system&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;system = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;idle&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;idle&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;idle = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapin&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapin&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;swapin = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapout&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapout&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;swapout = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;blockin&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;blockin&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;blockin = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;blockout&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;blockout&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;blockout = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapped&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;swapped&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;swapped = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;free&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;free&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;free = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;buffered&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;buffered&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;buffered = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;cached&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;cached&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;cached = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;used&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;used&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;used = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+-  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;systemp&quot;)) &amp;&amp; (t-&gt;cur-&gt;ns == t-&gt;ns)) {
++  if ((!xmlStrcmp(t-&gt;cur-&gt;name, (const xmlChar *) &quot;systemp&quot;)) &amp;&amp; (xmlNsEqual(t-&gt;cur-&gt;ns, t-&gt;ns))) {
+     res-&gt;systemp = xmlNodeListGetInt(t-&gt;doc, t-&gt;cur-&gt;xmlChildrenNode, 1);
+     return;
+   }
+
+Modified: upwatch/trunk/upwatch/xml.c
+===================================================================
+--- upwatch/trunk/upwatch/xml.c	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/xml.c	2005-10-22 20:19:06 UTC (rev 505)
+@@ -132,3 +132,16 @@
+   return(ret);
+ }
+ 
++int xmlNsEqual(xmlNs *ns1, xmlNs *ns2) {
++  if (ns1 == NULL &amp;&amp; ns2 == NULL) return 1;
++  if (ns1 == NULL || ns2 == NULL) return 0;
++
++  if (ns1-&gt;type != XML_NAMESPACE_DECL || ns2-&gt;type != XML_NAMESPACE_DECL) {
++    return 0;
++  }
++
++  if (ns1-&gt;href == NULL || ns2-&gt;href == NULL) {
++    return 0;
++  }  
++  return xmlStrcmp(ns1-&gt;href, ns2-&gt;href) ? 0 : 1;
++}
+
+Modified: upwatch/trunk/upwatch/xml.h
+===================================================================
+--- upwatch/trunk/upwatch/xml.h	2005-10-19 11:40:48 UTC (rev 504)
++++ upwatch/trunk/upwatch/xml.h	2005-10-22 20:19:06 UTC (rev 505)
+@@ -11,3 +11,5 @@
+ 
+ void UpwatchXmlGenericErrorFunc(void *ctx, const char *fmt, ...);
+ 
++int xmlNsEqual(xmlNs *ns1, xmlNs *ns2);
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000035.html">[Upwatch-commits] r504 - upwatch/trunk/upwatch
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

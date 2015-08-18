@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r669 - in upwatch/libdbi: common uw_process
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r669%20-%20in%20upwatch/libdbi%3A%20common%20uw_process&In-Reply-To=%3C200701272354.l0RNsfrE004123%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000203.html">
+   <LINK REL="Next"  HREF="000205.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r669 - in upwatch/libdbi: common uw_process</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r669%20-%20in%20upwatch/libdbi%3A%20common%20uw_process&In-Reply-To=%3C200701272354.l0RNsfrE004123%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r669 - in upwatch/libdbi: common uw_process">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Sun Jan 28 00:54:41 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000203.html">[Upwatch-commits] r668 - upwatch/libdbi/common
+</A></li>
+        <LI>Next message: <A HREF="000205.html">[Upwatch-commits] r670 - upwatch/libdbi/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2007-01-28 00:54:39 +0100 (Sun, 28 Jan 2007)
+New Revision: 669
+
+Modified:
+   upwatch/libdbi/common/db.c
+   upwatch/libdbi/uw_process/run.c
+Log:
+initialize libdbi before using it, it needs that to find drivers and load stuff in memory
+
+
+Modified: upwatch/libdbi/common/db.c
+===================================================================
+--- upwatch/libdbi/common/db.c	2007-01-27 23:15:58 UTC (rev 668)
++++ upwatch/libdbi/common/db.c	2007-01-27 23:54:39 UTC (rev 669)
+@@ -20,7 +20,9 @@
+ {
+   dbi_conn conn;
+ 
++  dbi_initialize(NULL);
+   conn = dbi_conn_new(dbtype);
++  if ( ! conn ) { LOG(LOG_ERR, &quot;Cannot start a connection with driver %s&quot;, dbtype); }
+ 
+   dbi_conn_set_option(conn, &quot;host&quot;, dbhost);
+   dbi_conn_set_option(conn, &quot;port&quot;, dbport);
+
+Modified: upwatch/libdbi/uw_process/run.c
+===================================================================
+--- upwatch/libdbi/uw_process/run.c	2007-01-27 23:15:58 UTC (rev 668)
++++ upwatch/libdbi/uw_process/run.c	2007-01-27 23:54:39 UTC (rev 669)
+@@ -273,7 +273,7 @@
+       dbi_result_free(result);
+     }
+     close_database(db);
+-  }
++  } 
+ 
+   for (i = 0; modules[i]; i++) {
+     dbi_result result;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000203.html">[Upwatch-commits] r668 - upwatch/libdbi/common
+</A></li>
+	<LI>Next message: <A HREF="000205.html">[Upwatch-commits] r670 - upwatch/libdbi/common
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

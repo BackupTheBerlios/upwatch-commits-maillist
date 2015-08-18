@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r696 - upwatch/trunk/uw_sysstat
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2009-November/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r696%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200911201348.nAKDm8RD011760%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000230.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r696 - upwatch/trunk/uw_sysstat</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r696%20-%20upwatch/trunk/uw_sysstat&In-Reply-To=%3C200911201348.nAKDm8RD011760%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r696 - upwatch/trunk/uw_sysstat">raarts at mail.berlios.de
+       </A><BR>
+    <I>Fri Nov 20 14:48:08 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000230.html">[Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql	uw_postgresql uw_process uw_snmpget
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#231">[ date ]</a>
+              <a href="thread.html#231">[ thread ]</a>
+              <a href="subject.html#231">[ subject ]</a>
+              <a href="author.html#231">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2009-11-20 14:48:07 +0100 (Fri, 20 Nov 2009)
+New Revision: 696
+
+Modified:
+   upwatch/trunk/uw_sysstat/run.c
+Log:
+Fix the skip-loadavgcheck-on-lockfile check. Log a message whenever this happens.
+
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2009-11-20 09:21:18 UTC (rev 695)
++++ upwatch/trunk/uw_sysstat/run.c	2009-11-20 13:48:07 UTC (rev 696)
+@@ -84,6 +84,7 @@
+ {
+   struct stat fst;
+ 
++  memset(&amp;st, 0, sizeof(st));
+   st.cpu = sg_get_cpu_percents();
+   if (!st.cpu) { LOG(LOG_INFO, &quot;could not sg_get_cpu_stats&quot;); }
+   st.mem = sg_get_mem_stats();
+@@ -91,11 +92,12 @@
+   st.swap = sg_get_swap_stats();
+   if (!st.swap) { LOG(LOG_INFO, &quot;could not get_swap_stats&quot;); }
+ 
++  memset(&amp;fst, 0, sizeof(fst));
+   if (stat(OPT_ARG(LOADCHECK_LOCK), &amp;fst) &lt; 0 || (time(NULL) - fst.st_mtime) &gt; 7200) {
+     st.load = sg_get_load_stats();
+     if (!st.load) { LOG(LOG_INFO, &quot;could not get_load_stats&quot;); }
+-    st.diskio = sg_get_disk_io_stats_diff(&amp;(st.diskio_entries));
+-    if (!st.diskio) { LOG(LOG_INFO, &quot;could not get_diskio_stats_diff&quot;); }
++  } else {
++    LOG(LOG_INFO, &quot;skipping loadavg check, because a recent %s exists&quot;, OPT_ARG(LOADCHECK_LOCK));
+   }
+ 
+   st.process = sg_get_process_stats(&amp;st.process_entries);
+@@ -104,6 +106,8 @@
+   if (!st.paging) { LOG(LOG_INFO, &quot;could not get_page_stats_diff&quot;); }
+   st.network = sg_get_network_io_stats_diff(&amp;(st.network_entries));
+   if (!st.network) { LOG(LOG_INFO, &quot;could not get_network_stats_diff&quot;); }
++  st.diskio = sg_get_disk_io_stats_diff(&amp;(st.diskio_entries));
++  if (!st.diskio) { LOG(LOG_INFO, &quot;could not get_diskio_stats_diff&quot;); }
+   st.disk = sg_get_fs_stats(&amp;(st.disk_entries));
+   if (!st.disk) { LOG(LOG_INFO, &quot;could not get_disk_stats&quot;); }
+   st.hostinfo = sg_get_host_info();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000230.html">[Upwatch-commits] r695 - in upwatch/trunk: config uw_mysql	uw_postgresql uw_process uw_snmpget
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#231">[ date ]</a>
+              <a href="thread.html#231">[ thread ]</a>
+              <a href="subject.html#231">[ subject ]</a>
+              <a href="author.html#231">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

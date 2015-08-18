@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r492 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r492%20-%20upwatch/trunk&In-Reply-To=%3C200508312101.j7VL1Ofn004383%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r492 - upwatch/trunk</H1>
+    <B>Wijnand Wiersma at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r492%20-%20upwatch/trunk&In-Reply-To=%3C200508312101.j7VL1Ofn004383%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r492 - upwatch/trunk">wijnand at berlios.de
+       </A><BR>
+    <I>Wed Aug 31 23:01:24 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[Upwatch-commits] r491 - upwatch/trunk/uw_postgresql
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2005-08-31 23:01:22 +0200 (Wed, 31 Aug 2005)
+New Revision: 492
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+/usr/include/postgresql is also a possible place for the include file. Still not elegant though.
+
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-08-31 20:47:19 UTC (rev 491)
++++ upwatch/trunk/configure.ac	2005-08-31 21:01:22 UTC (rev 492)
+@@ -587,6 +587,10 @@
+ 	then
+ 		LIBPQ_CFLAGS=-I/usr/include/pgsql
+ 	fi
++	if test -f /usr/include/postgresql/libpq-fe.h
++	then
++		LIBPQ_CFLAGS=-I/usr/include/postgresql
++	fi
+ fi
+ AM_CONDITIONAL(HAVE_LIBPQ, test $HAVE_LIBPQ -eq 1)
+ AC_SUBST(LIBPQ_LIBS)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[Upwatch-commits] r491 - upwatch/trunk/uw_postgresql
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r655 - upwatch/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r655%20-%20upwatch/trunk&In-Reply-To=%3C200610182159.k9ILxb5c001864%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000189.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r655 - upwatch/trunk</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r655%20-%20upwatch/trunk&In-Reply-To=%3C200610182159.k9ILxb5c001864%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r655 - upwatch/trunk">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Wed Oct 18 23:59:37 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000189.html">[Upwatch-commits] r654 - upwatch/trunk
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-10-18 23:59:37 +0200 (Wed, 18 Oct 2006)
+New Revision: 655
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+nicer fix
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2006-10-18 21:47:35 UTC (rev 654)
++++ upwatch/trunk/configure.ac	2006-10-18 21:59:37 UTC (rev 655)
+@@ -266,7 +266,7 @@
+   do
+     if test -f $libpath/libopts.a
+     then
+-      LIBOPTS_LIBS=$libpath/libopts.a
++      LIBOPTS_LIBS=&quot;-L$libpath -lopts&quot;
+     fi
+   done
+ fi
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000189.html">[Upwatch-commits] r654 - upwatch/trunk
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

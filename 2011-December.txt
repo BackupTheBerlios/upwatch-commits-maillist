@@ -1,0 +1,924 @@
+From raarts at mail.berlios.de  Mon Dec 26 18:34:58 2011
+From: raarts at mail.berlios.de (raarts at mail.berlios.de)
+Date: Mon, 26 Dec 2011 18:34:58 +0100
+Subject: [Upwatch-commits] r697 - in upwatch/trunk: . common config
+	uw_acceptbb uw_snmpget uw_sysstat
+Message-ID: <20111226173458.87A054812B5@sheep.berlios.de>
+
+Author: raarts
+Date: 2011-12-26 18:34:57 +0100 (Mon, 26 Dec 2011)
+New Revision: 697
+
+Added:
+   upwatch/trunk/config/upwatch-common.pgsql
+   upwatch/trunk/config/upwatch-full.pgsql
+   upwatch/trunk/config/upwatch-realm.pgsql
+Modified:
+   upwatch/trunk/Makefile.am
+   upwatch/trunk/Makefile.am.common
+   upwatch/trunk/common/probe.tpl
+   upwatch/trunk/config/Makefile.am
+   upwatch/trunk/uw_acceptbb/probe.def
+   upwatch/trunk/uw_snmpget/probe.def
+   upwatch/trunk/uw_sysstat/probe.def
+Log:
+Create PostgreSQL database files as well. Tested the resulting SQL, and it is processed correclty by PostgreSQL.
+
+
+Modified: upwatch/trunk/Makefile.am
+===================================================================
+--- upwatch/trunk/Makefile.am	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/Makefile.am	2011-12-26 17:34:57 UTC (rev 697)
+@@ -69,7 +69,7 @@
+ 
+ DIST_SUBDIRS = ${SUBDIRS} doc
+ 
+-dist_doc_DATA = AUTHORS COPYING NEWS README upwatch-base.mysql upwatch-full.mysql
++dist_doc_DATA = AUTHORS COPYING NEWS README upwatch-base.mysql upwatch-full.mysql upwatch-base.pgsql upwatch-full.pgsql
+ 
+ if ENABLE_SERVER
+ SERVER_DIST = probes.enum 
+@@ -93,6 +93,19 @@
+ upwatch-full.mysql: config/upwatch-full.mysql config/upwatch-common.mysql uw_*/probe.def_mysql uw_*/probe.raw_mysql
+ 	cat $+ > upwatch-full.mysql
+ 
++upwatch-base.pgsql: config/upwatch-realm.pgsql config/upwatch-common.pgsql uw_*/probe.def_pgsql
++	echo "CREATE DOMAIN uinteger AS INTEGER CHECK( VALUE >= '0');" > upwatch-base.pgsql
++	echo "CREATE DOMAIN usmallint AS SMALLINT CHECK( VALUE >= '0');" >> upwatch-base.pgsql
++	echo "CREATE DOMAIN ubigint AS BIGINT CHECK( VALUE >= '0');" >> upwatch-base.pgsql
++	echo "BEGIN;" >> upwatch-base.pgsql
++	cat $+ >> upwatch-base.pgsql
++	echo "ROLLBACK;" >> upwatch-base.pgsql
++
++upwatch-full.pgsql: config/upwatch-full.pgsql config/upwatch-common.pgsql uw_*/probe.def_pgsql uw_*/probe.raw_pgsql
++	echo "BEGIN;" > upwatch-full.pgsql
++	cat $+ >> upwatch-full.pgsql
++	echo "ROLLBACK;" >> upwatch-full.pgsql
++
+ force:
+ 	touch force
+ 
+@@ -100,7 +113,7 @@
+ 	svnversion . > RELEASE
+ 	rm -f force
+ 
+-CLEANFILES = upwatch.mysql upwatch.spec upwatch-*.tar.gz
++CLEANFILES = upwatch.mysql upwatch.pgsql upwatch.spec upwatch-*.tar.gz
+ 
+ install-data-local:
+ 	if test `${ID} -u` -eq 0; then \
+
+Modified: upwatch/trunk/Makefile.am.common
+===================================================================
+--- upwatch/trunk/Makefile.am.common	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/Makefile.am.common	2011-12-26 17:34:57 UTC (rev 697)
+@@ -25,7 +25,7 @@
+ 
+ SPECFILES = $(program:%=%.spec-requires) $(program:%=%.spec-buildrequires) $(program:%=%.spec-files)
+ INITFILES = $(program:%=%.redhat) $(program:%=%.suse) $(program:%=%.solaris) $(program:%=%.debian)
+-PROBFILES  = probe.def_h probe.res_h probe.enum probe.def_mysql probe.raw_mysql probe.xml probe.dtd probe.dtd-inc
++PROBFILES  = probe.def_h probe.res_h probe.enum probe.def_mysql probe.raw_mysql probe.def_pgsql probe.raw_pgsql probe.xml probe.dtd probe.dtd-inc
+ AGDEFINES = -Dconfdir=$(confdir) -Dsysconfdir=$(sysconfdir) -Dsbindir=$(sbindir) \
+  -Dlogdir=$(logdir) -Dspooldir=$(spooldir) $(ag_xmbmon)
+ 
+@@ -40,7 +40,7 @@
+ %.c %.h: %.def
+ 	autogen -b $(<:%.def=%) $(AGDEFINES) $(GENINCL) $<
+ 	
+-probe.def_h probe.res_h probe.enum probe.def_mysql probe.raw_mysql probe.dtd probe.dtd-inc probe.xml: probe.def $(PROBDEF)
++probe.def_h probe.res_h probe.enum probe.def_mysql probe.raw_mysql probe.def_pgsql probe.raw_pgsql probe.dtd probe.dtd-inc probe.xml: probe.def $(PROBDEF)
+ 	autogen -b probe $(AGDEFINES) $(GENINCL) -T $(PROBTPL) probe.def
+ 
+ %.1: %.def
+
+Modified: upwatch/trunk/common/probe.tpl
+===================================================================
+--- upwatch/trunk/common/probe.tpl	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/common/probe.tpl	2011-12-26 17:34:57 UTC (rev 697)
+@@ -1,4 +1,4 @@
+-[+ AutoGen5 template def_mysql raw_mysql def_h res_h enum xml dtd dtd-inc +]
++[+ AutoGen5 template def_mysql raw_mysql def_pgsql raw_pgsql def_h res_h enum xml dtd dtd-inc +]
+ [+ CASE (suffix) +][+
+    == def_mysql +]--
+ [+(dne "-- ")+]
+@@ -14,7 +14,7 @@
+ -- in one central database. 
+   domid int unsigned NOT NULL default '1',      -- the id of the database this probe belongs to
+   tblid int unsigned NOT NULL default '1',      -- the unique id of the probe in that database
+-  changed timestamp NOT NULL,			-- 
++  changed timestamp NOT NULL default CURRENT_TIMESTAMP,			-- 
+ -- end aggregation fields
+   pgroup int unsigned NOT NULL default '2', 	-- group id 
+   server int unsigned NOT NULL default '1', 	-- server id
+@@ -112,6 +112,126 @@
+ INSERT into probe set id = '[+id+]', name = '[+name+]', description = '[+descrip+]', [+
+  if (exist? "expiry") +]expiry = '[+expiry+]', [+ endif +]addbyhand = '[+addbyhand+]', [+
+  if (exist? "fuse") +]fuse = '[+fuse+]', [+ endif +]class = '[+class+]', graphgroup = '[+graphgroup+]', graphtypes = '[+graphtypes+]', comment = '[+comment+]';[+ ENDFOR probe +][+
++   == def_pgsql +]--
++[+(dne "-- ")+]
++[+ FOR probe +]
++--
++-- Table structure for table 'pr_[+name+]_def'
++--
++
++CREATE TABLE pr_[+name+]_def (
++-- PLEASE NOTE THE FIRST FIELDS MUST STAY THIS WAY.
++  id serial,  					-- probe unique numerical id
++-- the following fields are only used when the probe definitions are aggregated
++-- in one central database. 
++  domid uinteger NOT NULL default '1',		-- the id of the database this probe belongs to
++  tblid uinteger NOT NULL default '1',		-- the unique id of the probe in that database
++  changed timestamp NOT NULL default CURRENT_TIMESTAMP,			-- 
++-- end aggregation fields
++  pgroup uinteger NOT NULL default '2', 	-- group id 
++  server uinteger NOT NULL default '1', 	-- server id
++  contact uinteger NOT NULL default '1',	-- user field: pointer to contact database
++  notify uinteger NOT NULL default '1',		-- notifier id
++  email varchar(64) NOT NULL default '',	-- address to send warning email to
++  sms varchar(64) NOT NULL default '',		-- phonenumber(s) to send SMS to
++  delay uinteger NOT NULL default '1',		-- after this many minutes of red light
++  disable varchar(3) not null default 'no' CHECK (disable IN ('yes','no')), -- disable this probe
++  hide varchar(3) not null default 'no' CHECK (hide IN ('yes','no')), -- hide probe results from viewing
++  ipaddress varchar(128) NOT NULL default '127.0.0.1',	-- target ipaddress or hostname
++  description text NOT NULL default '',		-- description
++  freq usmallint NOT NULL default '1',		-- frequency in minutes
++  yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
++  red float NOT NULL default '[+red+]', 	-- value for red alert [+ 		
++FOR def +][+
++CASE type +][+
++== float +]
++  [+name+] [+type+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== varchar +]
++  [+name+] [+type+][+
++IF length +]([+length+])[+
++ENDIF +][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== text +]
++  [+name+] [+type+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== char +]
++  [+name+] [+type+][+
++IF length +]([+length+])[+
++ENDIF +][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== bool +]
++  [+name+] varchar(3)[+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]' CHECK ([+name+] IN ('yes','no')),       -- [+descrip+][+
++== enum +]
++  [+name+] varchar([+length+])[+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]' CHECK ([+name+] IN ([+enumval+])),       -- [+descrip+][+
++== tinyint +]
++  [+name+] [+
++IF unsigned +] usmallint[+
++ELSE +] smallint[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== int +]
++  [+name+][+
++IF unsigned +] uinteger[+
++ELSE +] integer[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL [+
++IF auto +]auto_increment,       -- [+descrip+][+
++ELSE +]default '[+default+]',   -- [+descrip+][+
++ENDIF +][+
++== bigint +]
++  [+name+] [+type+][+
++IF unsigned +] ubigint[+
++ELSE +] bigint[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL [+
++IF auto +]auto_increment,       -- [+descrip+][+
++ELSE +]default '[+default+]',   -- [+descrip+][+
++ENDIF +][+
++ESAC type +][+ ENDFOR def+]
++  PRIMARY KEY  (id)
++);
++
++CREATE INDEX pr_[+name+]_def_server_index on pr_[+name+]_def (server);
++CREATE INDEX pr_[+name+]_def_notify_index on pr_[+name+]_def (notify);
++CREATE INDEX pr_[+name+]_def_ipaddress_index on pr_[+name+]_def (ipaddress);
++CREATE INDEX pr_[+name+]_def_domtbl_index on pr_[+name+]_def (domid, tblid);
++
++[+
++  (if (not (exist? "id"))
++      (error (sprintf "Missing probe id for probe %s" (get "probe.name")) )
++  )
++  (if (not (exist? "addbyhand"))
++      (error (sprintf "addbyhand not set for probe %s" (get "probe.name")) )
++  )
+++]
++INSERT into pr_[+name+]_def (id, description) values ('1', 'empty');
++INSERT into probe (id, name, description, addbyhand, class, graphgroup, graphtypes, comment [+
++ if (exist? "expiry") +], expiry[+ endif +][+
++ if (exist? "fuse") +], fuse[+ endif 
+++]) values ('[+id+]', '[+name+]', '[+descrip+]', '[+addbyhand+]', '[+class+]', '[+graphgroup+]', '[+graphtypes+]', '[+comment+]' [+
++ if (exist? "expiry") +], '[+expiry+]'[+ endif +][+
++ if (exist? "fuse") +], '[+fuse+]'[+ endif +]);[+ ENDFOR probe +][+
+    == raw_mysql +]--
+ [+(dne "-- ")+]
+ [+ FOR probe +]
+@@ -206,7 +326,7 @@
+   probe int unsigned NOT NULL default '1',	-- probe identifier
+   yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
+   red float NOT NULL default '[+red+]', 	-- value for red alert 
+-  slot smallint(5) unsigned NOT NULL default '0', -- timeslot in this period
++  slot smallint unsigned NOT NULL default '0', -- timeslot in this period
+   stattime int unsigned NOT NULL default '0',	-- time when result was generated
+   color smallint unsigned NOT NULL default '200', -- color value [+ 
+ FOR result +]
+@@ -224,6 +344,121 @@
+ ) TYPE=MyISAM;
+ [+ ENDFOR period +]
+ [+ ENDIF  result +]
++[+ ENDFOR probe +][+
++   == raw_pgsql +]--
++[+(dne "-- ")+]
++[+ FOR probe +]
++[+ IF (count "result") +]
++--
++-- Table structure for table 'pr_[+name+]_raw'
++--
++
++CREATE TABLE pr_[+name+]_raw (
++  id serial,					-- unique id for result
++  probe uinteger NOT NULL default '1',      -- probe identifier
++  yellow float NOT NULL default '[+yellow+]',   -- value for yellow alert
++  red float NOT NULL default '[+red+]',         -- value for red alert
++  stattime uinteger NOT NULL default '0',   -- time when result was generated
++  color usmallint NOT NULL default '200', -- color value [+
++FOR result +][+
++CASE type +][+
++== float +]
++  [+name+] [+type+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== varchar +]
++  [+name+] [+type+][+
++IF length +]([+length+])[+
++ENDIF +][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== text +]
++  [+name+] [+type+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== char +]
++  [+name+] [+type+][+
++IF length +]([+length+])[+
++ENDIF +][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== bool +]
++  [+name+] enum('yes', 'no')[+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== tinyint +]
++  [+name+] [+
++IF unsigned +] usmallint[+
++ELSE +] smallint[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL default '[+default+]',       -- [+descrip+][+
++== int +]
++  [+name+] [+
++IF unsigned +] uinteger[+
++ELSE +] integer[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL [+
++IF auto +]auto_increment,       -- [+descrip+][+
++ELSE +]default '[+default+]',   -- [+descrip+][+
++ENDIF +][+
++== bigint +]
++  [+name+] [+
++IF unsigned +] ubigint[+
++ELSE +] bigint[+
++ENDIF+][+
++IF null +][+
++ELSE +] NOT[+
++ENDIF null +] NULL [+
++IF auto +]auto_increment,       -- [+descrip+][+
++ELSE +]default '[+default+]',   -- [+descrip+][+
++ENDIF +][+
++ESAC type +][+ ENDFOR result+]
++  message text NOT NULL default '',
++  PRIMARY KEY (id)
++); 
++
++CREATE UNIQUE INDEX pr_[+name+]_raw_probstat_index on pr_[+name+]_raw (probe,stattime);
++CREATE UNIQUE INDEX pr_[+name+]_raw_statprob_index on pr_[+name+]_raw (stattime, probe);
++
++[+ FOR period +]
++--
++-- Table structure for table 'pr_[+name+]_[+period+]'
++--
++
++CREATE TABLE pr_[+name+]_[+period+] (
++  id serial,					-- unique id for result
++  probe uinteger NOT NULL default '1',		-- probe identifier
++  yellow float NOT NULL default '[+yellow+]',	-- value for yellow alert
++  red float NOT NULL default '[+red+]', 	-- value for red alert 
++  slot usmallint NOT NULL default '0', 		-- timeslot in this period
++  stattime uinteger NOT NULL default '0',	-- time when result was generated
++  color usmallint NOT NULL default '200', 	-- color value [+ 
++FOR result +]
++  [+name+] [+type+][+
++IF length +]([+length+])[+ 
++ENDIF +] [+
++IF null +][+ 
++ELSE +]NOT [+
++ENDIF null +]NULL default '[+default+]',	-- [+descrip+][+ 
++ENDFOR result +]
++  message text NOT NULL default '',
++  PRIMARY KEY (id)
++);
++
++CREATE UNIQUE INDEX pr_[+name+]_[+period+]_probstat_index on pr_[+name+]_[+period+] (probe,stattime);
++CREATE UNIQUE INDEX pr_[+name+]_[+period+]_statprob_index on pr_[+name+]_[+period+] (stattime, probe);
++
++[+ ENDFOR period +]
++[+ ENDIF  result +]
+ [+ ENDFOR probe +]
+ [+ == def_h
+ +]/*
+
+Modified: upwatch/trunk/config/Makefile.am
+===================================================================
+--- upwatch/trunk/config/Makefile.am	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/config/Makefile.am	2011-12-26 17:34:57 UTC (rev 697)
+@@ -10,8 +10,9 @@
+ 	echo  >> result.dtd
+ 	cat ../uw_*/probe.dtd  >> result.dtd
+ 
+-EXTRA_DIST = upwatch.conf upwatch-common.mysql upwatch-realm.mysql upwatch-full.mysql result.dtd-base \
+-  logrotate sysconfig cron.daily upwatch.redhat upwatch.suse
++EXTRA_DIST = upwatch.conf upwatch-common.mysql upwatch-realm.mysql upwatch-full.mysql \
++  upwatch-common.pqsql upwatch-realm.pqsql upwatch-full.pgsql \
++  result.dtd-base logrotate sysconfig cron.daily upwatch.redhat upwatch.suse
+ 
+ install-data-local:
+ 	if test `${ID} -u` -eq 0; then \
+
+Added: upwatch/trunk/config/upwatch-common.pgsql
+===================================================================
+--- upwatch/trunk/config/upwatch-common.pgsql	                        (rev 0)
++++ upwatch/trunk/config/upwatch-common.pgsql	2011-12-26 17:34:57 UTC (rev 697)
+@@ -0,0 +1,26 @@
++
++
++--
++-- Table structure for table 'probe'
++--
++
++CREATE TABLE probe (
++  id serial,
++  name varchar(24) NOT NULL default '',
++  description varchar(128) NOT NULL default '',
++  expiry varchar(3) not null default 'yes' CHECK (expiry IN ('yes','no')),
++  addbyhand varchar(3) not null default 'yes' CHECK (addbyhand IN ('yes','no')),
++  fuse varchar(3) not null default 'no' CHECK (fuse IN ('yes','no')),
++  addbycust varchar(3) not null default 'no' CHECK (addbycust IN ('yes','no')),
++  lagwarn varchar(3) not null default 'no' CHECK (lagwarn IN ('yes','no')),
++  maxlag uinteger NOT NULL default '300',
++  lastseen uinteger NOT NULL default '0',
++  class varchar(16) NOT NULL default '',
++  graphgroup varchar(16) NOT NULL default '',
++  graphtypes varchar(255) NOT NULL default 'default',
++  comment text NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++INSERT INTO probe (id, name, addbyhand, comment) values('1', 'empty', 'no', 'do NOT delete!');
++
+
+Added: upwatch/trunk/config/upwatch-full.pgsql
+===================================================================
+--- upwatch/trunk/config/upwatch-full.pgsql	                        (rev 0)
++++ upwatch/trunk/config/upwatch-full.pgsql	2011-12-26 17:34:57 UTC (rev 697)
+@@ -0,0 +1,147 @@
++--
++-- Table structure for table 'pr_group'
++--
++
++CREATE TABLE pr_group (
++  id serial,
++  name varchar(24) NOT NULL default '',
++  description varchar(128) NOT NULL default '',
++  PRIMARY KEY  (id)
++);
++
++INSERT INTO pr_group (id, name, description) values ('1', 'empty', 'do NOT delete!');
++INSERT INTO pr_group (id, name) values ('2', 'Default');
++
++--
++-- Table structure for table 'pr_hist'
++--
++
++CREATE TABLE pr_hist (
++  id serial,
++  server uinteger NOT NULL default '1',
++  hide varchar(3) not null default 'no' CHECK (hide IN ('yes','no')),
++  contact uinteger NOT NULL default '1',  -- user field: pointer to contact database
++  class usmallint NOT NULL default '1',
++  probe uinteger NOT NULL default '1',
++  pgroup uinteger NOT NULL default '1',     -- group id
++  stattime uinteger NOT NULL default '0',
++  prv_color usmallint NOT NULL default '200',
++  color usmallint NOT NULL default '200',
++  message text NOT NULL default '',
++  PRIMARY KEY  (id)
++);
++
++CREATE UNIQUE INDEX pr_hist_probtime_index on pr_hist (probe,stattime);
++CREATE UNIQUE INDEX pr_hist_probclstat_index on pr_hist (probe,class,stattime);
++CREATE INDEX pr_hist_stattime_index on pr_hist (stattime);
++CREATE INDEX pr_hist_contact_index on pr_hist (contact);
++CREATE INDEX pr_hist_statprobcl_index on pr_hist (stattime,probe,class);
++CREATE INDEX pr_hist_probclstatnot_index on pr_hist (probe,class,stattime,notified);
++CREATE INDEX pr_hist_contacttime_index on pr_hist (contacttime);
++CREATE INDEX pr_hist_server_index on pr_hist (server);
++
++INSERT INTO pr_hist (id, message) values ('1', 'do NOT delete!');
++
++--
++-- Table structure for table 'pr_status'
++--
++
++CREATE TABLE pr_status (
++  id serial,
++  class uinteger NOT NULL default '1',
++  probe uinteger NOT NULL default '1',
++  server uinteger NOT NULL default '1',
++  hide varchar(3) not null default 'no' CHECK (hide IN ('yes','no')),
++  contact uinteger NOT NULL default '1',  -- user field: pointer to contact database
++  yellow float NOT NULL default '0',
++  red float NOT NULL default '0',
++  stattime uinteger NOT NULL default '0',
++  expires uinteger NOT NULL default '0',
++  color usmallint NOT NULL default '200',
++  message text NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++CREATE UNIQUE INDEX pr_status_uprobe_index on pr_status (class,probe);
++CREATE INDEX pr_status_class_index on pr_status (class);
++CREATE INDEX pr_status_probe_index on pr_status (probe);
++CREATE INDEX pr_status_server_index on pr_status (server);
++CREATE INDEX pr_status_expires_index on pr_status (expires);
++CREATE INDEX pr_status_contact_index on pr_status (contact);
++
++INSERT INTO pr_status (id, message) values ('1', 'do NOT delete!');
++
++--
++-- Table structure for table 'rack'
++--
++  
++CREATE TABLE rack (
++  id serial,
++  contact int NOT NULL default 1,
++  name varchar(128) NOT NULL default '',
++  comment text NOT NULL,
++  color usmallint NOT NULL default '0',
++  PRIMARY KEY  (id) 
++);
++
++INSERT INTO rack (id, name, comment) values ('1', 'empty', 'do NOT delete!');
++
++--
++-- Table structure for table 'server'
++--
++
++CREATE TABLE server (
++  id serial,
++  name varchar(128) NOT NULL default '',
++  os varchar(32) NOT NULL default '',
++  comment text NOT NULL,
++  color usmallint NOT NULL default '0',
++  PRIMARY KEY  (id)
++);
++
++INSERT INTO server (id, name, comment) values ('1', 'empty', 'do NOT delete!');
++
++--
++-- Table structure for table 'notify'
++--
++
++CREATE TABLE notify (
++  id serial,
++  name varchar(128) NOT NULL default '',
++  contact int NOT NULL default 1,
++  mail int NOT NULL default 1,
++  sms int NOT NULL default 1,
++  status enum('enabled', 'disabled', 'ok') NOT NULL default 'enabled',
++  comment text NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++CREATE INDEX notify_contact_index on notify (contact);
++
++INSERT INTO notify (id, name, status, comment) values ('1', 'empty', 'disabled', 'do NOT delete!');
++
++--
++-- Table structure for table 'notifycond'
++--
++
++CREATE TABLE notifycond (
++  id serial,
++  notify int NOT NULL default 1,
++  bycolor varchar(3) not null default 'yes' CHECK (bycolor IN ('yes','no')),
++  atcolor smallint NOT NULL default '400',
++  consecutive smallint NOT NULL default 1,
++  bydate varchar(3) not null default 'no' CHECK (bydate IN ('yes','no')),
++  fromwday tinyint NOT NULL default 0,
++  fromhour tinyint NOT NULL default 0,
++  frommin tinyint NOT NULL default 0,
++  towday tinyint NOT NULL default 0,
++  tohour tinyint NOT NULL default 0,
++  tomin tinyint NOT NULL default 0,
++  persist varchar(3) not null default 'no' CHECK (persist IN ('yes','no')),
++  comment text NOT NULL,
++  PRIMARY KEY  (id),
++  KEY (notify)
++);
++
++INSERT INTO notifycond (id, notify) values ('1', '1');
++
+
+Added: upwatch/trunk/config/upwatch-realm.pgsql
+===================================================================
+--- upwatch/trunk/config/upwatch-realm.pgsql	                        (rev 0)
++++ upwatch/trunk/config/upwatch-realm.pgsql	2011-12-26 17:34:57 UTC (rev 697)
+@@ -0,0 +1,56 @@
++
++--
++-- Table structure for table 'pr_realm'
++--
++
++CREATE TABLE pr_realm (
++  id serial,
++  name varchar(24) NOT NULL default '',
++  host varchar(64) NOT NULL default '',
++  port uinteger NOT NULL default '3306',
++  db varchar(24) NOT NULL default '',
++  "user" varchar(24) NOT NULL default '',
++  password varchar(24) NOT NULL default '',
++  srvrbyname varchar(255) NOT NULL default '',
++  srvrbyid varchar(245) NOT NULL default '',
++  srvrbyip varchar(245) NOT NULL default '',
++  comment text NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++INSERT INTO pr_realm (id, name, comment) values ('1', 'empty', 'do NOT delete!');
++
++CREATE TABLE pr_regex (
++  id serial,
++  logtype varchar(24) NOT NULL default '',
++  package varchar(24) NOT NULL default '',
++  action varchar(6) NOT NULL default 'green' CHECK(action in ('ignore', 'red', 'yellow', 'green')),
++  regex varchar(255) NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++CREATE UNIQUE INDEX pr_regex_packex_index on pr_regex (package,regex);
++INSERT INTO pr_regex (id, logtype, package, action, regex) values ('1', 'none', 'none', 'green', 'do NOT delete!');
++
++CREATE TABLE pr_macros (
++  id serial,
++  logtype varchar(24) NOT NULL default '',
++  name varchar(24) NOT NULL default '',
++  regex varchar(255) NOT NULL,
++  PRIMARY KEY  (id)
++);
++
++CREATE UNIQUE INDEX pr_macros_typename_index on pr_macros (logtype, name);
++INSERT INTO pr_macros (id, logtype, name, regex) values ('1', 'none', 'empty', 'do NOT delete!');
++
++CREATE TABLE pr_rmacros (
++  id serial,
++  logtype varchar(24) NOT NULL default '',
++  regex varchar(255) NOT NULL,
++  name varchar(24) NOT NULL default '',
++  PRIMARY KEY  (id)
++);
++
++CREATE UNIQUE INDEX pr_rmacros_typex_index on pr_rmacros (logtype, regex);
++INSERT INTO pr_rmacros (id, logtype, name, regex) values ('1', 'none', 'empty', 'do NOT delete!');
++
+
+Modified: upwatch/trunk/uw_acceptbb/probe.def
+===================================================================
+--- upwatch/trunk/uw_acceptbb/probe.def	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/uw_acceptbb/probe.def	2011-12-26 17:34:57 UTC (rev 697)
+@@ -10,6 +10,8 @@
+   graphgroup = "";
+   graphtypes = "default";
+   comment = "";
++  yellow = "0";
++  red = "0";
+ 
+   attribute = {
+     name = "ipaddress";
+
+Modified: upwatch/trunk/uw_snmpget/probe.def
+===================================================================
+--- upwatch/trunk/uw_snmpget/probe.def	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/uw_snmpget/probe.def	2011-12-26 17:34:57 UTC (rev 697)
+@@ -107,6 +107,7 @@
+   def = {
+     name = "mode";
+     type = "enum";
++    length = 10;
+     enumval = "'absolute', 'relative'";
+     null = false;
+     default = "absolute";
+
+Modified: upwatch/trunk/uw_sysstat/probe.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/probe.def	2009-11-20 13:48:07 UTC (rev 696)
++++ upwatch/trunk/uw_sysstat/probe.def	2011-12-26 17:34:57 UTC (rev 697)
+@@ -188,8 +188,8 @@
+   graphtypes = "temp rotation voltage";
+   comment = "";
+   max_rows = 1000000;
+-// yellow = "40";
+-// red = "50";
++  yellow = "0";
++  red = "0";
+   message = "Hardware status";
+ 
+   attribute = {
+@@ -414,6 +414,8 @@
+   class = "";
+   graphgroup = "";
+   graphtypes = "default";
++  yellow = "0";
++  red = "0";
+   comment = "";
+ 
+   attribute = {
+@@ -473,6 +475,8 @@
+   class = "";
+   graphgroup = "";
+   graphtypes = "default";
++  yellow = "0";
++  red = "0";
+   comment = "";
+ 
+   attribute = {
+@@ -532,6 +536,8 @@
+   class = "";
+   graphgroup = "";
+   graphtypes = "default";
++  yellow = "0";
++  red = "0";
+   comment = "";
+ 
+   attribute = {
+
+
+
+From raarts at mail.berlios.de  Mon Dec 26 19:11:29 2011
+From: raarts at mail.berlios.de (raarts at mail.berlios.de)
+Date: Mon, 26 Dec 2011 19:11:29 +0100
+Subject: [Upwatch-commits] r698 - in upwatch/trunk: . config
+Message-ID: <20111226181130.0AEB5480EE4@sheep.berlios.de>
+
+Author: raarts
+Date: 2011-12-26 19:11:29 +0100 (Mon, 26 Dec 2011)
+New Revision: 698
+
+Modified:
+   upwatch/trunk/config/Makefile.am
+   upwatch/trunk/upwatch-spec.tpl
+Log:
+Added the PostgreSQL DB files to the RPM.
+
+
+Modified: upwatch/trunk/config/Makefile.am
+===================================================================
+--- upwatch/trunk/config/Makefile.am	2011-12-26 17:34:57 UTC (rev 697)
++++ upwatch/trunk/config/Makefile.am	2011-12-26 18:11:29 UTC (rev 698)
+@@ -11,7 +11,7 @@
+ 	cat ../uw_*/probe.dtd  >> result.dtd
+ 
+ EXTRA_DIST = upwatch.conf upwatch-common.mysql upwatch-realm.mysql upwatch-full.mysql \
+-  upwatch-common.pqsql upwatch-realm.pqsql upwatch-full.pgsql \
++  upwatch-common.pgsql upwatch-realm.pgsql upwatch-full.pgsql \
+   result.dtd-base logrotate sysconfig cron.daily upwatch.redhat upwatch.suse
+ 
+ install-data-local:
+
+Modified: upwatch/trunk/upwatch-spec.tpl
+===================================================================
+--- upwatch/trunk/upwatch-spec.tpl	2011-12-26 17:34:57 UTC (rev 697)
++++ upwatch/trunk/upwatch-spec.tpl	2011-12-26 18:11:29 UTC (rev 698)
+@@ -159,7 +159,7 @@
+ %files
+ %defattr(0660,root,upwatch,0770)
+ %doc AUTHORS ChangeLog COPYING INSTALL README NEWS TODO VERSION
+-%doc upwatch-base.mysql upwatch-full.mysql
++%doc upwatch-base.mysql upwatch-full.mysql upwatch-base.pgsql upwatch-full.pgsql
+ %doc doc/upwatch.txt doc/upwatch.html doc/upwatch.pdf
+ %attr(0770,upwatch,upwatch) %dir /etc/upwatch.d
+ /etc/upwatch.d/uw_sysstat.d/syslog/linux.kernel
+
+
+
+From raarts at mail.berlios.de  Mon Dec 26 20:59:18 2011
+From: raarts at mail.berlios.de (raarts at mail.berlios.de)
+Date: Mon, 26 Dec 2011 20:59:18 +0100
+Subject: [Upwatch-commits] r699 - upwatch/trunk/common
+Message-ID: <20111226195919.034C44812D7@sheep.berlios.de>
+
+Author: raarts
+Date: 2011-12-26 20:59:18 +0100 (Mon, 26 Dec 2011)
+New Revision: 699
+
+Modified:
+   upwatch/trunk/common/probe.tpl
+Log:
+Discovered how to add comments to autogen template files.
+
+
+Modified: upwatch/trunk/common/probe.tpl
+===================================================================
+--- upwatch/trunk/common/probe.tpl	2011-12-26 18:11:29 UTC (rev 698)
++++ upwatch/trunk/common/probe.tpl	2011-12-26 19:59:18 UTC (rev 699)
+@@ -1,6 +1,6 @@
+ [+ AutoGen5 template def_mysql raw_mysql def_pgsql raw_pgsql def_h res_h enum xml dtd dtd-inc +]
+ [+ CASE (suffix) +][+
+-   == def_mysql +]--
++   == def_mysql +][+# =========== GENERATE DATABASE DEFINITION FOR THIS PROBE IN MYSQL FORMAT ========== +]--
+ [+(dne "-- ")+]
+ [+ FOR probe +]
+ --
+@@ -112,7 +112,7 @@
+ INSERT into probe set id = '[+id+]', name = '[+name+]', description = '[+descrip+]', [+
+  if (exist? "expiry") +]expiry = '[+expiry+]', [+ endif +]addbyhand = '[+addbyhand+]', [+
+  if (exist? "fuse") +]fuse = '[+fuse+]', [+ endif +]class = '[+class+]', graphgroup = '[+graphgroup+]', graphtypes = '[+graphtypes+]', comment = '[+comment+]';[+ ENDFOR probe +][+
+-   == def_pgsql +]--
++   == def_pgsql +][+# ============ GENERATE DATABASE DEFINITION FOR THIS PROBE IN POSTGRESQL FORMAT ===========  +]--
+ [+(dne "-- ")+]
+ [+ FOR probe +]
+ --
+@@ -232,7 +232,7 @@
+ +]) values ('[+id+]', '[+name+]', '[+descrip+]', '[+addbyhand+]', '[+class+]', '[+graphgroup+]', '[+graphtypes+]', '[+comment+]' [+
+  if (exist? "expiry") +], '[+expiry+]'[+ endif +][+
+  if (exist? "fuse") +], '[+fuse+]'[+ endif +]);[+ ENDFOR probe +][+
+-   == raw_mysql +]--
++   == raw_mysql +][+# ============ GENERATE DATABASE RESULT TABLES FOR THIS PROBE IN MYSQL FORMAT ============= +]--
+ [+(dne "-- ")+]
+ [+ FOR probe +]
+ [+ IF (count "result") +]
+@@ -345,7 +345,7 @@
+ [+ ENDFOR period +]
+ [+ ENDIF  result +]
+ [+ ENDFOR probe +][+
+-   == raw_pgsql +]--
++   == raw_pgsql +][+# ============ GENERATE DATABASE RESULT TABLES FOR THIS PROBE IN POSTGRESQL FORMAT ============ +]--
+ [+(dne "-- ")+]
+ [+ FOR probe +]
+ [+ IF (count "result") +]
+@@ -460,8 +460,7 @@
+ [+ ENDFOR period +]
+ [+ ENDIF  result +]
+ [+ ENDFOR probe +]
+-[+ == def_h
+-+]/*
++[+ == def_h +][+# ================ GENERATE DEFINITION FOR THIS PROBE IN C HEADER FORMAT =================== +]/*
+ [+(dne " * ")+]
+  */
+ /* probe specific part of C struct for [+table+] definition */
+@@ -488,8 +487,7 @@
+ IF unsigned +]unsigned [+
+ ENDIF+]
+   int [+name+];		/* [+descrip+] */[+ ESAC type +][+ ENDFOR def+][+ENDFOR probe+]
+-[+ == res_h
+-+]/*
++[+ == res_h +][+# ================== GENERATE RESULT FOR THIS PROBE IN C HEADER FORMAT ================== +]/*
+ [+(dne " * ")+]
+  */
+ /* probe specific part of C struct for [+table+] results */
+@@ -516,9 +514,9 @@
+ ENDIF+]int [+name+];    /* [+descrip+] */[+ ESAC type +][+ ENDFOR result+][+ ENDFOR probe +]
+ [+ == enum +][+ FOR probe 
+ +]PROBE_[+name+] = [+id+],
+-[+ ENDFOR probe +]
+-[+ == dtd-inc
+-+][+ FOR probe +][+ FOR element +]<!ELEMENT [+name+] (#PCDATA)>		<!-- [+descrip+] -->
++[+ ENDFOR probe +][+ 
++  == dtd-inc +][+# ================== GENERATE XML DTD FOR THIS PROBE ================== +][+ 
++FOR probe +][+ FOR element +]<!ELEMENT [+name+] (#PCDATA)>		<!-- [+descrip+] -->
+ [+ ENDFOR element +][+ FOR result +][+
+ IF (not (exist? "noelement")) +]<!ELEMENT [+name+] (#PCDATA)>		<!-- [+descrip+] -->
+ [+ ENDIF element +][+ ENDFOR result +][+ ENDFOR probe +][+ == dtd
+@@ -531,7 +529,8 @@
+ +][+IF required+] #REQUIRED[+ENDIF required+]
+ [+ ENDFOR attribute +]>
+ 
+-[+ ENDFOR probe +][+ == xml
++[+ ENDFOR probe +][+ 
++  == xml +][+# ====================== GENERATE XML DOCUMENTATION FOR THIS PROBE ========================
+ +]<?xml version="1.0" encoding="UTF-8"?>
+ [+ FOR probe +]
+ 
+
+
+
+From raarts at mail.berlios.de  Tue Dec 27 10:28:37 2011
+From: raarts at mail.berlios.de (raarts at mail.berlios.de)
+Date: Tue, 27 Dec 2011 10:28:37 +0100
+Subject: [Upwatch-commits] r700 - upwatch/trunk/upwatch
+Message-ID: <20111227092837.B4E314812FC@sheep.berlios.de>
+
+Author: raarts
+Date: 2011-12-27 10:28:37 +0100 (Tue, 27 Dec 2011)
+New Revision: 700
+
+Modified:
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/probe.h
+Log:
+Since all probes use the same default fields, remove the def_fields from the probe struct. Interferes with libdbi conversion.
+
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2011-12-26 19:59:18 UTC (rev 699)
++++ upwatch/trunk/upwatch/pr_process.c	2011-12-27 09:28:37 UTC (rev 700)
+@@ -180,7 +180,6 @@
+   MYSQL_RES *result;
+   MYSQL_ROW row;
+   time_t now = time(NULL);
+-  char *def_fields = "ipaddress, description, server, yellow, red, contact, hide, email, sms, delay, pgroup";
+ 
+   def = g_hash_table_lookup(t->probe->cache, &res->probeid);
+   if (def && def->stamp < now - (120 + uw_rand(240))) { // older then 2 - 6 minutes?
+@@ -210,8 +209,9 @@
+ 
+     // Get the server, contact and yellow/red info from the def record. Note the yellow/red may 
+     // have been changed by the user so need to be transported into the data files
+-    result = my_query(t->probe->db, 0, "select %s from pr_%s_def where  id = '%u'", 
+-                      t->probe->get_def_fields ? t->probe->get_def_fields : def_fields,
++    result = my_query(t->probe->db, 0, "select ipaddress, description, server, yellow, red, "
++                                       "       contact, hide, email, sms, delay, pgroup "
++                                       "  from pr_%s_def where  id = '%u'", 
+                       res->name, res->probeid);
+     if (!result) return(NULL);
+ 
+@@ -245,8 +245,9 @@
+                          res->realm, res->stattime, t->fromhost,
+                          res->name, res->probeid, mysql_error(t->probe->db));
+       }
+-      result = my_query(t->probe->db, 0, "select %s from pr_%s_def where  id = '%u'", 
+-                        t->probe->get_def_fields ? t->probe->get_def_fields : def_fields,
++      result = my_query(t->probe->db, 0, "select ipaddress, description, server, yellow, red, "
++                                         "       contact, hide, email, sms, delay, pgroup " 
++                                         "  from pr_%s_def where  id = '%u'", 
+                         res->name, res->probeid);
+       if (!result) return(NULL);
+     }
+
+Modified: upwatch/trunk/upwatch/probe.h
+===================================================================
+--- upwatch/trunk/upwatch/probe.h	2011-12-26 19:59:18 UTC (rev 699)
++++ upwatch/trunk/upwatch/probe.h	2011-12-27 09:28:37 UTC (rev 700)
+@@ -88,7 +88,6 @@
+   void (*xml_result_node)(trx *t);		/* process properties of the "result" node  */ \
+   void (*get_from_xml)(trx *t);			/* process one child of the "result" node */ \
+   int (*accept_result)(trx *t);			/* accept (and maybe convert) result */ \
+-  char *get_def_fields;				/* list of fields to be inserted into SQL get_def query */ \
+   void (*set_def_fields)(trx *t, struct probe_def *def, MYSQL_RES *result);/* convert MySQL ROW into probe_def */ \
+   void *(*get_def)(trx *t, int create);		/* retrieve probe definition */ \
+   void (*adjust_result)(trx *t);		/* adjust result: usually compute our own colors */ \
+
+
+

@@ -1,0 +1,676 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r645%20-%20in%20upwatch/trunk%3A%20doc%20upwatch%20uw_accept%0A%09uw_null%20uw_process%20uw_route%20uw_sysstat%20uw_sysstat/uw_local_scripts&In-Reply-To=%3C200608281358.k7SDwCFb031515%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000178.html">
+   <LINK REL="Next"  HREF="000180.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts</H1>
+    <B>wijnand at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r645%20-%20in%20upwatch/trunk%3A%20doc%20upwatch%20uw_accept%0A%09uw_null%20uw_process%20uw_route%20uw_sysstat%20uw_sysstat/uw_local_scripts&In-Reply-To=%3C200608281358.k7SDwCFb031515%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r645 - in upwatch/trunk: doc upwatch uw_accept	uw_null uw_process uw_route uw_sysstat uw_sysstat/uw_local_scripts">wijnand at mail.berlios.de
+       </A><BR>
+    <I>Mon Aug 28 15:58:12 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000178.html">[Upwatch-commits] r644 - upwatch/libdbi/config
+</A></li>
+        <LI>Next message: <A HREF="000180.html">[Upwatch-commits] r646 - in upwatch/trunk: . cfg
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#179">[ date ]</a>
+              <a href="thread.html#179">[ thread ]</a>
+              <a href="subject.html#179">[ subject ]</a>
+              <a href="author.html#179">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: wijnand
+Date: 2006-08-28 15:58:06 +0200 (Mon, 28 Aug 2006)
+New Revision: 645
+
+Added:
+   upwatch/trunk/uw_process/local.c
+   upwatch/trunk/uw_sysstat/uw_local_scripts/
+   upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh
+Modified:
+   upwatch/trunk/doc/admin-guide.txt
+   upwatch/trunk/doc/program-guide.txt
+   upwatch/trunk/doc/upwatch.txt
+   upwatch/trunk/upwatch/pr_process.c
+   upwatch/trunk/upwatch/probe.h
+   upwatch/trunk/uw_accept/uw_accept.def
+   upwatch/trunk/uw_null/uw_null.def
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_process/modules.inc
+   upwatch/trunk/uw_process/uw_process.def
+   upwatch/trunk/uw_route/uw_route.def
+   upwatch/trunk/uw_sysstat/Makefile.am
+   upwatch/trunk/uw_sysstat/probe.def
+   upwatch/trunk/uw_sysstat/run.c
+   upwatch/trunk/uw_sysstat/uw_sysstat.conf
+   upwatch/trunk/uw_sysstat/uw_sysstat.def
+Log:
+Feature: uw_local
+
+Description:
+Place your custom scripts in $sysconfdir/upwatch/uw_local_scripts (upwatch:upwatch mode 700!) with user upwatch and mode 700 (dir + script must have these permissions correct!). Each uw_sysstat run those scripts will be run. Those scripts should create a temp file with the first line a color. Resulting lines are optional and are used to give a message.
+Example:
+red
+Apache was not running, trying to restart
+
+You can do extra commands to restart for example. Be sure to have correct sudo rules or a other way to do it as user upwatch!
+
+One example script will be installed in share/upwatch/examples/uw_local_script, but we need lots of them of course. A admin should be able to copy most of the needed scripts from there.
+
+Todo: 
+* create a nice template for uw_local scripts.
+* the default email delay for this check can better be 0
+
+Caveats: if a script takes a long time to run uw_sysstat will not proceed since it is waiting. I want a limit of 30seconds max but I am not sure how to do this.
+
+
+Modified: upwatch/trunk/doc/admin-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/program-guide.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/doc/upwatch.txt
+===================================================================
+(Binary files differ)
+
+Modified: upwatch/trunk/upwatch/pr_process.c
+===================================================================
+--- upwatch/trunk/upwatch/pr_process.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/upwatch/pr_process.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -325,8 +325,8 @@
+                       &quot;       description = '%s'&quot;, 
+                        res-&gt;name, res-&gt;server, res-&gt;ipaddress ? res-&gt;ipaddress : &quot;&quot;, 
+                        res-&gt;hostname);
++    def-&gt;probeid = mysql_insert_id(t-&gt;probe-&gt;db);
+     mysql_free_result(result);
+-    def-&gt;probeid = mysql_insert_id(t-&gt;probe-&gt;db);
+     LOG(LOG_NOTICE, &quot;%s:%u@%s: pr_%s_def created for %s, id = %u&quot;, 
+         res-&gt;realm, res-&gt;stattime, t-&gt;fromhost, res-&gt;name, res-&gt;hostname, def-&gt;probeid);
+     result = my_query(t-&gt;probe-&gt;db, 0,
+
+Modified: upwatch/trunk/upwatch/probe.h
+===================================================================
+--- upwatch/trunk/upwatch/probe.h	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/upwatch/probe.h	2006-08-28 13:58:06 UTC (rev 645)
+@@ -169,6 +169,15 @@
+ #include &quot;../common/common.h&quot;
+ };
+ 
++/****************************** probe local ************************/
++struct local_result {
++  STANDARD_PROBE_RESULT;
++};
++struct local_def {
++  STANDARD_PROBE_DEF;
++#include &quot;../common/common.h&quot;
++};
++
+ /****************************** probe errlog ************************/
+ struct errlog_result {
+   STANDARD_PROBE_RESULT;
+
+Modified: upwatch/trunk/uw_accept/uw_accept.def
+===================================================================
+--- upwatch/trunk/uw_accept/uw_accept.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_accept/uw_accept.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -77,4 +77,5 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
++#include option_realm_ign.def
+ 
+
+Modified: upwatch/trunk/uw_null/uw_null.def
+===================================================================
+--- upwatch/trunk/uw_null/uw_null.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_null/uw_null.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -81,4 +81,4 @@
+ #include license_gpl.def
+ #include generic_options.def
+ #include option_realm_ign.def
+-#include minimal_options.def
++#include dbase_options_ign.def
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/Makefile.am	2006-08-28 13:58:06 UTC (rev 645)
+@@ -30,7 +30,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_process_SOURCES = run.c process.c notify.c generic_ct.c uw_process.c insertcache.c \
+- ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c tcpconnect.c \
++ ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c local.c tcpconnect.c \
+ $(USE_LIBPQ) $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c hwstat.c \
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+ uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+
+Added: upwatch/trunk/uw_process/local.c
+===================================================================
+--- upwatch/trunk/uw_process/local.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/local.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -0,0 +1,49 @@
++#include &quot;config.h&quot;
++#include &lt;string.h&gt;
++#include &lt;generic.h&gt;
++#include &quot;slot.h&quot;
++#include &quot;uw_process_glob.h&quot;
++
++#ifdef DMALLOC
++#include &quot;dmalloc.h&quot;
++#endif
++
++//*******************************************************************
++// Format the probe definition fields for inclusion in the notification body
++//*******************************************************************
++static void local_notify_mail_body_probe_def(trx *t, char *buf, size_t buflen)
++{
++  struct local_def *def = (struct local_def *)t-&gt;def;
++  struct local_result *res = (struct local_result *)t-&gt;res;
++
++  sprintf(buf, &quot;%-20s: %s\n&quot;
++               &quot;%-20s: %s\n&quot;,
++  &quot;IP Address&quot;, def-&gt;ipaddress,
++  &quot;Description&quot;, def-&gt;description);
++}
++
++
++module local_module  = {
++  STANDARD_MODULE_STUFF(local),
++  NO_FREE_DEF,
++  NO_FREE_RES,
++  NO_INIT,
++  NO_START_RUN,
++  NO_ACCEPT_PROBE,
++  NO_XML_RESULT_NODE,
++  ct_get_from_xml,
++  accept_result,
++  NO_GET_DEF_FIELDS,
++  NO_SET_DEF_FIELDS,
++  get_def_by_servid,
++  NO_ADJUST_RESULT,
++  NO_END_RESULT,
++  NO_END_RUN,
++  NO_EXIT,
++  NO_FIND_DOMAIN,
++  NO_STORE_RESULTS,
++  NO_NOTIFY_MAIL_SUBJECT_EXTRA,
++  NO_NOTIFY_MAIL_BODY_PROBE_DEF,
++  NO_SUMMARIZE
++};
++
+
+Modified: upwatch/trunk/uw_process/modules.inc
+===================================================================
+--- upwatch/trunk/uw_process/modules.inc	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/modules.inc	2006-08-28 13:58:06 UTC (rev 645)
+@@ -16,6 +16,7 @@
+ extern module errlog_module;
+ extern module diskfree_module;
+ extern module hwstat_module;
++extern module local_module;
+ 
+ module *modules[] = {
+   &amp;httpget_module,
+@@ -31,6 +32,7 @@
+   &amp;errlog_module,
+   &amp;diskfree_module,
+   &amp;hwstat_module,
++  &amp;local_module,
+   &amp;bb_cpu_module,
+   &amp;bb_module,
+ #if HAVE_LIBPQ
+
+Modified: upwatch/trunk/uw_process/uw_process.def
+===================================================================
+--- upwatch/trunk/uw_process/uw_process.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_process/uw_process.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -216,4 +216,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_route/uw_route.def
+===================================================================
+--- upwatch/trunk/uw_route/uw_route.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_route/uw_route.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -101,4 +101,4 @@
+ #include license_gpl.def
+ #include dbase_options.def
+ #include generic_options.def
+-
++#include option_realm_ign.def
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2006-08-28 13:58:06 UTC (rev 645)
+@@ -34,7 +34,7 @@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch 
+-EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d
++EXTRA_DIST = $(program:%=%.conf) $(program:%=%.def) probe.def uw_sysstat.d uw_local_scripts
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
+@@ -44,9 +44,19 @@
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ; \
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	  chown -R upwatch:upwatch ${DESTDIR}${confdir}/uw_sysstat.d ; \
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${confdir}/uw_local_scripts ;\
++          ${INSTALL} -d -m 700  -o upwatch -g upwatch ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	else \
+ 	  mkdir -p ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  cp -r uw_sysstat.d/* ${DESTDIR}${confdir}/uw_sysstat.d ;\
+ 	  find ${DESTDIR}${confdir}/uw_sysstat.d -type d -name CVS -o -name .svn | xargs rm -rf ; \
++          mkdir -p ${DESTDIR}${confdir}/uw_local_scripts ;\
++          mkdir -p ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++          cp -r uw_local_scripts/* ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts ;\
++	  find ${DESTDIR}${confdir}/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
++	  find ${DESTDIR}${datadir}/upwatch/examples/uw_local_scripts -type d -name CVS -o -name .svn | xargs rm -rf ; \
+ 	fi
+ 
+
+Modified: upwatch/trunk/uw_sysstat/probe.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/probe.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/probe.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -523,3 +523,63 @@
+     descrip = &quot;date/time this result was received by the upwatch server&quot;;
+   };
+ };
++
++probe = {
++  name = &quot;local&quot;;
++  id = 19;
++  descrip = &quot;Local checks&quot;;
++  addbyhand = &quot;no&quot;;
++  class = &quot;&quot;;
++  graphgroup = &quot;&quot;;
++  graphtypes = &quot;default&quot;;
++  comment = &quot;&quot;;
++
++  attribute = {
++    name = &quot;server&quot;;
++    required = true;
++    descrip = &quot;id of this server in the database&quot;;
++  };
++
++  attribute = {
++    name = &quot;ipaddress&quot;;
++    default = &quot;127.0.0.1&quot;;
++    descrip = &quot;target ip address&quot;;
++  };
++
++  attribute = {
++    name = &quot;realm&quot;;
++    required = true;
++    descrip = &quot;database realm for these values&quot;;
++  };
++
++  attribute = {
++    name = &quot;date&quot;;
++    required = true;
++    descrip = &quot;date/time for this result&quot;;
++  };
++
++  attribute = {
++    name = &quot;expires&quot;;
++    required = true;
++    descrip = &quot;when this result expires&quot;;
++  };
++
++  attribute = {
++    name = &quot;color&quot;;
++    required = true;
++    descrip = &quot;color as this probe thinks it should be&quot;;
++  };
++
++  attribute = {
++    name = &quot;interval&quot;;
++    default = &quot;60&quot;;
++    descrip = &quot;time between measurements&quot;;
++  };
++
++  attribute = {
++    name = &quot;received&quot;;
++    default = &quot;0&quot;;
++    descrip = &quot;date/time this result was received by the upwatch server&quot;;
++  };
++};
++
+
+Modified: upwatch/trunk/uw_sysstat/run.c
+===================================================================
+--- upwatch/trunk/uw_sysstat/run.c	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/run.c	2006-08-28 13:58:06 UTC (rev 645)
+@@ -30,6 +30,8 @@
+ 
+ char ipaddress[24];
+ 
++xmlNodePtr newnode(xmlDocPtr doc, char *name);
++
+ struct _errlogspec {
+   char *style;
+   char *path;
+@@ -174,6 +176,107 @@
+ }
+ #endif
+ 
++int do_local(xmlNodePtr doc )
++{
++  char buffer[1024];
++  char resultmsg[32768]=&quot;&quot;;
++  unsigned int color=STAT_GREEN;
++  GError *error=NULL;
++  GDir *dir;
++  G_CONST_RETURN gchar *filename;
++  char path[PATH_MAX] = &quot;/etc/upwatch.d/uw_local_scripts&quot;;
++  char cmd[PATH_MAX];
++  FILE *in;
++  char info[32768];
++  char buf[256];
++  xmlNodePtr node = (xmlNodePtr) newnode(doc, &quot;local&quot;);
++  struct stat st;
++  struct timeval start, now;
++
++  /* measure the time it takes to perform all checks */
++  gettimeofday(&amp;start, NULL);
++ 
++  /* Don't allow directories writable by others */
++  if ( stat(path, &amp;st ) == -1 ) return;
++  if ( (st.st_mode &amp; 077) != 0)  return;  /* we are world or group writable */
++  /* XXX FIXME, we have to check the full path for bad permissions*/
++
++  /* Ok the directory is safe enough, lets open it. */
++  dir = g_dir_open (path, 0, &amp;error);
++  if (dir == NULL) {
++    perror(path);
++    return;
++  }
++
++  /* set a strict umask for safety */
++  umask(077);
++
++  /* Time to traverse the directory */
++  while ((filename = g_dir_read_name(dir)) != NULL) {
++    char fullpath[PATH_MAX];
++    if (filename[0] == '.') continue;  // skip '.', '..' and hidden files
++    sprintf(fullpath, &quot;%s/%s&quot;, path, filename);
++    if (!g_file_test(fullpath, G_FILE_TEST_IS_EXECUTABLE)) {
++      continue;
++    }
++ 
++    if ( debug &gt; 4 ) printf(&quot;Checking script %s\n&quot;, fullpath);
++
++    /* The script should not be writable by others */
++    if ( stat(fullpath, &amp;st ) == -1 ) continue;
++    if ( (st.st_mode &amp; 077) != 0)  continue;  /* we are world or group writable */
++    if ( debug &gt; 4 ) printf(&quot;Script %s is ok\n&quot;, fullpath);
++
++    uw_setproctitle(&quot;Running check %s&quot;, fullpath);
++
++    char msgbuf[8192]=&quot;&quot;;
++    unsigned int mycolor=STAT_GREEN; /* Untill proven otherwise */
++    sprintf(cmd, &quot;%s &gt; /tmp/.uw_sysstat.tmp&quot;, fullpath);
++    LOG(LOG_INFO, cmd);
++    if ( debug &gt; 4 ) printf(&quot;Running local check %s\n&quot;, fullpath);
++    system(cmd);
++    in = fopen(&quot;/tmp/.uw_sysstat.tmp&quot;, &quot;r&quot;);
++    if (in) {
++      int linecount=0;
++      while (fgets(buf, sizeof(buf), in)) {
++        if ( linecount == 0 ) { /* First line contains the color of the check */
++          linecount++;
++          mycolor=convert_color(buf); 
++        }
++        else { /* All the rest is part of the message */
++          snprintf(msgbuf, sizeof(msgbuf), &quot;%s\n%s&quot;, msgbuf, buf);
++        }
++          
++      }
++    } else {
++      strcpy(info, strerror(errno));
++    }
++    fclose(in);
++    unlink(&quot;tmp/.uw_sysstat.tmp&quot;);
++
++   /* If there is a message, put it into the big message. Prepend the script name. */
++   if (strlen( msgbuf ) != 0 ) {
++     snprintf(resultmsg, sizeof(resultmsg), &quot;%s%s:%s\n&quot;, resultmsg, fullpath, msgbuf );
++   }
++
++   /* is this the highest color? */
++   if ( mycolor &gt; color ) color = mycolor;
++  }
++
++  /* ok, we finished the scripts loop, set the results */
++  gettimeofday(&amp;now, NULL);
++  char totalstring[16]=&quot;&quot;; /* Big enough? */
++  snprintf( totalstring, sizeof(totalstring), &quot;%f&quot;, ((float) timeval_diff(&amp;now, &amp;start)) * 0.000001);
++  xmlSetProp(node, &quot;total&quot;, totalstring);
++  /* Here we set the color */
++  sprintf(buffer, &quot;%d&quot;, color);
++  xmlSetProp(node, &quot;color&quot;, buffer);
++  xmlNewTextChild(node, NULL, &quot;info&quot;, resultmsg);
++  g_dir_close(dir);
++
++  return color;
++}
++
+ #if HAVE_LIBPCRE
+ #define STATFILE &quot;/var/run/upwatch/uw_sysstat.stat&quot;
+ int check_log(GString *string, int idx)
+@@ -390,6 +493,29 @@
+   return node;
+ }
+ 
++/* Small helper function to convert a string to a valid upwatch color code. Probably not efficient */
++int convert_color ( char *string )
++{
++  int color=STAT_GREEN;
++  switch(string[0]) {
++               case 'r':
++                         color=STAT_RED;
++                         break;
++               case 'p':
++                         color=STAT_PURPLE;
++                         break;
++               case 'y':
++                         color=STAT_YELLOW;
++                         break;
++               case 'b':
++                         color=STAT_BLUE;
++                         break;
++               default: 
++                         color=STAT_GREEN;
++  } 
++  return color;
++}
++
+ #if USE_XMBMON || defined (__OpenBSD__)
+ void add_hwstat(xmlNodePtr node)
+ {
+@@ -662,7 +788,7 @@
+   xmlSetDocCompressMode(doc, OPT_VALUE_COMPRESS);
+ 
+   // do the sysstat
+-  node = newnode(doc, &quot;sysstat&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;sysstat&quot;);
+   add_loadavg(node);
+   add_cpu(node);
+   add_paging(node);
+@@ -677,16 +803,21 @@
+   if (OPT_VALUE_HWSTATS ) { 
+     // do the hwstat
+     get_hwstats();
+-    node = newnode(doc, &quot;hwstat&quot;);
++    node = (xmlNodePtr) newnode(doc, &quot;hwstat&quot;);
+     add_hwstat(node);
+     color = xmlGetPropInt(node, &quot;color&quot;);
+     if (color &gt; highest_color) highest_color = color;
+   }
+ #endif
++  if (OPT_VALUE_LOCALCHECKS ) { 
++   // do the local checks
++    color = do_local((xmlNodePtr) doc);
++    if (color &gt; highest_color) highest_color = color;
++  }
+ 
+ #if HAVE_LIBPCRE
+   // do the errlog
+-  node = newnode(doc, &quot;errlog&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;errlog&quot;);
+   log = check_logs(&amp;color);
+   if (color &gt; highest_color) highest_color = color;
+   sprintf(buf, &quot;%u&quot;, color);
+@@ -701,7 +832,7 @@
+ 
+   // do the diskfree
+   uw_setproctitle(&quot;checking diskspace&quot;);
+-  node = newnode(doc, &quot;diskfree&quot;);
++  node = (xmlNodePtr) newnode(doc, &quot;diskfree&quot;);
+   add_diskfree_info(node);
+   color = xmlGetPropInt(node, &quot;color&quot;);
+ 
+
+Added: upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_local_scripts/uw_send.sh	2006-08-28 13:58:06 UTC (rev 645)
+@@ -0,0 +1,37 @@
++#!/bin/sh
++
++# Sample script to check uw_send availlability
++
++# sudo rules needed:
++# Defaults:upwatch !authenticate
++# custom installations:
++# Cmnd_Alias UPWATCH = /usr/local/sbin/uw_*
++# upwatch ALL=(upwatch) UPWATCH
++# or for /etc/init.d/ type scripts
++# upwatch ALL=/etc/init.d/uw_*
++
++OUTPUT=/tmp/.uw_sysstat.tmp
++
++restart()
++{
++  if [ -x /etc/init.d/uw_send ]
++  then
++	/etc/init.d/uw_send restart
++  else
++        sudo -u upwatch uw_send
++  fi
++}
++
++if [ -z &quot;`ps -aux | grep uw_send | grep -v grep | grep -v &quot;uw_local_scripts&quot;`&quot; ]
++then
++  echo red &gt; $OUTPUT
++  echo &quot;uw_send was not running, trying to restart&quot; &gt;&gt; $OUTPUT
++  restart
++elif [ `uwq uw_send | grep ^uw_send | awk '{print $3}'` -gt 9 ] # 10 or more items in the queue
++then
++  echo red &gt; $OUTPUT
++  echo &quot;uw_send was not sending results last 10 minutes, trying to restart&quot; &gt;&gt; $OUTPUT
++  restart
++else
++  echo green &gt; $OUTPUT
++fi
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.conf
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.conf	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.conf	2006-08-28 13:58:06 UTC (rev 645)
+@@ -1,6 +1,10 @@
+ #serverid 0
+ # generate hwstats yes/no
+ hwstats no
++
++# Run local check script
++localchecks no
++
+ errlog syslog /var/log/messages
+ errlog maillog /var/log/maillog
+ output uw_send
+
+Modified: upwatch/trunk/uw_sysstat/uw_sysstat.def
+===================================================================
+--- upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-08-23 09:04:13 UTC (rev 644)
++++ upwatch/trunk/uw_sysstat/uw_sysstat.def	2006-08-28 13:58:06 UTC (rev 645)
+@@ -32,6 +32,10 @@
+ spec-files = `echo &quot;%dir&quot; $confdir/uw_sysstat.d/quagga`;
+ spec-files = `for i in \`find uw_sysstat.d/quagga -type f | grep -v .svn\` ; do echo $confdir/$i; done`;
+ 
++// Include the uw_local example scripts
++spec-files = `echo &quot;%dir&quot; $confdir/uw_local_scripts`;
++spec-files = `for i in \`find uw_local_scripts -type f | grep -v .svn\` ; do echo /usr/share/upwatch/examples/$i; done`;
++
+ // describe commandline flags
+ flag = {
+     name      = realm;
+@@ -118,6 +122,15 @@
+ };
+ 
+ flag = {
++    name      = localchecks;
++    arg_type  = bool;
++    descrip   = &quot;Run local scripts&quot;;
++    doc       =
++'Run local check scripts. Please make sure the uw_local scripts directory has proper permissions. ';
++};
++
++
++flag = {
+     name      = diskfree-red;
+     arg_default  = 95;
+     arg_type  = number;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000178.html">[Upwatch-commits] r644 - upwatch/libdbi/config
+</A></li>
+	<LI>Next message: <A HREF="000180.html">[Upwatch-commits] r646 - in upwatch/trunk: . cfg
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#179">[ date ]</a>
+              <a href="thread.html#179">[ thread ]</a>
+              <a href="subject.html#179">[ subject ]</a>
+              <a href="author.html#179">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>

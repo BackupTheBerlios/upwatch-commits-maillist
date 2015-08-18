@@ -1,0 +1,807 @@
+From wijnand at berlios.de  Wed Aug 17 11:29:13 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 17 Aug 2005 11:29:13 +0200
+Subject: [Upwatch-commits] r485 - in upwatch/trunk: . upwatch
+Message-ID: <200508170929.j7H9TDjJ020486@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-17 11:29:08 +0200 (Wed, 17 Aug 2005)
+New Revision: 485
+
+Modified:
+   upwatch/trunk/configure.ac
+   upwatch/trunk/upwatch/generic.h
+Log:
+OpenBSD client support.
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-06-23 17:49:04 UTC (rev 484)
++++ upwatch/trunk/configure.ac	2005-08-17 09:29:08 UTC (rev 485)
+@@ -91,6 +91,23 @@
+     CFLAGS="${CFLAGS} -I/usr/local/include -I/usr/pkg/include"
+     LDFLAGS="-L/usr/local/lib -L/usr/pkg/lib"
+     ;;
++  *-*-openbsd*)
++    openbsd=true
++    if test "$bindir" = '${exec_prefix}/bin' ;          then bindir='/usr/bin' ; fi
++    if test "$sbindir" = '${exec_prefix}/sbin' ;        then sbindir='/usr/sbin' ; fi
++    if test "$libexecdir" = '${exec_prefix}/libexec';   then libexecdir='/usr/libexec' ; fi
++    if test "$datadir" = '${prefix}/share' ;            then datadir='/usr/local/share' ; fi
++    if test "$sysconfdir" = '${prefix}/etc' ;           then sysconfdir='/etc' ; fi
++    if test "$sharedstatedir" = '${prefix}/com' ;       then sharedstatedir='/usr/local/com' ; fi
++    if test "$localstatedir" = '${prefix}/var' ;        then localstatedir='/var' ; fi
++    if test "$libdir" = '${exec_prefix}/lib' ;          then libdir='/usr/lib' ; fi
++    if test "$includedir" = '${prefix}/include' ;       then includedir='/usr/include' ; fi
++    if test "$oldincludedir" = '/usr/include' ;         then oldincludedir='/usr/include' ; fi
++    if test "$infodir" = '${prefix}/info' ;             then infodir='/usr/share/info' ; fi
++    if test "$mandir" = '${prefix}/man' ;               then mandir='/usr/share/man' ; fi
++    CFLAGS="${CFLAGS} -I/usr/local/include"
++    LDFLAGS="-L/usr/local/lib"
++    ;;
+   *-*-solaris*)
+     solaris=true
+     if test "$bindir" = '${exec_prefix}/bin' ; 		then bindir='/usr/bin' ; fi
+@@ -130,6 +147,7 @@
+ AM_CONDITIONAL(LINUX, test x$linux = xtrue)
+ AM_CONDITIONAL(FREEBSD, test x$freebsd = xtrue)
+ AM_CONDITIONAL(NETBSD, test x$netbsd = xtrue)
++AM_CONDITIONAL(OPENBSD, test x$openbsd = xtrue)
+ AM_CONDITIONAL(SOLARIS, test x$solaris = xtrue)
+ AM_CONDITIONAL(CYGWIN, test x$cygwin = xtrue)
+ 
+
+Modified: upwatch/trunk/upwatch/generic.h
+===================================================================
+--- upwatch/trunk/upwatch/generic.h	2005-06-23 17:49:04 UTC (rev 484)
++++ upwatch/trunk/upwatch/generic.h	2005-08-17 09:29:08 UTC (rev 485)
+@@ -12,6 +12,10 @@
+ #include <db.h>
+ #endif
+ 
++#ifndef ETIME
++#define ETIME ETIMEDOUT                         /* For OpenBSD and possibly more platforms */
++#endif
++
+ #ifdef USE_ST
+ #include <st.h>
+ #define sleep st_sleep
+
+
+
+From wijnand at berlios.de  Wed Aug 17 13:49:17 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 17 Aug 2005 13:49:17 +0200
+Subject: [Upwatch-commits] r486 - upwatch/trunk/uw_process
+Message-ID: <200508171149.j7HBnHSZ028120@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-17 13:49:02 +0200 (Wed, 17 Aug 2005)
+New Revision: 486
+
+Modified:
+   upwatch/trunk/uw_process/run.c
+Log:
+Compile on GCC 4
+
+
+Modified: upwatch/trunk/uw_process/run.c
+===================================================================
+--- upwatch/trunk/uw_process/run.c	2005-08-17 09:29:08 UTC (rev 485)
++++ upwatch/trunk/uw_process/run.c	2005-08-17 11:49:02 UTC (rev 486)
+@@ -673,7 +673,7 @@
+   if (debug > 3) { LOG(LOG_DEBUG, "run()"); }
+ 
+   if (HAVE_OPT(SUMMARIZE)) {
+-static int resummarize(void);
++    int resummarize(void);
+     return(resummarize()); // --summarize
+   }
+ 
+@@ -690,7 +690,7 @@
+   return(count);
+ }
+ 
+-static int resummarize(void)
++int resummarize(void)
+ {
+   gint idx, found;
+   trx t;
+
+
+
+From wijnand at berlios.de  Wed Aug 17 14:19:23 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 17 Aug 2005 14:19:23 +0200
+Subject: [Upwatch-commits] r487 - in upwatch/trunk: . compat/bb/bbhimport compat/sometests/setproctitle upwatch util uw_accept uw_acceptbb uw_dns uw_httpget uw_imap uw_investigate uw_iptraf uw_mssql uw_mysql uw_mysqlstats uw_notify uw_null uw_ping uw_pop3 uw_postgresql uw_process uw_purple uw_route uw_send uw_setip uw_smtp uw_snmpget uw_syncprobes uw_sysstat uw_tcpconnect
+Message-ID: <200508171219.j7HCJNjZ027551@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-17 14:19:22 +0200 (Wed, 17 Aug 2005)
+New Revision: 487
+
+Modified:
+   upwatch/trunk/Makefile.am.common
+   upwatch/trunk/compat/bb/bbhimport/Makefile.am
+   upwatch/trunk/compat/sometests/setproctitle/Makefile.am
+   upwatch/trunk/configure.ac
+   upwatch/trunk/upwatch/Makefile.am
+   upwatch/trunk/util/Makefile.am
+   upwatch/trunk/uw_accept/Makefile.am
+   upwatch/trunk/uw_acceptbb/Makefile.am
+   upwatch/trunk/uw_dns/Makefile.am
+   upwatch/trunk/uw_httpget/Makefile.am
+   upwatch/trunk/uw_imap/Makefile.am
+   upwatch/trunk/uw_investigate/Makefile.am
+   upwatch/trunk/uw_iptraf/Makefile.am
+   upwatch/trunk/uw_mssql/Makefile.am
+   upwatch/trunk/uw_mysql/Makefile.am
+   upwatch/trunk/uw_mysqlstats/Makefile.am
+   upwatch/trunk/uw_notify/Makefile.am
+   upwatch/trunk/uw_null/Makefile.am
+   upwatch/trunk/uw_ping/Makefile.am
+   upwatch/trunk/uw_pop3/Makefile.am
+   upwatch/trunk/uw_postgresql/Makefile.am
+   upwatch/trunk/uw_process/Makefile.am
+   upwatch/trunk/uw_purple/Makefile.am
+   upwatch/trunk/uw_route/Makefile.am
+   upwatch/trunk/uw_send/Makefile.am
+   upwatch/trunk/uw_setip/Makefile.am
+   upwatch/trunk/uw_smtp/Makefile.am
+   upwatch/trunk/uw_snmpget/Makefile.am
+   upwatch/trunk/uw_syncprobes/Makefile.am
+   upwatch/trunk/uw_sysstat/Makefile.am
+   upwatch/trunk/uw_tcpconnect/Makefile.am
+Log:
+Some distro's (like debian) store options.h in $PREFIX/include/autoopts.
+Try to discover this and add a CFLAG if this is the case.
+
+
+Modified: upwatch/trunk/Makefile.am.common
+===================================================================
+--- upwatch/trunk/Makefile.am.common	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/Makefile.am.common	2005-08-17 12:19:22 UTC (rev 487)
+@@ -32,11 +32,11 @@
+ 
+ %_main.o: $(top_srcdir)/common/main.c $(@:%_main.o=%.def) $(CMDDEF)
+ 	$(COMPILE) -include $(@:%_main.o=%.h) -o $@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ \
+-		@MYSQL_CFLAGS@ $(AM_CFLAGS) -c $(top_srcdir)/common/main.c
++		@MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) -c $(top_srcdir)/common/main.c
+ 
+ %_db.o: $(top_srcdir)/common/db.c $(@:%_db.o=%.def) $(CMDDEF)
+ 	$(COMPILE) -include $(@:%_db.o=%.h) -o $@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ \
+-		@MYSQL_CFLAGS@ $(AM_CFLAGS) -c $(top_srcdir)/common/db.c
++		@MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) -c $(top_srcdir)/common/db.c
+ 
+ %.c %.h: %.def
+ 	autogen -b $(<:%.def=%) $(AGDEFINES) $(GENINCL) $<
+
+Modified: upwatch/trunk/compat/bb/bbhimport/Makefile.am
+===================================================================
+--- upwatch/trunk/compat/bb/bbhimport/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/compat/bb/bbhimport/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -5,7 +5,7 @@
+ man_MANS = bbhimport.1
+ 
+ bbhimport_SOURCES = run.c bbhimport.h bbhimport.c
+-bbhimport_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS)
++bbhimport_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ bbhimport_LDADD = bbhimport_$(DB_O) bbhimport_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ @MYSQL_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c)
+
+Modified: upwatch/trunk/compat/sometests/setproctitle/Makefile.am
+===================================================================
+--- upwatch/trunk/compat/sometests/setproctitle/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/compat/sometests/setproctitle/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -4,7 +4,7 @@
+ noinst_MANS = setproctitle.1
+ 
+ setproctitle_SOURCES = run.c setproctitle.c setproctitle.h
+-setproctitle_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++setproctitle_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ setproctitle_LDADD = setproctitle_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ 
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.c) $(program:%=%.h)
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/configure.ac	2005-08-17 12:19:22 UTC (rev 487)
+@@ -270,6 +270,27 @@
+ fi
+ AC_SUBST(LIBOPTS)
+ 
++# path to autoopts includes
++AC_ARG_WITH(autoopts-include,
++    [  --with-autoopts-include=<path>        prefix of autoopts headers. Default /usr/include/],
++    [LIBOPTS_INC_PREFIX=$with_autoopts_include],
++    [LIBOPTS_INC_PREFIX=/usr/include/]
++)
++AC_SUBST(LIBOPTS_INC_PREFIX)
++
++for incpath in /usr/include/ $LIBOPTS_LIB_PREFIX /usr/local/include/ /cygdrive/c/include /usr/pkg/include/
++do
++  if test -f $incpath/options.h
++  then
++    LIBOPTS_CFLAGS="-I${incpath}"
++  fi
++  if test -f $incpath/autoopts/options.h
++  then
++    LIBOPTS_CFLAGS="-I${incpath}/autoopts"
++  fi
++done
++
++AC_SUBST(LIBOPTS_CFLAGS)
+ ################## MYSQL
+ # path to libmysqlclient stuff:.
+ AC_ARG_WITH(mysql-libs,
+
+Modified: upwatch/trunk/upwatch/Makefile.am
+===================================================================
+--- upwatch/trunk/upwatch/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/upwatch/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -29,8 +29,8 @@
+ endif
+ 
+ libupwatch_a_SOURCES = $(sources)
+-libupwatch_a_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ $(AM_CFLAGS)
++libupwatch_a_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ 
+ libupwatcht_a_SOURCES = $(sources)
+-libupwatcht_a_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ $(AM_CFLAGS) -DWITH_THREADS
++libupwatcht_a_CFLAGS = @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) -DWITH_THREADS
+ 
+
+Modified: upwatch/trunk/util/Makefile.am
+===================================================================
+--- upwatch/trunk/util/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/util/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -46,7 +46,7 @@
+ 
+ uwq_SOURCES = uwq.c uwq_options.h uwq_options.c uwq_options.def 
+ uwq_LDADD = $(LIBOPTS) @LIBGLIB2_LIBS@
+-uwq_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@
++uwq_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+ BUILT_SOURCES += uwq_options.h uwq.1
+ EXTRA_DIST += uwq_options.def
+ CLEAN_FILES = uwq_options.h uwq_options.c
+@@ -72,7 +72,7 @@
+ 	autogen -b ctime $(AGDEFINES) $(GENINCL) -T $(MAN1TPL) ctime_options.def
+ 
+ slot_SOURCES = slot.c slot_options.c slot_options.h slot_options.def
+-slot_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@
++slot_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@
+ slot_LDADD = $(LIBOPTS) $(LIBUPWATCH) 
+ BUILT_SOURCES += slot_options.h
+ EXTRA_DIST += slot_options.def
+@@ -86,7 +86,7 @@
+ 	autogen -b slot $(AGDEFINES) $(GENINCL) -T $(MAN1TPL) slot_options.def
+ 
+ chklog_SOURCES = chklog.c chklog_options.c chklog_options.h chklog_options.def
+-chklog_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@
++chklog_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@
+ chklog_LDADD = @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@ $(LIBOPTS) $(LIBUPWATCH) 
+ BUILT_SOURCES += chklog_options.h
+ EXTRA_DIST += chklog_options.def
+
+Modified: upwatch/trunk/uw_accept/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_accept/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_accept/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_accept_SOURCES = run.c uw_accept.h uw_accept.c $(SPECFILES) $(INITFILES)
+-uw_accept_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS) 
++uw_accept_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+ uw_accept_LDADD = uw_accept_$(DB_O) uw_accept_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES) 
+
+Modified: upwatch/trunk/uw_acceptbb/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_acceptbb/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_acceptbb/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -9,7 +9,7 @@
+ 
+ uw_acceptbb_SOURCES = run.c uw_acceptbb.h uw_acceptbb.c \
+  $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_acceptbb_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_acceptbb_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_acceptbb_LDADD = uw_acceptbb_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_dns/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_dns/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_dns/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_dns_SOURCES = run.c uw_dns.h uw_dns.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_dns_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) 
++uw_dns_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+ uw_dns_LDADD = uw_dns_$(DB_O) uw_dns_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_httpget/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_httpget/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_httpget/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_httpget_SOURCES = run.c uw_httpget.h uw_httpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_httpget_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) 
++uw_httpget_CFLAGS = @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+ uw_httpget_LDADD = uw_httpget_$(DB_O) uw_httpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_imap/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_imap/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_imap/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_imap_SOURCES = run.c uw_imap.h uw_imap.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_imap_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_imap_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_imap_LDADD = uw_imap_$(DB_O) uw_imap_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_investigate/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_investigate/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_investigate/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -10,7 +10,7 @@
+ uw_investigate_SOURCES = run.c cmd_options.c cmd_options.h traceroute.c traceroute.h \
+   cmd_options.def $(PROBFILES) $(SPECFILES) $(INITFILES)
+ uw_investigate_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBNET_CFLAGS@ \
+-  @LIBPCAP_CFLAGS@ $(AM_CFLAGS)
++ at LIBOPTS_CFLAGS@  @LIBPCAP_CFLAGS@ $(AM_CFLAGS)
+ BUILT_SOURCES = cmd_options.h $(PROBFILES) $(SPECFILES) $(INITFILES)
+ INCLUDES = -I../upwatch 
+ EXTRA_DIST = cmd_options.def $(program).conf
+
+Modified: upwatch/trunk/uw_iptraf/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_iptraf/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_iptraf/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_iptraf_SOURCES = run.c uw_iptraf.h uw_iptraf.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_iptraf_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBPCAP_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_iptraf_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBPCAP_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_iptraf_LDADD = uw_iptraf_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @LIBGTHREAD2_LIBS@ @LIBPCAP_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_mssql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mssql/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_mssql/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_mssql_SOURCES = run.c uw_mssql.h uw_mssql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_mssql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_mssql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_mssql_LDADD = uw_mssql_$(DB_O) uw_mssql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBTDS_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_mysql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mysql/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_mysql/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_mysql_SOURCES = run.c uw_mysql.h uw_mysql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_mysql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_mysql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_mysql_LDADD = uw_mysql_$(DB_O) uw_mysql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_mysqlstats/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_mysqlstats/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_mysqlstats/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_mysqlstats_SOURCES = run.c uw_mysqlstats.h uw_mysqlstats.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_mysqlstats_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_mysqlstats_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_mysqlstats_LDADD = uw_mysqlstats_$(DB_O) uw_mysqlstats_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_notify/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_notify/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_notify/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -33,7 +33,7 @@
+  ping.c httpget.c iptraf.c sysstat.c mysql.c bb_cpu.c bb.c pop3.c $(USE_LIBPQ) \
+  $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c \
+  uw_notify.h uw_notify_glob.h modules.inc $(SPECFILES) $(INITFILES)
+-uw_notify_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS) \
++uw_notify_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+   $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
+ uw_notify_LDADD = uw_notify_$(DB_O) uw_notify_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ \
+   @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
+
+Modified: upwatch/trunk/uw_null/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_null/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_null/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -11,7 +11,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_null_SOURCES = run.c uw_null.h uw_null.c $(SPECFILES) $(INITFILES) 
+-uw_null_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_null_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_null_LDADD = uw_null_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_ping/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_ping/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_ping/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -7,7 +7,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_ping_SOURCES = run.c uw_ping.h uw_ping.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_ping_CFLAGS = @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_ping_CFLAGS = @LIBGLIB2_CFLAGS@ @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_ping_LDADD = uw_ping_$(DB_O) uw_ping_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBXML2_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_pop3/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_pop3/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_pop3/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_pop3_SOURCES = run.c uw_pop3.h uw_pop3.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_pop3_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_pop3_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_pop3_LDADD = uw_pop3_$(DB_O) uw_pop3_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_postgresql/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_postgresql/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_postgresql/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_postgresql_SOURCES = run.c uw_postgresql.h uw_postgresql.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_postgresql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBPQ_CFLAGS@ $(AM_CFLAGS)
++uw_postgresql_CFLAGS = @MYSQL_CFLAGS@ @LIBGTHREAD2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBPQ_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_postgresql_LDADD = uw_postgresql_$(DB_O) uw_postgresql_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCHT) @MYSQL_LIBS@ @LIBGTHREAD2_LIBS@ @LIBPQ_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_process/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_process/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_process/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -33,7 +33,7 @@
+  ping.c httpget.c iptraf.c sysstat.c mysql.c mysqlstats.c bb_cpu.c bb.c pop3.c smtp.c tcpconnect.c \
+ $(USE_LIBPQ) $(USE_LIBSNMP) $(USE_LIBTDS) imap.c errlog.c diskfree.c hwstat.c \
+  uw_process.h uw_process_glob.h modules.inc $(SPECFILES) $(INITFILES)
+-uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS) \
++uw_process_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) \
+   $(DEF_LIBPQ) $(DEF_LIBSNMP) $(DEF_LIBTDS) $(DEF_LIBESMTP) 
+ uw_process_LDADD = uw_process_$(DB_O) uw_process_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ \
+   @LIBESMTP_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
+
+Modified: upwatch/trunk/uw_purple/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_purple/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_purple/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -7,7 +7,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_purple_SOURCES = run.c uw_purple.h uw_purple.c  $(SPECFILES) $(INITFILES)
+-uw_purple_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_purple_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_purple_LDADD = uw_purple_$(DB_O) uw_purple_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_route/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_route/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_route/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -11,7 +11,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_route_SOURCES = run.c uw_route.h uw_route.c $(SPECFILES) $(INITFILES) 
+-uw_route_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_route_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_route_LDADD = uw_route_$(DB_O) uw_route_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@ @LIBXML2_LIBS@ $(SOLARISLIBS)
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_send/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_send/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_send/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -7,7 +7,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_send_SOURCES = run.c uw_send.c uw_send.h uw_send.def $(SPECFILES) $(INITFILES)
+-uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ $(AM_CFLAGS)
++uw_send_CFLAGS = @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @MYSQL_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_send_LDADD = uw_send_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_setip/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_setip/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_setip/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_setip_SOURCES = run.c uw_setip.h uw_setip.c $(SPECFILES) $(INITFILES)
+-uw_setip_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS) 
++uw_setip_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+ uw_setip_LDADD = uw_setip_$(DB_O) uw_setip_$(MAIN_O) $(LIBOPTS) $(LIBST) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_smtp/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_smtp/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_smtp/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_smtp_SOURCES = run.c uw_smtp.h uw_smtp.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_smtp_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS) 
++uw_smtp_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS) 
+ uw_smtp_LDADD = uw_smtp_$(DB_O) uw_smtp_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_snmpget/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_snmpget/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_snmpget/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -7,7 +7,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_snmpget_SOURCES = run.c uw_snmpget.h uw_snmpget.c $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_snmpget_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_snmpget_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_snmpget_LDADD = uw_snmpget_$(DB_O) uw_snmpget_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBSNMP_LIBS@ @LIBCRYPTO_LIBS@ @LIBGLIB2_LIBS@ 
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_syncprobes/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_syncprobes/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_syncprobes/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -7,7 +7,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_syncprobes_SOURCES = run.c uw_syncprobes.h uw_syncprobes.c  $(SPECFILES) $(INITFILES)
+-uw_syncprobes_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_syncprobes_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_syncprobes_LDADD = uw_syncprobes_$(DB_O) uw_syncprobes_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(SPECFILES) $(INITFILES)
+
+Modified: upwatch/trunk/uw_sysstat/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_sysstat/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_sysstat/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -27,7 +27,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_sysstat_SOURCES = run.c uw_sysstat.c uw_sysstat.h $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_sysstat_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@
++uw_sysstat_CFLAGS = @MYSQL_CFLAGS@ @LIBXML2_CFLAGS@ @LIBGLIB2_CFLAGS@ $(AM_CFLAGS) @LIBPCRE_CFLAGS@ @LIBOPTS_CFLAGS@
+ uw_sysstat_LDADD = uw_sysstat_$(MAIN_O) $(XMBMON_LIB) $(LIBOPTS) \
+   $(FREEBSDLIBS) $(SOLARISLIBS) $(LIBSTATGRAB) \
+   $(LIBUPWATCH) @LIBXML2_LIBS@ @LIBGLIB2_LIBS@ @LIBPCRE_LIBS@
+
+Modified: upwatch/trunk/uw_tcpconnect/Makefile.am
+===================================================================
+--- upwatch/trunk/uw_tcpconnect/Makefile.am	2005-08-17 11:49:02 UTC (rev 486)
++++ upwatch/trunk/uw_tcpconnect/Makefile.am	2005-08-17 12:19:22 UTC (rev 487)
+@@ -8,7 +8,7 @@
+ init_DATA = $(INITFILES)
+ 
+ uw_tcpconnect_SOURCES = run.c uw_tcpconnect.h uw_tcpconnect.c  $(PROBFILES) $(SPECFILES) $(INITFILES)
+-uw_tcpconnect_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ $(AM_CFLAGS)
++uw_tcpconnect_CFLAGS = @MYSQL_CFLAGS@ @LIBGLIB2_CFLAGS@ @LIBXML2_CFLAGS@ @LIBOPTS_CFLAGS@ $(AM_CFLAGS)
+ uw_tcpconnect_LDADD = uw_tcpconnect_$(DB_O) uw_tcpconnect_$(MAIN_O) $(LIBOPTS) $(LIBUPWATCH) $(LIBST) @MYSQL_LIBS@ @LIBGLIB2_LIBS@
+ 
+ BUILT_SOURCES = $(program:%=%.1) $(program:%=%.h) $(program:%=%.c) $(PROBFILES) $(SPECFILES) $(INITFILES)
+
+
+
+From wijnand at berlios.de  Mon Aug 22 15:12:14 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Mon, 22 Aug 2005 15:12:14 +0200
+Subject: [Upwatch-commits] r488 - upwatch/trunk/uw_process
+Message-ID: <200508221312.j7MDCEc1011623@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-22 15:12:10 +0200 (Mon, 22 Aug 2005)
+New Revision: 488
+
+Modified:
+   upwatch/trunk/uw_process/process.c
+Log:
+Add another debugging warning, tell us what was exactly the last color, and what is the new one.
+
+
+Modified: upwatch/trunk/uw_process/process.c
+===================================================================
+--- upwatch/trunk/uw_process/process.c	2005-08-17 12:19:22 UTC (rev 487)
++++ upwatch/trunk/uw_process/process.c	2005-08-22 13:12:10 UTC (rev 488)
+@@ -478,6 +478,9 @@
+   if (t->seen_before) {
+     goto finish;
+   }
++  
++  // Extra debugging, be sure what colors are processed here
++  if ( debug > 3 ) fprintf(stderr, "PREVIOUS COLOR %d - NEW COLOR %d\n", prv->color, t->res->color);
+ 
+   // IF COLOR DIFFERS FROM PRECEDING RAW RECORD
+   if (t->res->color != prv->color) {
+
+
+
+From wijnand at berlios.de  Thu Aug 25 17:33:05 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Thu, 25 Aug 2005 17:33:05 +0200
+Subject: [Upwatch-commits] r489 - upwatch/trunk/doc
+Message-ID: <200508251533.j7PFX5Cr000538@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-25 17:33:03 +0200 (Thu, 25 Aug 2005)
+New Revision: 489
+
+Modified:
+   upwatch/trunk/doc/installation.xml
+Log:
+upwatch.% > upwatch.*
+
+
+Modified: upwatch/trunk/doc/installation.xml
+===================================================================
+--- upwatch/trunk/doc/installation.xml	2005-08-22 13:12:10 UTC (rev 488)
++++ upwatch/trunk/doc/installation.xml	2005-08-25 15:33:03 UTC (rev 489)
+@@ -134,7 +134,7 @@
+         </para>
+         <literallayout>
+            $ mysql -u root --PASSWORD=PASSWORD mysql
+-           mysql> GRANT SELECT ON upwatch.% TO probe@'192.168.1.23' IDENTIFIED BY 'PASSWD'
++           mysql> GRANT SELECT ON upwatch.* TO probe@'192.168.1.23' IDENTIFIED BY 'PASSWD'
+         </literallayout>
+         <para>Do this for every host that runs probes.</para>
+         <para>Next user is for the background processing (user upwatch) and the php access (user uwww):</para>
+
+
+
+From wijnand at berlios.de  Wed Aug 31 09:49:06 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 31 Aug 2005 09:49:06 +0200
+Subject: [Upwatch-commits] r490 - upwatch/trunk/uw_mysql
+Message-ID: <200508310749.j7V7n6ri017030@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-31 09:49:05 +0200 (Wed, 31 Aug 2005)
+New Revision: 490
+
+Modified:
+   upwatch/trunk/uw_mysql/run.c
+Log:
+Setting mysql_options results in a segfault. The function is probably used wrong.
+This makes sure the probe works (again?). I will look at the right usage soon, I just need a working probe now.
+
+
+Modified: upwatch/trunk/uw_mysql/run.c
+===================================================================
+--- upwatch/trunk/uw_mysql/run.c	2005-08-25 15:33:03 UTC (rev 489)
++++ upwatch/trunk/uw_mysql/run.c	2005-08-31 07:49:05 UTC (rev 490)
+@@ -254,8 +254,8 @@
+   dbuser = probe->dbuser;
+   dbpasswd = probe->dbpasswd;
+ 
+-  mysql_options(mysql, MYSQL_OPT_COMPRESS, 0);
+-  mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, 50);
++  /* mysql_options(mysql, MYSQL_OPT_COMPRESS, 0); */
++  /* mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, 50); */
+   gettimeofday(&start, NULL);
+   if (!mysql_real_connect(mysql, dbhost, dbuser, dbpasswd, dbname, 0, NULL, 0)) {
+     probe->msg = strdup(mysql_error(mysql));
+
+
+
+From wijnand at berlios.de  Wed Aug 31 22:47:20 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 31 Aug 2005 22:47:20 +0200
+Subject: [Upwatch-commits] r491 - upwatch/trunk/uw_postgresql
+Message-ID: <200508312047.j7VKlKpe003275@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-31 22:47:19 +0200 (Wed, 31 Aug 2005)
+New Revision: 491
+
+Modified:
+   upwatch/trunk/uw_postgresql/run.c
+Log:
+Fix the sql query, the probe did not find the realm so all probes were discarded by uw_process.
+
+
+Modified: upwatch/trunk/uw_postgresql/run.c
+===================================================================
+--- upwatch/trunk/uw_postgresql/run.c	2005-08-31 07:49:05 UTC (rev 490)
++++ upwatch/trunk/uw_postgresql/run.c	2005-08-31 20:47:19 UTC (rev 491)
+@@ -110,7 +110,7 @@
+                 "       pr_postgresql_def.yellow,  pr_postgresql_def.red "
+                 "FROM   pr_postgresql_def, pr_realm "
+                 "WHERE  pr_postgresql_def.id > 1 and pr_postgresql_def.disable <> 'yes'"
+-                "       and pr_postgresql_def.pgroup = '%d'",
++                "       and pr_postgresql_def.pgroup = '%d' and pr_realm.id = pr_postgresql_def.domid",
+                 (unsigned)OPT_VALUE_GROUPID);
+ 
+   result = my_query(mysql, 1, qry);
+
+
+
+From wijnand at berlios.de  Wed Aug 31 23:01:24 2005
+From: wijnand at berlios.de (Wijnand Wiersma at BerliOS)
+Date: Wed, 31 Aug 2005 23:01:24 +0200
+Subject: [Upwatch-commits] r492 - upwatch/trunk
+Message-ID: <200508312101.j7VL1Ofn004383@sheep.berlios.de>
+
+Author: wijnand
+Date: 2005-08-31 23:01:22 +0200 (Wed, 31 Aug 2005)
+New Revision: 492
+
+Modified:
+   upwatch/trunk/configure.ac
+Log:
+/usr/include/postgresql is also a possible place for the include file. Still not elegant though.
+
+
+
+Modified: upwatch/trunk/configure.ac
+===================================================================
+--- upwatch/trunk/configure.ac	2005-08-31 20:47:19 UTC (rev 491)
++++ upwatch/trunk/configure.ac	2005-08-31 21:01:22 UTC (rev 492)
+@@ -587,6 +587,10 @@
+ 	then
+ 		LIBPQ_CFLAGS=-I/usr/include/pgsql
+ 	fi
++	if test -f /usr/include/postgresql/libpq-fe.h
++	then
++		LIBPQ_CFLAGS=-I/usr/include/postgresql
++	fi
+ fi
+ AM_CONDITIONAL(HAVE_LIBPQ, test $HAVE_LIBPQ -eq 1)
+ AC_SUBST(LIBPQ_LIBS)
+
+
+

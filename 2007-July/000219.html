@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Upwatch-commits] r684 - upwatch/trunk/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/upwatch-commits/2007-July/index.html" >
+   <LINK REL="made" HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r684%20-%20upwatch/trunk/util&In-Reply-To=%3C200707102002.l6AK2wl7020436%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000218.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Upwatch-commits] r684 - upwatch/trunk/util</H1>
+    <B>raarts at BerliOS</B> 
+    <A HREF="mailto:upwatch-commits%40lists.berlios.de?Subject=Re%3A%20%5BUpwatch-commits%5D%20r684%20-%20upwatch/trunk/util&In-Reply-To=%3C200707102002.l6AK2wl7020436%40sheep.berlios.de%3E"
+       TITLE="[Upwatch-commits] r684 - upwatch/trunk/util">raarts at mail.berlios.de
+       </A><BR>
+    <I>Tue Jul 10 22:02:58 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000218.html">[Upwatch-commits] r683 - in upwatch/trunk: common doc
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#219">[ date ]</a>
+              <a href="thread.html#219">[ thread ]</a>
+              <a href="subject.html#219">[ subject ]</a>
+              <a href="author.html#219">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: raarts
+Date: 2007-07-10 22:02:57 +0200 (Tue, 10 Jul 2007)
+New Revision: 684
+
+Modified:
+   upwatch/trunk/util/chklog.c
+   upwatch/trunk/util/ctime.c
+   upwatch/trunk/util/slot.c
+   upwatch/trunk/util/uwq.c
+Log:
+I thought I had all instances of this, but had to add more.
+
+
+Modified: upwatch/trunk/util/chklog.c
+===================================================================
+--- upwatch/trunk/util/chklog.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/chklog.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -22,6 +22,10 @@
+     progname = argv[0];
+   }
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &amp;progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/ctime.c
+===================================================================
+--- upwatch/trunk/util/ctime.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/ctime.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -12,6 +12,10 @@
+   int c, idx=0;
+   char number[40];
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &amp;progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/slot.c
+===================================================================
+--- upwatch/trunk/util/slot.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/slot.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -12,6 +12,10 @@
+   gulong lowest, highest;
+   char start[40], end[40];
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &amp;progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+Modified: upwatch/trunk/util/uwq.c
+===================================================================
+--- upwatch/trunk/util/uwq.c	2007-07-10 19:45:37 UTC (rev 683)
++++ upwatch/trunk/util/uwq.c	2007-07-10 20:02:57 UTC (rev 684)
+@@ -24,6 +24,10 @@
+     progname = argv[0];
+   }
+ 
++#ifdef ERRSKIP_OPTERR
++  ERRSKIP_OPTERR;  // Don't barf on unknown commandline or configfile options. Only available in newer autogen versions
++#endif
++
+   arg_ct = optionProcess( &amp;progOptions, argc, argv );
+   argc -= arg_ct;
+   argv += arg_ct;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000218.html">[Upwatch-commits] r683 - in upwatch/trunk: common doc
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#219">[ date ]</a>
+              <a href="thread.html#219">[ thread ]</a>
+              <a href="subject.html#219">[ subject ]</a>
+              <a href="author.html#219">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/upwatch-commits">More information about the Upwatch-commits
+mailing list</a><br>
+</body></html>
